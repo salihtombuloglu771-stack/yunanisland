@@ -1,36 +1,31 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# HelloIslands
 
-## Getting Started
+Yunan Adaları için kapsamlı bir gezi platformu. Next.js + Supabase üzerine kurulu.
 
-First, run the development server:
+**Durum**: Teknik altyapı kurulum aşamasında — sayfa tasarımı ve Supabase canlı bağlantısı henüz yapılmadı.
+
+## Teknoloji
+
+- **Next.js 16** (App Router, Turbopack)
+- **Supabase** (Postgres + Auth + Storage), Row Level Security ile
+- **Tailwind CSS v4**
+
+## Kurulum
 
 ```bash
+npm install
+cp .env.example .env.local   # Supabase bilgilerinizi girin
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Veritabanı
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+`supabase/migrations/001_initial_schema.sql` — Supabase projesi oluşturulduktan sonra Dashboard → SQL Editor'den çalıştırılmalı. İçerik: users, categories, islands, beaches, restaurants, hotels, ferry_routes, articles, advertisements, favorites, reviews, media, affiliate_links — hepsinde RLS açık, admin/public ayrımı `is_admin()` fonksiyonuyla yapılıyor.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Hava durumu verisi ayrı bir tablo olarak tutulmuyor — canlı bir API'den çekilecek (ileride entegre edilecek).
 
-## Learn More
+## Geliştirme notları
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `npx tsc --noEmit` — tip kontrolü
+- `npm run lint` — ESLint
+- `npm run build` — üretim derlemesi
