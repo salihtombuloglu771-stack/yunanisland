@@ -12,8 +12,9 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+
 export const metadata: Metadata = {
-  title: "HelloIslands",
+  title: "Yunanisland",
   description: "Yunan Adaları için kapsamlı gezi rehberi",
 };
 

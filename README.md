@@ -1,4 +1,4 @@
-# HelloIslands
+# Yunanisland
 
 Yunan Adaları için kapsamlı bir gezi platformu. Next.js + Supabase üzerine kurulu.
 

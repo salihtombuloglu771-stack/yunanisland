@@ -1,4 +1,4 @@
--- HelloIslands — initial schema
+-- Yunanisland — initial schema
 -- Not applied yet: Supabase project connection is deferred to a later session.
 -- Run this in Supabase Dashboard → SQL Editor once the project exists.
 
