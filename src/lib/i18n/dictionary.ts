@@ -2,6 +2,7 @@ export type Locale = 'tr' | 'en'
 
 export const dictionary = {
   tr: {
+    'nav.home': 'Ana Sayfa',
     'nav.ferryGuide': 'Feribot Rehberi',
     'nav.blog': 'Gezi Blogu',
     'nav.budgetCalculator': 'Bütçe Hesaplayıcı',
@@ -22,6 +23,7 @@ export const dictionary = {
     'footer.rights': 'Tüm hakları saklıdır.',
   },
   en: {
+    'nav.home': 'Home',
     'nav.ferryGuide': 'Ferry Guide',
     'nav.blog': 'Travel Blog',
     'nav.budgetCalculator': 'Budget Calculator',
