@@ -30,17 +30,22 @@ function SearchForm() {
   const [searched, setSearched] = useState(false)
 
   const runSearch = async (term: string) => {
-    if (!term.trim()) return
+    if (!term.trim()) {
+      setResults([])
+      setSearched(false)
+      return
+    }
     setLoading(true)
     setSearched(true)
 
     const supabase = createClient()
     const ilikeTerm = `%${term.trim()}%`
 
-    const [islandsRes, beachesRes, restaurantsRes] = await Promise.all([
+    const [islandsRes, beachesRes, restaurantsRes, hotelsRes] = await Promise.all([
       supabase.from('islands').select('id, name, slug, description').ilike('name', ilikeTerm).limit(10),
       supabase.from('beaches').select('id, name, slug, description, islands(slug)').ilike('name', ilikeTerm).limit(10),
       supabase.from('restaurants').select('id, name, slug, description, islands(slug)').ilike('name', ilikeTerm).limit(10),
+      supabase.from('hotels').select('id, name, slug, description, islands(slug)').ilike('name', ilikeTerm).limit(10),
     ])
 
     const combined: Result[] = [
@@ -53,6 +58,10 @@ function SearchForm() {
         const island = Array.isArray(r.islands) ? r.islands[0] : r.islands
         return { type: 'restaurant' as const, id: r.id, name: r.name, slug: r.slug, islandSlug: island?.slug, description: r.description }
       }),
+      ...(hotelsRes.data ?? []).map((h) => {
+        const island = Array.isArray(h.islands) ? h.islands[0] : h.islands
+        return { type: 'hotel' as const, id: h.id, name: h.name, slug: h.slug, islandSlug: island?.slug, description: h.description }
+      }),
     ]
 
     setResults(combined)
@@ -64,6 +73,14 @@ function SearchForm() {
     if (initialQ) runSearch(initialQ)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  // live search: re-run automatically as the user types, after a short pause
+  useEffect(() => {
+    const handle = setTimeout(() => {
+      if (query.trim()) runSearch(query)
+    }, 350)
+    return () => clearTimeout(handle)
+  }, [query])
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -97,10 +114,17 @@ function SearchForm() {
         </form>
 
         <div className="mt-8 space-y-3">
-          {results.map((r) => (
+          {results.map((r) => {
+            const hrefByType: Record<Result['type'], string> = {
+              island: `/islands/${r.slug}`,
+              beach: `/beaches/${r.slug}`,
+              restaurant: `/restaurants/${r.slug}`,
+              hotel: `/hotels/${r.slug}`,
+            }
+            return (
             <Link
               key={`${r.type}-${r.id}`}
-              href={r.type === 'island' ? `/islands/${r.slug}` : `/islands/${r.islandSlug}`}
+              href={hrefByType[r.type]}
               className="block bg-white dark:bg-neutral-900 p-4 rounded-xl border border-slate-100 dark:border-neutral-900 hover:shadow-md transition-all"
             >
               <div className="flex items-center gap-2">
@@ -111,7 +135,8 @@ function SearchForm() {
                 <p className="mt-1 text-sm text-neutral-500 line-clamp-1">{r.description}</p>
               )}
             </Link>
-          ))}
+            )
+          })}
 
           {searched && !loading && results.length === 0 && (
             <div className="text-center py-12 bg-white dark:bg-neutral-900 border border-dashed border-slate-200 dark:border-neutral-850 rounded-2xl">
