@@ -1,0 +1,46 @@
+export type Locale = 'tr' | 'en'
+
+export const dictionary = {
+  tr: {
+    'nav.ferryGuide': 'Feribot Rehberi',
+    'nav.blog': 'Gezi Blogu',
+    'nav.budgetCalculator': 'Bütçe Hesaplayıcı',
+    'nav.tripTools': 'Seyahat Araçları',
+    'nav.map': 'Harita',
+    'nav.compare': 'Karşılaştır',
+    'nav.events': 'Etkinlikler',
+    'nav.search': 'Ara',
+    'nav.admin': 'Admin Paneli',
+    'nav.account': 'Hesabım',
+    'nav.logout': 'Çıkış Yap',
+    'nav.login': 'Giriş Yap',
+    'nav.register': 'Kayıt Ol',
+    'home.badge': 'Yunanistan Adaları Rehberi',
+    'home.title': 'Ege\'nin Masalsı Dünyasını Keşfedin',
+    'home.subtitle': 'Yunan Adaları\'nın saklı koyları, eşsiz plajları, en özel restoranları ve feribot rotalarıyla dolu en kapsamlı gezi planlayıcınız.',
+    'home.destinations': 'Popüler Destinasyonlar',
+    'footer.rights': 'Tüm hakları saklıdır.',
+  },
+  en: {
+    'nav.ferryGuide': 'Ferry Guide',
+    'nav.blog': 'Travel Blog',
+    'nav.budgetCalculator': 'Budget Calculator',
+    'nav.tripTools': 'Trip Tools',
+    'nav.map': 'Map',
+    'nav.compare': 'Compare',
+    'nav.events': 'Events',
+    'nav.search': 'Search',
+    'nav.admin': 'Admin Panel',
+    'nav.account': 'My Account',
+    'nav.logout': 'Log Out',
+    'nav.login': 'Log In',
+    'nav.register': 'Sign Up',
+    'home.badge': 'Greek Islands Travel Guide',
+    'home.title': 'Discover the Fairy-Tale World of the Aegean',
+    'home.subtitle': 'Your most comprehensive travel planner for the Greek Islands\' hidden coves, unique beaches, finest restaurants, and ferry routes.',
+    'home.destinations': 'Popular Destinations',
+    'footer.rights': 'All rights reserved.',
+  },
+} as const satisfies Record<Locale, Record<string, string>>
+
+export type TranslationKey = keyof typeof dictionary.tr

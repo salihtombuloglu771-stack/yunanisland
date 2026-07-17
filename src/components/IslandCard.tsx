@@ -1,15 +1,20 @@
+'use client'
+
 import Image from 'next/image'
 import Link from 'next/link'
 import { FavoriteButton } from '@/components/FavoriteButton'
+import { useLanguage } from '@/lib/i18n/LanguageProvider'
 
 export interface Island {
   id: string
   name: string
   slug: string
   description: string | null
+  description_en?: string | null
   budget_level: 'budget' | 'mid' | 'luxury'
   population: number | null
   best_time_to_visit: string | null
+  best_time_to_visit_en?: string | null
   cover_image_url: string | null
 }
 
@@ -24,7 +29,10 @@ const BUDGET_LABELS = {
 }
 
 export function IslandCard({ island }: IslandCardProps) {
+  const { locale } = useLanguage()
   const budget = BUDGET_LABELS[island.budget_level]
+  const description = locale === 'en' ? (island.description_en || island.description) : island.description
+  const bestTime = locale === 'en' ? (island.best_time_to_visit_en || island.best_time_to_visit) : island.best_time_to_visit
 
   return (
     <div className="group relative overflow-hidden rounded-2xl border border-neutral-100 dark:border-neutral-800 bg-white dark:bg-neutral-900 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
@@ -59,9 +67,9 @@ export function IslandCard({ island }: IslandCardProps) {
           <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${budget.color}`}>
             {budget.label}
           </span>
-          {island.best_time_to_visit && (
+          {bestTime && (
             <span className="text-xs text-neutral-500 dark:text-neutral-400">
-              📅 {island.best_time_to_visit}
+              📅 {bestTime}
             </span>
           )}
         </div>
@@ -71,19 +79,19 @@ export function IslandCard({ island }: IslandCardProps) {
         </h3>
 
         <p className="mt-2 line-clamp-2 text-sm text-neutral-600 dark:text-neutral-300">
-          {island.description || 'Bu ada hakkında henüz bir açıklama eklenmedi.'}
+          {description || (locale === 'en' ? 'No description added yet.' : 'Bu ada hakkında henüz bir açıklama eklenmedi.')}
         </p>
 
         {/* Alt Bilgi ve Link */}
         <div className="mt-5 flex items-center justify-between border-t border-neutral-100 dark:border-neutral-800 pt-4">
           <span className="text-xs text-neutral-500 dark:text-neutral-400">
-            {island.population ? `👥 Nüfus: ${island.population.toLocaleString('tr-TR')}` : ''}
+            {island.population ? `👥 ${locale === 'en' ? 'Population' : 'Nüfus'}: ${island.population.toLocaleString(locale === 'en' ? 'en-US' : 'tr-TR')}` : ''}
           </span>
           <Link
             href={`/islands/${island.slug}`}
             className="inline-flex items-center gap-1 text-sm font-semibold text-sky-600 hover:text-sky-500 dark:text-sky-400 dark:hover:text-sky-300 transition-colors"
           >
-            Detayları Gör
+            {locale === 'en' ? 'View Details' : 'Detayları Gör'}
             <span className="transition-transform duration-200 group-hover:translate-x-1">→</span>
           </Link>
         </div>

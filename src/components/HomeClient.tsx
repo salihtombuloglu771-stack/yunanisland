@@ -2,8 +2,10 @@
 
 import { useState } from 'react'
 import { IslandCard, type Island } from '@/components/IslandCard'
+import { useLanguage } from '@/lib/i18n/LanguageProvider'
 
 export function HomeClient({ islands }: { islands: Island[] }) {
+  const { t } = useLanguage()
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedBudget, setSelectedBudget] = useState<string>('all')
 
@@ -63,7 +65,7 @@ export function HomeClient({ islands }: { islands: Island[] }) {
       <div>
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-bold text-neutral-900 dark:text-white">
-            Popüler Destinasyonlar
+            {t('home.destinations')}
           </h2>
           <p className="text-sm text-neutral-500 dark:text-neutral-400">
             {filteredIslands.length} ada listeleniyor

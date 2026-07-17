@@ -4,9 +4,11 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
+import { useLanguage } from '@/lib/i18n/LanguageProvider'
 
 export function Header() {
   const router = useRouter()
+  const { locale, setLocale, t } = useLanguage()
   const [email, setEmail] = useState<string | null>(null)
   const [isAdmin, setIsAdmin] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
@@ -47,56 +49,62 @@ export function Header() {
 
         <nav className="hidden md:flex items-center gap-6">
           <Link href="/ferry-guide" className="text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
-            Feribot Rehberi
+            {t('nav.ferryGuide')}
           </Link>
           <Link href="/blog" className="text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
-            Gezi Blogu
+            {t('nav.blog')}
           </Link>
           <Link href="/budget-calculator" className="text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
-            Bütçe Hesaplayıcı
+            {t('nav.budgetCalculator')}
           </Link>
           <Link href="/trip-tools" className="text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
-            Seyahat Araçları
+            {t('nav.tripTools')}
           </Link>
           <Link href="/map" className="text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
-            Harita
+            {t('nav.map')}
           </Link>
           <Link href="/compare" className="text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
-            Karşılaştır
+            {t('nav.compare')}
           </Link>
           <Link href="/events" className="text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
-            Etkinlikler
+            {t('nav.events')}
           </Link>
           <Link href="/search" className="text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
-            Ara
+            {t('nav.search')}
           </Link>
           {isAdmin && (
             <Link href="/admin/dashboard" className="text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
-              Admin Paneli
+              {t('nav.admin')}
             </Link>
           )}
         </nav>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => setLocale(locale === 'tr' ? 'en' : 'tr')}
+            className="text-xs font-bold text-neutral-500 dark:text-neutral-400 hover:text-sky-600 dark:hover:text-sky-400 border border-slate-200 dark:border-neutral-800 rounded-lg px-2 py-1 transition-colors"
+          >
+            {locale === 'tr' ? '🇬🇧 EN' : '🇹🇷 TR'}
+          </button>
           {email ? (
             <div className="hidden sm:flex items-center gap-4">
               <Link href="/account" className="text-sm font-semibold text-neutral-700 dark:text-neutral-300 hover:text-sky-600 transition-colors">
-                Hesabım
+                {t('nav.account')}
               </Link>
               <button
                 onClick={handleLogout}
                 className="rounded-xl bg-slate-100 dark:bg-neutral-800 px-4 py-2 text-sm font-semibold text-neutral-700 dark:text-neutral-300 hover:bg-slate-200 dark:hover:bg-neutral-750 transition-colors"
               >
-                Çıkış Yap
+                {t('nav.logout')}
               </button>
             </div>
           ) : (
             <div className="hidden sm:flex items-center gap-4">
               <Link href="/login" className="text-sm font-semibold text-neutral-700 dark:text-neutral-300 hover:text-sky-600 transition-colors">
-                Giriş Yap
+                {t('nav.login')}
               </Link>
               <Link href="/register" className="rounded-xl bg-sky-600 px-4 py-2 text-sm font-semibold text-white shadow-md hover:bg-sky-500 transition-all hover:shadow-sky-500/10">
-                Kayıt Ol
+                {t('nav.register')}
               </Link>
             </div>
           )}
@@ -114,25 +122,25 @@ export function Header() {
 
       {menuOpen && (
         <div className="md:hidden border-t border-slate-100 dark:border-neutral-900 px-6 py-4 space-y-3 bg-white dark:bg-neutral-950">
-          <Link href="/ferry-guide" className="block text-sm font-medium text-neutral-600 dark:text-neutral-400">Feribot Rehberi</Link>
-          <Link href="/blog" className="block text-sm font-medium text-neutral-600 dark:text-neutral-400">Gezi Blogu</Link>
-          <Link href="/budget-calculator" className="block text-sm font-medium text-neutral-600 dark:text-neutral-400">Bütçe Hesaplayıcı</Link>
-          <Link href="/trip-tools" className="block text-sm font-medium text-neutral-600 dark:text-neutral-400">Seyahat Araçları</Link>
-          <Link href="/map" className="block text-sm font-medium text-neutral-600 dark:text-neutral-400">Harita</Link>
-          <Link href="/compare" className="block text-sm font-medium text-neutral-600 dark:text-neutral-400">Karşılaştır</Link>
-          <Link href="/events" className="block text-sm font-medium text-neutral-600 dark:text-neutral-400">Etkinlikler</Link>
-          <Link href="/search" className="block text-sm font-medium text-neutral-600 dark:text-neutral-400">Ara</Link>
-          {isAdmin && <Link href="/admin/dashboard" className="block text-sm font-medium text-neutral-600 dark:text-neutral-400">Admin Paneli</Link>}
+          <Link href="/ferry-guide" className="block text-sm font-medium text-neutral-600 dark:text-neutral-400">{t('nav.ferryGuide')}</Link>
+          <Link href="/blog" className="block text-sm font-medium text-neutral-600 dark:text-neutral-400">{t('nav.blog')}</Link>
+          <Link href="/budget-calculator" className="block text-sm font-medium text-neutral-600 dark:text-neutral-400">{t('nav.budgetCalculator')}</Link>
+          <Link href="/trip-tools" className="block text-sm font-medium text-neutral-600 dark:text-neutral-400">{t('nav.tripTools')}</Link>
+          <Link href="/map" className="block text-sm font-medium text-neutral-600 dark:text-neutral-400">{t('nav.map')}</Link>
+          <Link href="/compare" className="block text-sm font-medium text-neutral-600 dark:text-neutral-400">{t('nav.compare')}</Link>
+          <Link href="/events" className="block text-sm font-medium text-neutral-600 dark:text-neutral-400">{t('nav.events')}</Link>
+          <Link href="/search" className="block text-sm font-medium text-neutral-600 dark:text-neutral-400">{t('nav.search')}</Link>
+          {isAdmin && <Link href="/admin/dashboard" className="block text-sm font-medium text-neutral-600 dark:text-neutral-400">{t('nav.admin')}</Link>}
           <div className="pt-3 border-t border-slate-100 dark:border-neutral-900">
             {email ? (
               <div className="flex items-center gap-4">
-                <Link href="/account" className="text-sm font-semibold text-neutral-700 dark:text-neutral-300">Hesabım</Link>
-                <button onClick={handleLogout} className="text-sm font-semibold text-neutral-700 dark:text-neutral-300">Çıkış Yap</button>
+                <Link href="/account" className="text-sm font-semibold text-neutral-700 dark:text-neutral-300">{t('nav.account')}</Link>
+                <button onClick={handleLogout} className="text-sm font-semibold text-neutral-700 dark:text-neutral-300">{t('nav.logout')}</button>
               </div>
             ) : (
               <div className="flex items-center gap-4">
-                <Link href="/login" className="text-sm font-semibold text-neutral-700 dark:text-neutral-300">Giriş Yap</Link>
-                <Link href="/register" className="text-sm font-semibold text-sky-600">Kayıt Ol</Link>
+                <Link href="/login" className="text-sm font-semibold text-neutral-700 dark:text-neutral-300">{t('nav.login')}</Link>
+                <Link href="/register" className="text-sm font-semibold text-sky-600">{t('nav.register')}</Link>
               </div>
             )}
           </div>

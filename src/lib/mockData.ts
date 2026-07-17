@@ -3,11 +3,14 @@ export interface Island {
   name: string
   slug: string
   description: string | null
+  description_en?: string | null
   history: string | null
+  history_en?: string | null
   population: number | null
   latitude: number | null
   longitude: number | null
   best_time_to_visit: string | null
+  best_time_to_visit_en?: string | null
   budget_level: 'budget' | 'mid' | 'luxury'
   cover_image_url: string | null
   is_published: boolean

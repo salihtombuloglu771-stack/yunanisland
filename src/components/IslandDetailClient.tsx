@@ -11,6 +11,7 @@ import { FavoriteButton } from '@/components/FavoriteButton'
 import { ReviewSection } from '@/components/ReviewSection'
 import { Gallery, type MediaItem } from '@/components/Gallery'
 import { Breadcrumbs } from '@/components/Breadcrumbs'
+import { useLanguage } from '@/lib/i18n/LanguageProvider'
 import type { Island, Beach, Restaurant } from '@/lib/mockData'
 
 const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://yunanisland.vercel.app'
@@ -22,6 +23,11 @@ const BUDGET_LEVEL_LABELS = {
 }
 
 export function IslandDetailClient({ island, allBeaches, allRestaurants, allHotels, media }: { island: Island; allBeaches: Beach[]; allRestaurants: Restaurant[]; allHotels: Hotel[]; media: MediaItem[] }) {
+  const { locale } = useLanguage()
+  const description = locale === 'en' ? (island.description_en || island.description) : island.description
+  const history = locale === 'en' ? (island.history_en || island.history) : island.history
+  const bestTime = locale === 'en' ? (island.best_time_to_visit_en || island.best_time_to_visit) : island.best_time_to_visit
+
   const [activeTab, setActiveTab] = useState<'about' | 'beaches' | 'restaurants' | 'hotels' | 'gallery'>('about')
 
   const [beachTypeFilter, setBeachTypeFilter] = useState<'all' | 'sand' | 'pebble'>('all')
@@ -155,14 +161,14 @@ export function IslandDetailClient({ island, allBeaches, allRestaurants, allHote
             <span className={`inline-flex items-center rounded-full border px-3 py-0.5 text-xs font-semibold ${budget.color}`}>
               {budget.label}
             </span>
-            {island.best_time_to_visit && (
+            {bestTime && (
               <span className="text-xs bg-white/10 backdrop-blur-md px-3 py-1 rounded-full font-medium">
-                📅 Ziyaret Zamanı: {island.best_time_to_visit}
+                📅 {locale === 'en' ? 'Best time to visit' : 'Ziyaret Zamanı'}: {bestTime}
               </span>
             )}
             {island.population && (
               <span className="text-xs bg-white/10 backdrop-blur-md px-3 py-1 rounded-full font-medium">
-                👥 Nüfus: {island.population.toLocaleString('tr-TR')}
+                👥 {locale === 'en' ? 'Population' : 'Nüfus'}: {island.population.toLocaleString(locale === 'en' ? 'en-US' : 'tr-TR')}
               </span>
             )}
           </div>
@@ -179,11 +185,11 @@ export function IslandDetailClient({ island, allBeaches, allRestaurants, allHote
 
             <div className="flex border-b border-slate-200 dark:border-neutral-850 mb-8 overflow-x-auto">
               {[
-                { id: 'about' as const, label: '📖 Hakkında' },
-                { id: 'beaches' as const, label: `🏖️ Plajlar (${allBeaches.length})` },
-                { id: 'restaurants' as const, label: `🍽️ Restoranlar (${allRestaurants.length})` },
-                { id: 'hotels' as const, label: `🏨 Oteller (${allHotels.length})` },
-                { id: 'gallery' as const, label: `📸 Galeri (${media.length})` },
+                { id: 'about' as const, label: locale === 'en' ? '📖 About' : '📖 Hakkında' },
+                { id: 'beaches' as const, label: `🏖️ ${locale === 'en' ? 'Beaches' : 'Plajlar'} (${allBeaches.length})` },
+                { id: 'restaurants' as const, label: `🍽️ ${locale === 'en' ? 'Restaurants' : 'Restoranlar'} (${allRestaurants.length})` },
+                { id: 'hotels' as const, label: `🏨 ${locale === 'en' ? 'Hotels' : 'Oteller'} (${allHotels.length})` },
+                { id: 'gallery' as const, label: `📸 ${locale === 'en' ? 'Gallery' : 'Galeri'} (${media.length})` },
               ].map((tab) => (
                 <button
                   key={tab.id}
@@ -205,19 +211,19 @@ export function IslandDetailClient({ island, allBeaches, allRestaurants, allHote
                 <>
                   <article className="prose max-w-none dark:prose-invert">
                     <h2 className="text-2xl font-bold text-neutral-900 dark:text-white mb-4">
-                      Genel Bakış
+                      {locale === 'en' ? 'Overview' : 'Genel Bakış'}
                     </h2>
                     <p className="text-neutral-700 dark:text-neutral-300 leading-relaxed text-base">
-                      {island.description}
+                      {description}
                     </p>
 
-                    {island.history && (
+                    {history && (
                       <div className="mt-8 bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-slate-100 dark:border-neutral-900 shadow-sm">
                         <h3 className="text-lg font-bold text-neutral-900 dark:text-white flex items-center gap-2 mb-3">
-                          🏛️ Tarihçesi & Kültürü
+                          🏛️ {locale === 'en' ? 'History & Culture' : 'Tarihçesi & Kültürü'}
                         </h3>
                         <p className="text-neutral-600 dark:text-neutral-350 text-sm leading-relaxed">
-                          {island.history}
+                          {history}
                         </p>
                       </div>
                     )}
