@@ -48,6 +48,9 @@ export function Header() {
         </Link>
 
         <nav className="hidden md:flex items-center gap-6">
+          <Link href="/trip-planner" className="text-sm font-medium text-sky-600 dark:text-sky-400 hover:text-sky-700 dark:hover:text-sky-300 transition-colors">
+            🤖 AI Planlayıcı
+          </Link>
           <Link href="/ferry-guide" className="text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
             {t('nav.ferryGuide')}
           </Link>
@@ -122,6 +125,7 @@ export function Header() {
 
       {menuOpen && (
         <div className="md:hidden border-t border-slate-100 dark:border-neutral-900 px-6 py-4 space-y-3 bg-white dark:bg-neutral-950">
+          <Link href="/trip-planner" className="block text-sm font-medium text-sky-600 dark:text-sky-400">🤖 AI Planlayıcı</Link>
           <Link href="/ferry-guide" className="block text-sm font-medium text-neutral-600 dark:text-neutral-400">{t('nav.ferryGuide')}</Link>
           <Link href="/blog" className="block text-sm font-medium text-neutral-600 dark:text-neutral-400">{t('nav.blog')}</Link>
           <Link href="/budget-calculator" className="block text-sm font-medium text-neutral-600 dark:text-neutral-400">{t('nav.budgetCalculator')}</Link>

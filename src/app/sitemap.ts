@@ -22,6 +22,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${baseUrl}/compare`, changeFrequency: 'monthly', priority: 0.5 },
     { url: `${baseUrl}/events`, changeFrequency: 'weekly', priority: 0.6 },
     { url: `${baseUrl}/trip-tools`, changeFrequency: 'monthly', priority: 0.5 },
+    { url: `${baseUrl}/trip-planner`, changeFrequency: 'monthly', priority: 0.7 },
   ]
 
   const islandRoutes: MetadataRoute.Sitemap = (islands ?? []).map((i) => ({
