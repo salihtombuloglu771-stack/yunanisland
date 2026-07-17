@@ -11,8 +11,11 @@ import { FavoriteButton } from '@/components/FavoriteButton'
 import { ReviewSection } from '@/components/ReviewSection'
 import { Gallery, type MediaItem } from '@/components/Gallery'
 import { Breadcrumbs } from '@/components/Breadcrumbs'
+import { FaqAccordion, type Faq } from '@/components/FaqAccordion'
+import { SimilarIslands } from '@/components/SimilarIslands'
 import { useLanguage } from '@/lib/i18n/LanguageProvider'
 import type { Island, Beach, Restaurant } from '@/lib/mockData'
+import type { Island as IslandCardType } from '@/components/IslandCard'
 
 const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://yunanisland.vercel.app'
 
@@ -22,7 +25,7 @@ const BUDGET_LEVEL_LABELS = {
   luxury: { label: 'Lüks', color: 'bg-amber-500/10 text-amber-600 dark:text-amber-450 border-amber-500/20' },
 }
 
-export function IslandDetailClient({ island, allBeaches, allRestaurants, allHotels, media }: { island: Island; allBeaches: Beach[]; allRestaurants: Restaurant[]; allHotels: Hotel[]; media: MediaItem[] }) {
+export function IslandDetailClient({ island, allBeaches, allRestaurants, allHotels, media, similarIslands }: { island: Island & { faqs?: Faq[] }; allBeaches: Beach[]; allRestaurants: Restaurant[]; allHotels: Hotel[]; media: MediaItem[]; similarIslands: IslandCardType[] }) {
   const { locale } = useLanguage()
   const description = locale === 'en' ? (island.description_en || island.description) : island.description
   const history = locale === 'en' ? (island.history_en || island.history) : island.history
@@ -229,6 +232,7 @@ export function IslandDetailClient({ island, allBeaches, allRestaurants, allHote
                     )}
                   </article>
 
+                  <FaqAccordion faqs={island.faqs ?? []} />
                   <ReviewSection entityType="island" entityId={island.id} />
                 </>
               )}
@@ -496,6 +500,8 @@ export function IslandDetailClient({ island, allBeaches, allRestaurants, allHote
           </div>
 
         </div>
+
+        <SimilarIslands islands={similarIslands} />
       </main>
 
       <footer className="border-t border-slate-100 dark:border-neutral-900 bg-white dark:bg-neutral-950 py-8 mt-24">
