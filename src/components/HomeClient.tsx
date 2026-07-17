@@ -73,7 +73,7 @@ export function HomeClient({ islands }: { islands: Island[] }) {
         </div>
 
         {filteredIslands.length > 0 ? (
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {filteredIslands.map((island) => (
               <IslandCard key={island.id} island={island} />
             ))}

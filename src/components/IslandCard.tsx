@@ -62,34 +62,34 @@ export function IslandCard({ island }: IslandCardProps) {
       </div>
 
       {/* İçerik Alanı */}
-      <div className="p-5">
+      <div className="p-3.5">
         <div className="flex items-center justify-between gap-2">
-          <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${budget.color}`}>
+          <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-semibold ${budget.color}`}>
             {budget.label}
           </span>
           {bestTime && (
-            <span className="text-xs text-neutral-500 dark:text-neutral-400">
+            <span className="text-[11px] text-neutral-500 dark:text-neutral-400">
               📅 {bestTime}
             </span>
           )}
         </div>
 
-        <h3 className="mt-3 text-xl font-semibold text-neutral-900 dark:text-white">
+        <h3 className="mt-2 text-base font-semibold text-neutral-900 dark:text-white">
           {island.name}
         </h3>
 
-        <p className="mt-2 line-clamp-2 text-sm text-neutral-600 dark:text-neutral-300">
+        <p className="mt-1 line-clamp-2 text-xs text-neutral-600 dark:text-neutral-300">
           {description || (locale === 'en' ? 'No description added yet.' : 'Bu ada hakkında henüz bir açıklama eklenmedi.')}
         </p>
 
         {/* Alt Bilgi ve Link */}
-        <div className="mt-5 flex items-center justify-between border-t border-neutral-100 dark:border-neutral-800 pt-4">
-          <span className="text-xs text-neutral-500 dark:text-neutral-400">
-            {island.population ? `👥 ${locale === 'en' ? 'Population' : 'Nüfus'}: ${island.population.toLocaleString(locale === 'en' ? 'en-US' : 'tr-TR')}` : ''}
+        <div className="mt-3 flex items-center justify-between border-t border-neutral-100 dark:border-neutral-800 pt-2.5">
+          <span className="text-[11px] text-neutral-500 dark:text-neutral-400">
+            {island.population ? `👥 ${island.population.toLocaleString(locale === 'en' ? 'en-US' : 'tr-TR')}` : ''}
           </span>
           <Link
             href={`/islands/${island.slug}`}
-            className="inline-flex items-center gap-1 text-sm font-semibold text-sky-600 hover:text-sky-500 dark:text-sky-400 dark:hover:text-sky-300 transition-colors"
+            className="inline-flex items-center gap-1 text-xs font-semibold text-sky-600 hover:text-sky-500 dark:text-sky-400 dark:hover:text-sky-300 transition-colors"
           >
             {locale === 'en' ? 'View Details' : 'Detayları Gör'}
             <span className="transition-transform duration-200 group-hover:translate-x-1">→</span>
