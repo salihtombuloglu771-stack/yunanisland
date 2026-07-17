@@ -1,7 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import { Suspense, useEffect, useState } from 'react'
 import Link from 'next/link'
+import { useSearchParams } from 'next/navigation'
 import { Header } from '@/components/Header'
 import { createClient } from '@/lib/supabase/client'
 
@@ -21,25 +22,25 @@ const TYPE_LABELS: Record<Result['type'], string> = {
   hotel: '🏨 Otel',
 }
 
-export default function SearchPage() {
-  const [query, setQuery] = useState('')
+function SearchForm() {
+  const searchParams = useSearchParams()
+  const [query, setQuery] = useState(searchParams.get('q') ?? '')
   const [results, setResults] = useState<Result[]>([])
   const [loading, setLoading] = useState(false)
   const [searched, setSearched] = useState(false)
 
-  const handleSearch = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!query.trim()) return
+  const runSearch = async (term: string) => {
+    if (!term.trim()) return
     setLoading(true)
     setSearched(true)
 
     const supabase = createClient()
-    const term = `%${query.trim()}%`
+    const ilikeTerm = `%${term.trim()}%`
 
     const [islandsRes, beachesRes, restaurantsRes] = await Promise.all([
-      supabase.from('islands').select('id, name, slug, description').ilike('name', term).limit(10),
-      supabase.from('beaches').select('id, name, slug, description, islands(slug)').ilike('name', term).limit(10),
-      supabase.from('restaurants').select('id, name, slug, description, islands(slug)').ilike('name', term).limit(10),
+      supabase.from('islands').select('id, name, slug, description').ilike('name', ilikeTerm).limit(10),
+      supabase.from('beaches').select('id, name, slug, description, islands(slug)').ilike('name', ilikeTerm).limit(10),
+      supabase.from('restaurants').select('id, name, slug, description, islands(slug)').ilike('name', ilikeTerm).limit(10),
     ])
 
     const combined: Result[] = [
@@ -58,6 +59,17 @@ export default function SearchPage() {
     setLoading(false)
   }
 
+  useEffect(() => {
+    const initialQ = searchParams.get('q')
+    if (initialQ) runSearch(initialQ)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    runSearch(query)
+  }
+
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-neutral-950 transition-colors duration-300">
       <Header />
@@ -66,7 +78,7 @@ export default function SearchPage() {
         <h1 className="text-2xl font-bold text-neutral-900 dark:text-white">Yunanisland&apos;da Ara</h1>
         <p className="mt-2 text-sm text-neutral-500">Adalar, plajlar ve restoranlar arasında arama yap.</p>
 
-        <form onSubmit={handleSearch} className="mt-6 relative">
+        <form onSubmit={handleSubmit} className="mt-6 relative">
           <input
             type="text"
             autoFocus
@@ -110,5 +122,13 @@ export default function SearchPage() {
         </div>
       </main>
     </div>
+  )
+}
+
+export default function SearchPage() {
+  return (
+    <Suspense fallback={null}>
+      <SearchForm />
+    </Suspense>
   )
 }

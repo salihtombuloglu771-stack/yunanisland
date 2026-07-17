@@ -10,7 +10,10 @@ import { HotelCard, type Hotel } from '@/components/HotelCard'
 import { FavoriteButton } from '@/components/FavoriteButton'
 import { ReviewSection } from '@/components/ReviewSection'
 import { Gallery, type MediaItem } from '@/components/Gallery'
+import { Breadcrumbs } from '@/components/Breadcrumbs'
 import type { Island, Beach, Restaurant } from '@/lib/mockData'
+
+const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://yunanisland.vercel.app'
 
 const BUDGET_LEVEL_LABELS = {
   budget: { label: 'Bütçe Dostu', color: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-450 border-emerald-500/20' },
@@ -115,6 +118,16 @@ export function IslandDetailClient({ island, allBeaches, allRestaurants, allHote
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-neutral-950 transition-colors duration-300">
       <Header />
+
+      <div className="mx-auto max-w-7xl px-6 pt-4">
+        <Breadcrumbs
+          baseUrl={SITE_URL}
+          items={[
+            { label: 'Ana Sayfa', href: '/' },
+            { label: island.name },
+          ]}
+        />
+      </div>
 
       {/* Hero Banner */}
       <section className="relative h-[350px] md:h-[450px] w-full overflow-hidden bg-slate-900">

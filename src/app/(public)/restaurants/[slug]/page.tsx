@@ -4,7 +4,11 @@ import type { Metadata } from 'next'
 import { Header } from '@/components/Header'
 import { FavoriteButton } from '@/components/FavoriteButton'
 import { ReviewSection } from '@/components/ReviewSection'
+import { Breadcrumbs } from '@/components/Breadcrumbs'
+import { JsonLd } from '@/components/JsonLd'
 import { createClient } from '@/lib/supabase/server'
+
+const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://yunanisland.vercel.app'
 
 interface PageProps {
   params: Promise<{ slug: string }>
@@ -40,6 +44,28 @@ export default async function RestaurantDetailPage({ params }: PageProps) {
 
   const island = Array.isArray(restaurant.islands) ? restaurant.islands[0] : restaurant.islands
 
+  const { data: reviews } = await supabase.from('reviews').select('rating').eq('entity_type', 'restaurant').eq('entity_id', restaurant.id)
+  const reviewCount = reviews?.length ?? 0
+  const avgRating = reviewCount > 0 ? reviews!.reduce((s, r) => s + r.rating, 0) / reviewCount : null
+
+  const priceRangeMap: Record<string, string> = { budget: '€', mid: '€€', expensive: '€€€' }
+
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Restaurant',
+    name: restaurant.name,
+    servesCuisine: restaurant.cuisine ?? undefined,
+    priceRange: priceRangeMap[restaurant.price_level],
+    telephone: restaurant.phone ?? undefined,
+    url: `${SITE_URL}/restaurants/${restaurant.slug}`,
+    ...(restaurant.latitude && restaurant.longitude
+      ? { geo: { '@type': 'GeoCoordinates', latitude: restaurant.latitude, longitude: restaurant.longitude } }
+      : {}),
+    ...(avgRating
+      ? { aggregateRating: { '@type': 'AggregateRating', ratingValue: avgRating.toFixed(1), reviewCount } }
+      : {}),
+  }
+
   const facts: { label: string; show: boolean }[] = [
     { label: '🌊 Deniz Manzarası', show: restaurant.sea_view },
     { label: '🪑 Açık Hava Alanı', show: restaurant.outdoor_seating },
@@ -51,7 +77,19 @@ export default async function RestaurantDetailPage({ params }: PageProps) {
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-neutral-950 transition-colors duration-300">
+      <JsonLd data={jsonLd} />
       <Header />
+
+      <div className="mx-auto max-w-4xl px-6 pt-4">
+        <Breadcrumbs
+          baseUrl={SITE_URL}
+          items={[
+            { label: 'Ana Sayfa', href: '/' },
+            ...(island ? [{ label: island.name, href: `/islands/${island.slug}` }] : []),
+            { label: restaurant.name },
+          ]}
+        />
+      </div>
 
       <section className="relative h-[300px] w-full overflow-hidden bg-slate-900">
         {restaurant.cover_image_url ? (

@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { JsonLd } from "@/components/JsonLd";
 import "./globals.css";
+
+const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || "https://yunanisland.vercel.app";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,7 +36,22 @@ export default function RootLayout({
       lang="tr"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <JsonLd
+          data={{
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            name: "Yunanisland",
+            url: SITE_URL,
+            potentialAction: {
+              "@type": "SearchAction",
+              target: `${SITE_URL}/search?q={search_term_string}`,
+              "query-input": "required name=search_term_string",
+            },
+          }}
+        />
+        {children}
+      </body>
     </html>
   );
 }

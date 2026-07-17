@@ -2,7 +2,10 @@ import Link from 'next/link'
 import type { Metadata } from 'next'
 import { Header } from '@/components/Header'
 import { IslandDetailClient } from '@/components/IslandDetailClient'
+import { JsonLd } from '@/components/JsonLd'
 import { createClient } from '@/lib/supabase/server'
+
+const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://yunanisland.vercel.app'
 
 interface PageProps {
   params: Promise<{ slug: string }>
@@ -54,20 +57,42 @@ export default async function IslandPage({ params }: PageProps) {
     )
   }
 
-  const [{ data: allBeaches }, { data: allRestaurants }, { data: allHotels }, { data: media }] = await Promise.all([
+  const [{ data: allBeaches }, { data: allRestaurants }, { data: allHotels }, { data: media }, { data: reviews }] = await Promise.all([
     supabase.from('beaches').select('*').eq('island_id', island.id),
     supabase.from('restaurants').select('*').eq('island_id', island.id),
     supabase.from('hotels').select('*').eq('island_id', island.id),
     supabase.from('media').select('id, url, media_type').eq('entity_type', 'island').eq('entity_id', island.id),
+    supabase.from('reviews').select('rating').eq('entity_type', 'island').eq('entity_id', island.id),
   ])
 
+  const reviewCount = reviews?.length ?? 0
+  const avgRating = reviewCount > 0 ? reviews!.reduce((s, r) => s + r.rating, 0) / reviewCount : null
+
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'TouristAttraction',
+    name: island.name,
+    description: island.description ?? undefined,
+    image: island.cover_image_url ? `${SITE_URL}${island.cover_image_url}` : undefined,
+    url: `${SITE_URL}/islands/${island.slug}`,
+    ...(island.latitude && island.longitude
+      ? { geo: { '@type': 'GeoCoordinates', latitude: island.latitude, longitude: island.longitude } }
+      : {}),
+    ...(avgRating
+      ? { aggregateRating: { '@type': 'AggregateRating', ratingValue: avgRating.toFixed(1), reviewCount } }
+      : {}),
+  }
+
   return (
-    <IslandDetailClient
-      island={island}
-      allBeaches={allBeaches ?? []}
-      allRestaurants={allRestaurants ?? []}
-      allHotels={allHotels ?? []}
-      media={media ?? []}
-    />
+    <>
+      <JsonLd data={jsonLd} />
+      <IslandDetailClient
+        island={island}
+        allBeaches={allBeaches ?? []}
+        allRestaurants={allRestaurants ?? []}
+        allHotels={allHotels ?? []}
+        media={media ?? []}
+      />
+    </>
   )
 }

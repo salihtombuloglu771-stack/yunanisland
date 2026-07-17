@@ -1,7 +1,11 @@
 import Link from 'next/link'
 import type { Metadata } from 'next'
 import { Header } from '@/components/Header'
+import { Breadcrumbs } from '@/components/Breadcrumbs'
+import { JsonLd } from '@/components/JsonLd'
 import { createClient } from '@/lib/supabase/server'
+
+const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://yunanisland.vercel.app'
 
 interface PageProps {
   params: Promise<{ slug: string }>
@@ -33,12 +37,32 @@ export default async function ArticlePage({ params }: PageProps) {
 
   const category = article && (Array.isArray(article.categories) ? article.categories[0] : article.categories)
 
+  const jsonLd = article ? {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: article.title,
+    articleSection: category?.name ?? undefined,
+    datePublished: article.published_at ?? undefined,
+    url: `${SITE_URL}/blog/${slug}`,
+    publisher: { '@type': 'Organization', name: 'Yunanisland' },
+  } : null
+
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-neutral-950 transition-colors duration-300">
+      {jsonLd && <JsonLd data={jsonLd} />}
       <Header />
 
       <main className="mx-auto max-w-3xl px-6 py-16">
         {article ? (
+          <>
+          <Breadcrumbs
+            baseUrl={SITE_URL}
+            items={[
+              { label: 'Ana Sayfa', href: '/' },
+              { label: 'Blog', href: '/blog' },
+              { label: article.title },
+            ]}
+          />
           <article className="prose max-w-none dark:prose-invert">
             {category && (
               <span className="inline-flex items-center rounded-full bg-sky-500/10 text-sky-600 dark:text-sky-400 px-2.5 py-0.5 text-xs font-semibold mb-4 not-prose">
@@ -55,6 +79,7 @@ export default async function ArticlePage({ params }: PageProps) {
               {article.content}
             </p>
           </article>
+          </>
         ) : (
           <div className="text-center py-16">
             <span className="text-5xl">📝❌</span>

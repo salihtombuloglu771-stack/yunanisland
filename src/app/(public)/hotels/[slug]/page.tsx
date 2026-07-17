@@ -4,7 +4,11 @@ import type { Metadata } from 'next'
 import { Header } from '@/components/Header'
 import { FavoriteButton } from '@/components/FavoriteButton'
 import { ReviewSection } from '@/components/ReviewSection'
+import { Breadcrumbs } from '@/components/Breadcrumbs'
+import { JsonLd } from '@/components/JsonLd'
 import { createClient } from '@/lib/supabase/server'
+
+const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://yunanisland.vercel.app'
 
 interface PageProps {
   params: Promise<{ slug: string }>
@@ -40,9 +44,39 @@ export default async function HotelDetailPage({ params }: PageProps) {
 
   const island = Array.isArray(hotel.islands) ? hotel.islands[0] : hotel.islands
 
+  const { data: reviews } = await supabase.from('reviews').select('rating').eq('entity_type', 'hotel').eq('entity_id', hotel.id)
+  const reviewCount = reviews?.length ?? 0
+  const avgRating = reviewCount > 0 ? reviews!.reduce((s, r) => s + r.rating, 0) / reviewCount : null
+
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'LodgingBusiness',
+    name: hotel.name,
+    description: hotel.description ?? undefined,
+    url: `${SITE_URL}/hotels/${hotel.slug}`,
+    ...(hotel.latitude && hotel.longitude
+      ? { geo: { '@type': 'GeoCoordinates', latitude: hotel.latitude, longitude: hotel.longitude } }
+      : {}),
+    ...(avgRating
+      ? { aggregateRating: { '@type': 'AggregateRating', ratingValue: avgRating.toFixed(1), reviewCount } }
+      : {}),
+  }
+
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-neutral-950 transition-colors duration-300">
+      <JsonLd data={jsonLd} />
       <Header />
+
+      <div className="mx-auto max-w-4xl px-6 pt-4">
+        <Breadcrumbs
+          baseUrl={SITE_URL}
+          items={[
+            { label: 'Ana Sayfa', href: '/' },
+            ...(island ? [{ label: island.name, href: `/islands/${island.slug}` }] : []),
+            { label: hotel.name },
+          ]}
+        />
+      </div>
 
       <section className="relative h-[300px] w-full overflow-hidden bg-slate-900">
         {hotel.cover_image_url ? (
