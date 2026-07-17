@@ -29,7 +29,7 @@ export default async function AdminFerryRoutesPage() {
           </thead>
           <tbody>
             {(routes ?? []).map((r) => (
-              <tr key={r.id} className="border-t border-slate-100 dark:border-neutral-850">
+              <tr key={r.id} className="border-t border-slate-100 dark:border-neutral-800">
                 <td className="px-5 py-3 font-medium text-neutral-800 dark:text-neutral-200">{r.from_port} → {r.to_port}</td>
                 <td className="px-5 py-3 text-neutral-500">{r.duration_minutes} dk</td>
                 <td className="px-5 py-3 text-neutral-500">{r.price_min}-{r.price_max} €</td>

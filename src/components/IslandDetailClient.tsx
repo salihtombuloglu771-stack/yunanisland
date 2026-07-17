@@ -20,9 +20,9 @@ import type { Island as IslandCardType } from '@/components/IslandCard'
 const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://yunanisland.vercel.app'
 
 const BUDGET_LEVEL_LABELS = {
-  budget: { label: 'Bütçe Dostu', color: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-450 border-emerald-500/20' },
-  mid: { label: 'Orta Segment', color: 'bg-blue-500/10 text-blue-600 dark:text-blue-450 border-blue-500/20' },
-  luxury: { label: 'Lüks', color: 'bg-amber-500/10 text-amber-600 dark:text-amber-450 border-amber-500/20' },
+  budget: { label: 'Bütçe Dostu', color: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20' },
+  mid: { label: 'Orta Segment', color: 'bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20' },
+  luxury: { label: 'Lüks', color: 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20' },
 }
 
 export function IslandDetailClient({ island, allBeaches, allRestaurants, allHotels, media, similarIslands }: { island: Island & { faqs?: Faq[] }; allBeaches: Beach[]; allRestaurants: Restaurant[]; allHotels: Hotel[]; media: MediaItem[]; similarIslands: IslandCardType[] }) {
@@ -196,7 +196,7 @@ export function IslandDetailClient({ island, allBeaches, allRestaurants, allHote
 
           <div className="lg:col-span-2">
 
-            <div className="flex border-b border-slate-200 dark:border-neutral-850 mb-8 overflow-x-auto">
+            <div className="flex border-b border-slate-200 dark:border-neutral-800 mb-8 overflow-x-auto">
               {[
                 { id: 'about' as const, label: locale === 'en' ? '📖 About' : locale === 'el' ? '📖 Σχετικά' : '📖 Hakkında' },
                 { id: 'beaches' as const, label: `🏖️ ${locale === 'en' ? 'Beaches' : locale === 'el' ? 'Παραλίες' : 'Plajlar'} (${allBeaches.length})` },
@@ -235,7 +235,7 @@ export function IslandDetailClient({ island, allBeaches, allRestaurants, allHote
                         <h3 className="text-lg font-bold text-neutral-900 dark:text-white flex items-center gap-2 mb-3">
                           🏛️ {locale === 'en' ? 'History & Culture' : locale === 'el' ? 'Ιστορία & Πολιτισμός' : 'Tarihçesi & Kültürü'}
                         </h3>
-                        <p className="text-neutral-600 dark:text-neutral-350 text-sm leading-relaxed">
+                        <p className="text-neutral-600 dark:text-neutral-400 text-sm leading-relaxed">
                           {history}
                         </p>
                       </div>
@@ -275,8 +275,8 @@ export function IslandDetailClient({ island, allBeaches, allRestaurants, allHote
                       ))}
                     </div>
 
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 border-t border-slate-100 dark:border-neutral-850 pt-4">
-                      <label className="flex items-center gap-2 text-xs text-neutral-600 dark:text-neutral-450 cursor-pointer">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 border-t border-slate-100 dark:border-neutral-800 pt-4">
+                      <label className="flex items-center gap-2 text-xs text-neutral-600 dark:text-neutral-400 cursor-pointer">
                         <input
                           type="checkbox"
                           checked={beachFamilyFilter}
@@ -285,7 +285,7 @@ export function IslandDetailClient({ island, allBeaches, allRestaurants, allHote
                         />
                         👨‍👩‍👧 Aile Dostu
                       </label>
-                      <label className="flex items-center gap-2 text-xs text-neutral-600 dark:text-neutral-450 cursor-pointer">
+                      <label className="flex items-center gap-2 text-xs text-neutral-600 dark:text-neutral-400 cursor-pointer">
                         <input
                           type="checkbox"
                           checked={beachBlueFlagFilter}
@@ -294,7 +294,7 @@ export function IslandDetailClient({ island, allBeaches, allRestaurants, allHote
                         />
                         💙 Mavi Bayrak
                       </label>
-                      <label className="flex items-center gap-2 text-xs text-neutral-600 dark:text-neutral-450 cursor-pointer">
+                      <label className="flex items-center gap-2 text-xs text-neutral-600 dark:text-neutral-400 cursor-pointer">
                         <input
                           type="checkbox"
                           checked={beachParkingFilter}
@@ -303,7 +303,7 @@ export function IslandDetailClient({ island, allBeaches, allRestaurants, allHote
                         />
                         🚗 Otopark
                       </label>
-                      <label className="flex items-center gap-2 text-xs text-neutral-600 dark:text-neutral-450 cursor-pointer">
+                      <label className="flex items-center gap-2 text-xs text-neutral-600 dark:text-neutral-400 cursor-pointer">
                         <input
                           type="checkbox"
                           checked={beachShowerFilter}
@@ -362,8 +362,8 @@ export function IslandDetailClient({ island, allBeaches, allRestaurants, allHote
                       ))}
                     </div>
 
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-3 border-t border-slate-100 dark:border-neutral-850 pt-4">
-                      <label className="flex items-center gap-2 text-xs text-neutral-600 dark:text-neutral-450 cursor-pointer">
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-3 border-t border-slate-100 dark:border-neutral-800 pt-4">
+                      <label className="flex items-center gap-2 text-xs text-neutral-600 dark:text-neutral-400 cursor-pointer">
                         <input
                           type="checkbox"
                           checked={restSeaViewFilter}
@@ -372,7 +372,7 @@ export function IslandDetailClient({ island, allBeaches, allRestaurants, allHote
                         />
                         🌊 Deniz Manzaralı
                       </label>
-                      <label className="flex items-center gap-2 text-xs text-neutral-600 dark:text-neutral-450 cursor-pointer">
+                      <label className="flex items-center gap-2 text-xs text-neutral-600 dark:text-neutral-400 cursor-pointer">
                         <input
                           type="checkbox"
                           checked={restVeganFilter}
@@ -381,7 +381,7 @@ export function IslandDetailClient({ island, allBeaches, allRestaurants, allHote
                         />
                         🌱 Vegan Seçenekli
                       </label>
-                      <label className="flex items-center gap-2 text-xs text-neutral-600 dark:text-neutral-450 cursor-pointer">
+                      <label className="flex items-center gap-2 text-xs text-neutral-600 dark:text-neutral-400 cursor-pointer">
                         <input
                           type="checkbox"
                           checked={restOutdoorFilter}
@@ -456,7 +456,7 @@ export function IslandDetailClient({ island, allBeaches, allRestaurants, allHote
                 href={`https://www.google.com/maps/search/?api=1&query=${island.latitude},${island.longitude}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-4 block text-center rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-neutral-800 dark:hover:bg-neutral-750 py-2.5 text-xs font-bold text-neutral-800 dark:text-neutral-250 transition-colors"
+                className="mt-4 block text-center rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 py-2.5 text-xs font-bold text-neutral-800 dark:text-neutral-200 transition-colors"
               >
                 Haritada Göster ↗
               </a>
@@ -478,13 +478,13 @@ export function IslandDetailClient({ island, allBeaches, allRestaurants, allHote
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-3xl font-extrabold text-neutral-900 dark:text-white">{weather.temp}°C</p>
-                      <p className="text-xs text-emerald-600 dark:text-emerald-450 font-semibold mt-1">
+                      <p className="text-xs text-emerald-600 dark:text-emerald-400 font-semibold mt-1">
                         {weather.icon} {weather.description}
                       </p>
                     </div>
                     <span className="text-5xl">{weather.icon}</span>
                   </div>
-                  <div className="grid grid-cols-2 gap-2 mt-4 border-t border-slate-150 dark:border-neutral-850 pt-4 text-xs text-neutral-500 dark:text-neutral-450">
+                  <div className="grid grid-cols-2 gap-2 mt-4 border-t border-slate-200 dark:border-neutral-800 pt-4 text-xs text-neutral-500 dark:text-neutral-400">
                     <div>🌬️ Rüzgar: {weather.windSpeed} km/sa</div>
                     <div>💧 Nem: %{weather.humidity}</div>
                   </div>
@@ -496,7 +496,7 @@ export function IslandDetailClient({ island, allBeaches, allRestaurants, allHote
               <h3 className="text-sm font-bold text-neutral-400 dark:text-neutral-500 uppercase tracking-wider mb-3">
                 Ulaşım Tüyoları
               </h3>
-              <p className="text-xs text-neutral-600 dark:text-neutral-450 leading-relaxed">
+              <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
                 Kos&apos;a Atina limanlarından feribotla gelinebildiği gibi, Türkiye kıyılarına (özellikle Bodrum&apos;a) sadece 20 dakikalık katamaran seferleri de bulunur.
               </p>
               <Link

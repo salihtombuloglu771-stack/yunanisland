@@ -31,7 +31,7 @@ export default async function AdminBeachesPage() {
             {(beaches ?? []).map((beach) => {
               const island = Array.isArray(beach.islands) ? beach.islands[0] : beach.islands
               return (
-                <tr key={beach.id} className="border-t border-slate-100 dark:border-neutral-850">
+                <tr key={beach.id} className="border-t border-slate-100 dark:border-neutral-800">
                   <td className="px-5 py-3 font-medium text-neutral-800 dark:text-neutral-200">
                     {beach.name} {beach.blue_flag && '💙'}
                   </td>

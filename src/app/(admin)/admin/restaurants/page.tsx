@@ -32,7 +32,7 @@ export default async function AdminRestaurantsPage() {
             {(restaurants ?? []).map((r) => {
               const island = Array.isArray(r.islands) ? r.islands[0] : r.islands
               return (
-                <tr key={r.id} className="border-t border-slate-100 dark:border-neutral-850">
+                <tr key={r.id} className="border-t border-slate-100 dark:border-neutral-800">
                   <td className="px-5 py-3 font-medium text-neutral-800 dark:text-neutral-200">{r.name}</td>
                   <td className="px-5 py-3 text-neutral-500">{island?.name}</td>
                   <td className="px-5 py-3 text-neutral-500">{r.cuisine}</td>

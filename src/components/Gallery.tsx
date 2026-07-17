@@ -34,7 +34,7 @@ export function Gallery({ items }: { items: MediaItem[] }) {
             href={item.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex aspect-square items-center justify-center rounded-xl bg-slate-100 dark:bg-neutral-800 text-center text-xs font-semibold text-neutral-600 dark:text-neutral-300 p-3 hover:bg-slate-200 dark:hover:bg-neutral-750 transition-colors"
+            className="flex aspect-square items-center justify-center rounded-xl bg-slate-100 dark:bg-neutral-800 text-center text-xs font-semibold text-neutral-600 dark:text-neutral-300 p-3 hover:bg-slate-200 dark:hover:bg-neutral-700 transition-colors"
           >
             {TYPE_LABELS[item.media_type]} — İzle ↗
           </a>

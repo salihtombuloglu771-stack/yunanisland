@@ -102,7 +102,7 @@ export function TripPlannerClient({ islands }: { islands: IslandOption[] }) {
 
       <div>
         {!plan && !loading && (
-          <div className="py-16 text-center bg-white dark:bg-neutral-900 border border-dashed border-slate-200 dark:border-neutral-850 rounded-2xl">
+          <div className="py-16 text-center bg-white dark:bg-neutral-900 border border-dashed border-slate-200 dark:border-neutral-800 rounded-2xl">
             <span className="text-4xl">🤖🏝️</span>
             <p className="mt-4 text-sm text-neutral-500">Tercihlerini seç, yapay zeka sana özel bir gezi planı hazırlasın.</p>
           </div>

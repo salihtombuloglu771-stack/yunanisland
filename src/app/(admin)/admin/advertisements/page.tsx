@@ -29,7 +29,7 @@ export default async function AdminAdvertisementsPage() {
           </thead>
           <tbody>
             {(ads ?? []).map((ad) => (
-              <tr key={ad.id} className="border-t border-slate-100 dark:border-neutral-850">
+              <tr key={ad.id} className="border-t border-slate-100 dark:border-neutral-800">
                 <td className="px-5 py-3 font-medium text-neutral-800 dark:text-neutral-200">{ad.title}</td>
                 <td className="px-5 py-3 text-neutral-500">{ad.placement}</td>
                 <td className="px-5 py-3">

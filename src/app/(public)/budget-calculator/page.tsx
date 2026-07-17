@@ -155,19 +155,19 @@ export default function BudgetCalculatorPage() {
         <div className="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-slate-100 dark:border-neutral-900 shadow-sm h-fit">
           <h2 className="text-lg font-bold text-neutral-900 dark:text-white mb-6">Tahmini Bütçe</h2>
           <div className="space-y-3 text-sm">
-            <div className="flex justify-between border-b border-slate-100 dark:border-neutral-850 pb-3">
+            <div className="flex justify-between border-b border-slate-100 dark:border-neutral-800 pb-3">
               <span className="text-neutral-500">🏨 Konaklama</span>
               <span className="font-semibold text-neutral-800 dark:text-neutral-200">{result.accommodation} €</span>
             </div>
-            <div className="flex justify-between border-b border-slate-100 dark:border-neutral-850 pb-3">
+            <div className="flex justify-between border-b border-slate-100 dark:border-neutral-800 pb-3">
               <span className="text-neutral-500">🚗 Ulaşım</span>
               <span className="font-semibold text-neutral-800 dark:text-neutral-200">{result.transport} €</span>
             </div>
-            <div className="flex justify-between border-b border-slate-100 dark:border-neutral-850 pb-3">
+            <div className="flex justify-between border-b border-slate-100 dark:border-neutral-800 pb-3">
               <span className="text-neutral-500">🍽️ Yeme-İçme</span>
               <span className="font-semibold text-neutral-800 dark:text-neutral-200">{result.food} €</span>
             </div>
-            <div className="flex justify-between border-b border-slate-100 dark:border-neutral-850 pb-3">
+            <div className="flex justify-between border-b border-slate-100 dark:border-neutral-800 pb-3">
               <span className="text-neutral-500">🎟️ Aktiviteler</span>
               <span className="font-semibold text-neutral-800 dark:text-neutral-200">{result.activities} €</span>
             </div>

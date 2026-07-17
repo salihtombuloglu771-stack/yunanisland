@@ -4,6 +4,8 @@ import { Header } from '@/components/Header'
 import { Breadcrumbs } from '@/components/Breadcrumbs'
 import { JsonLd } from '@/components/JsonLd'
 import { createClient } from '@/lib/supabase/server'
+import { stripMarkdown } from '@/lib/markdown'
+import { MarkdownContent } from '@/components/MarkdownContent'
 
 const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://yunanisland.vercel.app'
 
@@ -20,7 +22,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   return {
     title: `${article.title} — Yunanisland Blog`,
-    description: article.content?.slice(0, 160) ?? undefined,
+    description: article.content ? stripMarkdown(article.content).slice(0, 160) : undefined,
   }
 }
 
@@ -75,9 +77,12 @@ export default async function ArticlePage({ params }: PageProps) {
                 {new Date(article.published_at).toLocaleDateString('tr-TR')}
               </p>
             )}
-            <p className="text-neutral-700 dark:text-neutral-300 leading-relaxed whitespace-pre-line">
-              {article.content}
-            </p>
+            {article.content && (
+              <MarkdownContent
+                content={article.content}
+                className="text-neutral-700 dark:text-neutral-300 leading-relaxed"
+              />
+            )}
           </article>
           </>
         ) : (

@@ -31,7 +31,7 @@ export default async function AdminArticlesPage() {
             {(articles ?? []).map((a) => {
               const category = Array.isArray(a.categories) ? a.categories[0] : a.categories
               return (
-                <tr key={a.id} className="border-t border-slate-100 dark:border-neutral-850">
+                <tr key={a.id} className="border-t border-slate-100 dark:border-neutral-800">
                   <td className="px-5 py-3 font-medium text-neutral-800 dark:text-neutral-200">{a.title}</td>
                   <td className="px-5 py-3 text-neutral-500">{category?.name}</td>
                   <td className="px-5 py-3">

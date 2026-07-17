@@ -29,7 +29,7 @@ export default async function AdminIslandsPage() {
           </thead>
           <tbody>
             {(islands ?? []).map((island) => (
-              <tr key={island.id} className="border-t border-slate-100 dark:border-neutral-850">
+              <tr key={island.id} className="border-t border-slate-100 dark:border-neutral-800">
                 <td className="px-5 py-3 font-medium text-neutral-800 dark:text-neutral-200">{island.name}</td>
                 <td className="px-5 py-3 text-neutral-500">{island.budget_level}</td>
                 <td className="px-5 py-3">

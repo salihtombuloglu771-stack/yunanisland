@@ -28,7 +28,7 @@ export default async function AdminUsersPage() {
           </thead>
           <tbody>
             {(users ?? []).map((u) => (
-              <tr key={u.id} className="border-t border-slate-100 dark:border-neutral-850">
+              <tr key={u.id} className="border-t border-slate-100 dark:border-neutral-800">
                 <td className="px-5 py-3 font-medium text-neutral-800 dark:text-neutral-200">
                   {u.full_name || '—'} {u.id === currentUser?.id && <span className="text-xs text-sky-600">(sen)</span>}
                 </td>

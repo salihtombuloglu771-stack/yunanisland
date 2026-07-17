@@ -60,53 +60,53 @@ export function BeachCard({ beach }: BeachCardProps) {
           <h3 className="text-lg font-bold text-neutral-900 dark:text-white group-hover:text-sky-600 dark:group-hover:text-sky-400 transition-colors">
             {beach.name}
           </h3>
-          <span className="text-xs bg-slate-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-350 px-2 py-1 rounded-md font-medium">
+          <span className="text-xs bg-slate-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 px-2 py-1 rounded-md font-medium">
             {BEACH_TYPE_LABELS[beach.beach_type] || beach.beach_type}
           </span>
         </div>
 
         <RatingBadge avgRating={beach.avgRating} reviewCount={beach.reviewCount} />
 
-        <p className="mt-2 text-sm text-neutral-600 dark:text-neutral-450 line-clamp-2">
+        <p className="mt-2 text-sm text-neutral-600 dark:text-neutral-400 line-clamp-2">
           {beach.description || 'Bu plaj hakkında henüz bir açıklama eklenmedi.'}
         </p>
 
         {/* Detaylar ve Tesisler */}
-        <div className="mt-4 border-t border-neutral-100 dark:border-neutral-850 pt-4">
+        <div className="mt-4 border-t border-neutral-100 dark:border-neutral-800 pt-4">
           <p className="text-xs font-bold text-neutral-400 dark:text-neutral-500 uppercase tracking-wider mb-2">Tesisler & Özellikler</p>
           <div className="flex flex-wrap gap-1.5">
             {beach.has_parking && (
-              <span className="inline-flex items-center text-xs bg-slate-50 dark:bg-neutral-950 text-neutral-700 dark:text-neutral-300 border border-slate-150 dark:border-neutral-800 rounded-lg px-2 py-0.5">
+              <span className="inline-flex items-center text-xs bg-slate-50 dark:bg-neutral-950 text-neutral-700 dark:text-neutral-300 border border-slate-200 dark:border-neutral-800 rounded-lg px-2 py-0.5">
                 🚗 Otopark
               </span>
             )}
             {beach.has_showers && (
-              <span className="inline-flex items-center text-xs bg-slate-50 dark:bg-neutral-950 text-neutral-700 dark:text-neutral-300 border border-slate-150 dark:border-neutral-800 rounded-lg px-2 py-0.5">
+              <span className="inline-flex items-center text-xs bg-slate-50 dark:bg-neutral-950 text-neutral-700 dark:text-neutral-300 border border-slate-200 dark:border-neutral-800 rounded-lg px-2 py-0.5">
                 🚿 Duş
               </span>
             )}
             {beach.has_toilets && (
-              <span className="inline-flex items-center text-xs bg-slate-50 dark:bg-neutral-950 text-neutral-700 dark:text-neutral-300 border border-slate-150 dark:border-neutral-800 rounded-lg px-2 py-0.5">
+              <span className="inline-flex items-center text-xs bg-slate-50 dark:bg-neutral-950 text-neutral-700 dark:text-neutral-300 border border-slate-200 dark:border-neutral-800 rounded-lg px-2 py-0.5">
                 🚽 Tuvalet
               </span>
             )}
             {beach.has_beach_bar && (
-              <span className="inline-flex items-center text-xs bg-slate-50 dark:bg-neutral-950 text-neutral-700 dark:text-neutral-300 border border-slate-150 dark:border-neutral-800 rounded-lg px-2 py-0.5">
+              <span className="inline-flex items-center text-xs bg-slate-50 dark:bg-neutral-950 text-neutral-700 dark:text-neutral-300 border border-slate-200 dark:border-neutral-800 rounded-lg px-2 py-0.5">
                 🍹 Plaj Bar
               </span>
             )}
             {beach.has_lifeguard && (
-              <span className="inline-flex items-center text-xs bg-slate-50 dark:bg-neutral-950 text-neutral-700 dark:text-neutral-300 border border-slate-150 dark:border-neutral-800 rounded-lg px-2 py-0.5">
+              <span className="inline-flex items-center text-xs bg-slate-50 dark:bg-neutral-950 text-neutral-700 dark:text-neutral-300 border border-slate-200 dark:border-neutral-800 rounded-lg px-2 py-0.5">
                 🛟 Cankurtaran
               </span>
             )}
             {beach.family_friendly && (
-              <span className="inline-flex items-center text-xs bg-emerald-500/10 text-emerald-600 dark:text-emerald-450 rounded-lg px-2 py-0.5 font-medium">
+              <span className="inline-flex items-center text-xs bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-lg px-2 py-0.5 font-medium">
                 👨‍👩‍👧 Aile Dostu
               </span>
             )}
             {beach.pet_friendly && (
-              <span className="inline-flex items-center text-xs bg-indigo-500/10 text-indigo-600 dark:text-indigo-450 rounded-lg px-2 py-0.5 font-medium">
+              <span className="inline-flex items-center text-xs bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 rounded-lg px-2 py-0.5 font-medium">
                 🐾 Evcil Hayvan
               </span>
             )}
@@ -114,7 +114,7 @@ export function BeachCard({ beach }: BeachCardProps) {
         </div>
 
         {/* Fiyatlar & Ulaşım Bilgisi */}
-        <div className="mt-4 flex items-center justify-between border-t border-neutral-100 dark:border-neutral-850 pt-3 text-xs text-neutral-500 dark:text-neutral-400">
+        <div className="mt-4 flex items-center justify-between border-t border-neutral-100 dark:border-neutral-800 pt-3 text-xs text-neutral-500 dark:text-neutral-400">
           <span>
             {beach.sunbed_price ? (
               <span className="font-semibold text-neutral-700 dark:text-neutral-300">

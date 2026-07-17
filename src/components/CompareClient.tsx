@@ -54,7 +54,7 @@ function IslandColumn({ island, onChange, options, otherSlug }: { island: Island
       <select
         value={island?.slug ?? ''}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full border-b border-slate-100 dark:border-neutral-850 bg-slate-50 dark:bg-neutral-950 py-3 px-4 text-sm font-semibold outline-none"
+        className="w-full border-b border-slate-100 dark:border-neutral-800 bg-slate-50 dark:bg-neutral-950 py-3 px-4 text-sm font-semibold outline-none"
       >
         <option value="" disabled>Bir ada seç...</option>
         {options.map((o) => (
@@ -68,31 +68,31 @@ function IslandColumn({ island, onChange, options, otherSlug }: { island: Island
           <p className="mt-2 text-sm text-neutral-600 dark:text-neutral-400 line-clamp-3">{island.description}</p>
 
           <dl className="mt-5 space-y-3 text-sm">
-            <div className="flex justify-between border-t border-slate-100 dark:border-neutral-850 pt-3">
+            <div className="flex justify-between border-t border-slate-100 dark:border-neutral-800 pt-3">
               <dt className="text-neutral-500">Bütçe Seviyesi</dt>
               <dd className="font-semibold text-neutral-800 dark:text-neutral-200">{BUDGET_LABELS[island.budget_level]}</dd>
             </div>
-            <div className="flex justify-between border-t border-slate-100 dark:border-neutral-850 pt-3">
+            <div className="flex justify-between border-t border-slate-100 dark:border-neutral-800 pt-3">
               <dt className="text-neutral-500">En İyi Zaman</dt>
               <dd className="font-semibold text-neutral-800 dark:text-neutral-200">{island.best_time_to_visit ?? '—'}</dd>
             </div>
-            <div className="flex justify-between border-t border-slate-100 dark:border-neutral-850 pt-3">
+            <div className="flex justify-between border-t border-slate-100 dark:border-neutral-800 pt-3">
               <dt className="text-neutral-500">Nüfus</dt>
               <dd className="font-semibold text-neutral-800 dark:text-neutral-200">{island.population?.toLocaleString('tr-TR') ?? '—'}</dd>
             </div>
-            <div className="flex justify-between border-t border-slate-100 dark:border-neutral-850 pt-3">
+            <div className="flex justify-between border-t border-slate-100 dark:border-neutral-800 pt-3">
               <dt className="text-neutral-500">🏖️ Plaj Sayısı</dt>
               <dd className="font-semibold text-neutral-800 dark:text-neutral-200">{island.beachCount}</dd>
             </div>
-            <div className="flex justify-between border-t border-slate-100 dark:border-neutral-850 pt-3">
+            <div className="flex justify-between border-t border-slate-100 dark:border-neutral-800 pt-3">
               <dt className="text-neutral-500">🍽️ Restoran Sayısı</dt>
               <dd className="font-semibold text-neutral-800 dark:text-neutral-200">{island.restaurantCount}</dd>
             </div>
-            <div className="flex justify-between border-t border-slate-100 dark:border-neutral-850 pt-3">
+            <div className="flex justify-between border-t border-slate-100 dark:border-neutral-800 pt-3">
               <dt className="text-neutral-500">🏨 Otel Sayısı</dt>
               <dd className="font-semibold text-neutral-800 dark:text-neutral-200">{island.hotelCount}</dd>
             </div>
-            <div className="flex justify-between border-t border-slate-100 dark:border-neutral-850 pt-3">
+            <div className="flex justify-between border-t border-slate-100 dark:border-neutral-800 pt-3">
               <dt className="text-neutral-500">⭐ Ortalama Puan</dt>
               <dd className="font-semibold text-amber-500">{island.avgRating ? `${island.avgRating.toFixed(1)} (${island.reviewCount})` : 'Henüz yorum yok'}</dd>
             </div>

@@ -223,7 +223,7 @@ export function BeachForm({ islands, initial }: { islands: IslandOption[]; initi
           className="w-full rounded-xl border border-slate-200 dark:border-neutral-800 bg-slate-50 dark:bg-neutral-950 py-2.5 px-4 text-sm outline-none focus:border-sky-500" />
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 border-t border-slate-100 dark:border-neutral-850 pt-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 border-t border-slate-100 dark:border-neutral-800 pt-4">
         {checkboxes.map(({ key, label }) => (
           <label key={key} className="flex items-center gap-2 text-sm text-neutral-600 dark:text-neutral-400 cursor-pointer">
             <input type="checkbox" checked={values[key] as boolean} onChange={(e) => set(key, e.target.checked as BeachFormValues[typeof key])}

@@ -32,7 +32,7 @@ export default async function AdminHotelsPage() {
             {(hotels ?? []).map((h) => {
               const island = Array.isArray(h.islands) ? h.islands[0] : h.islands
               return (
-                <tr key={h.id} className="border-t border-slate-100 dark:border-neutral-850">
+                <tr key={h.id} className="border-t border-slate-100 dark:border-neutral-800">
                   <td className="px-5 py-3 font-medium text-neutral-800 dark:text-neutral-200">{h.name}</td>
                   <td className="px-5 py-3 text-neutral-500">{island?.name}</td>
                   <td className="px-5 py-3 text-neutral-500">{h.category}</td>

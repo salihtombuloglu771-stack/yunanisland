@@ -48,7 +48,7 @@ export function RestaurantCard({ restaurant }: RestaurantCardProps) {
         )}
 
         {/* Özellikler / Tesisler */}
-        <div className="mt-4 border-t border-neutral-100 dark:border-neutral-850 pt-4">
+        <div className="mt-4 border-t border-neutral-100 dark:border-neutral-800 pt-4">
           <div className="flex flex-wrap gap-1.5">
             {restaurant.sea_view && (
               <span className="inline-flex items-center text-xs bg-sky-50 dark:bg-neutral-950 text-sky-700 dark:text-sky-400 border border-sky-100 dark:border-sky-950 rounded-lg px-2 py-0.5 font-medium">
@@ -56,12 +56,12 @@ export function RestaurantCard({ restaurant }: RestaurantCardProps) {
               </span>
             )}
             {restaurant.outdoor_seating && (
-              <span className="inline-flex items-center text-xs bg-slate-50 dark:bg-neutral-950 text-neutral-700 dark:text-neutral-300 border border-slate-150 dark:border-neutral-800 rounded-lg px-2 py-0.5">
+              <span className="inline-flex items-center text-xs bg-slate-50 dark:bg-neutral-950 text-neutral-700 dark:text-neutral-300 border border-slate-200 dark:border-neutral-800 rounded-lg px-2 py-0.5">
                 🪑 Açık Hava Alanı
               </span>
             )}
             {restaurant.family_friendly && (
-              <span className="inline-flex items-center text-xs bg-slate-50 dark:bg-neutral-950 text-neutral-700 dark:text-neutral-300 border border-slate-150 dark:border-neutral-800 rounded-lg px-2 py-0.5">
+              <span className="inline-flex items-center text-xs bg-slate-50 dark:bg-neutral-950 text-neutral-700 dark:text-neutral-300 border border-slate-200 dark:border-neutral-800 rounded-lg px-2 py-0.5">
                 👨‍👩‍👧 Aile Dostu
               </span>
             )}
@@ -90,7 +90,7 @@ export function RestaurantCard({ restaurant }: RestaurantCardProps) {
         )}
 
         {/* İletişim ve Ortalama Fiyat */}
-        <div className="mt-5 flex items-center justify-between border-t border-neutral-100 dark:border-neutral-850 pt-4 text-xs text-neutral-500 dark:text-neutral-450">
+        <div className="mt-5 flex items-center justify-between border-t border-neutral-100 dark:border-neutral-800 pt-4 text-xs text-neutral-500 dark:text-neutral-400">
           <span>
             {restaurant.average_cost ? (
               <span>Ort. Kişi Başı: <strong className="text-neutral-800 dark:text-neutral-200">{restaurant.average_cost} €</strong></span>

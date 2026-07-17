@@ -139,7 +139,7 @@ function SearchForm() {
           })}
 
           {searched && !loading && results.length === 0 && (
-            <div className="text-center py-12 bg-white dark:bg-neutral-900 border border-dashed border-slate-200 dark:border-neutral-850 rounded-2xl">
+            <div className="text-center py-12 bg-white dark:bg-neutral-900 border border-dashed border-slate-200 dark:border-neutral-800 rounded-2xl">
               <span className="text-3xl">🔍</span>
               <p className="mt-3 text-sm text-neutral-500">&quot;{query}&quot; için sonuç bulunamadı.</p>
             </div>

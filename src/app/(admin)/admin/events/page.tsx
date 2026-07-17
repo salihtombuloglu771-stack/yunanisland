@@ -30,7 +30,7 @@ export default async function AdminEventsPage() {
           </thead>
           <tbody>
             {(events ?? []).map((e) => (
-              <tr key={e.id} className="border-t border-slate-100 dark:border-neutral-850">
+              <tr key={e.id} className="border-t border-slate-100 dark:border-neutral-800">
                 <td className="px-5 py-3 font-medium text-neutral-800 dark:text-neutral-200">{e.title}</td>
                 <td className="px-5 py-3 text-neutral-500">{new Date(e.start_date).toLocaleDateString('tr-TR')}</td>
                 <td className="px-5 py-3 text-neutral-500">{e.category}</td>

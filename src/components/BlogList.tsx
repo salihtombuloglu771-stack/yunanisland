@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from 'react'
 import Link from 'next/link'
+import { stripMarkdown } from '@/lib/markdown'
 
 interface Article {
   id: string
@@ -27,7 +28,7 @@ export function BlogList({ articles }: { articles: Article[] }) {
 
   if (articles.length === 0) {
     return (
-      <div className="py-16 text-center bg-white dark:bg-neutral-900 border border-dashed border-slate-200 dark:border-neutral-850 rounded-2xl">
+      <div className="py-16 text-center bg-white dark:bg-neutral-900 border border-dashed border-slate-200 dark:border-neutral-800 rounded-2xl">
         <span className="text-4xl">📝</span>
         <p className="mt-4 text-sm text-neutral-500">Henüz yayınlanmış bir yazı yok.</p>
       </div>
@@ -43,7 +44,7 @@ export function BlogList({ articles }: { articles: Article[] }) {
             className={`whitespace-nowrap rounded-xl px-4 py-2 text-xs font-semibold transition-all ${
               activeCategory === 'all'
                 ? 'bg-sky-600 text-white shadow-md shadow-sky-500/10'
-                : 'bg-white dark:bg-neutral-900 text-neutral-600 dark:text-neutral-400 border border-slate-200 dark:border-neutral-850 hover:bg-slate-100 dark:hover:bg-neutral-850'
+                : 'bg-white dark:bg-neutral-900 text-neutral-600 dark:text-neutral-400 border border-slate-200 dark:border-neutral-800 hover:bg-slate-100 dark:hover:bg-neutral-800'
             }`}
           >
             Tümü
@@ -55,7 +56,7 @@ export function BlogList({ articles }: { articles: Article[] }) {
               className={`whitespace-nowrap rounded-xl px-4 py-2 text-xs font-semibold transition-all ${
                 activeCategory === c.slug
                   ? 'bg-sky-600 text-white shadow-md shadow-sky-500/10'
-                  : 'bg-white dark:bg-neutral-900 text-neutral-600 dark:text-neutral-400 border border-slate-200 dark:border-neutral-850 hover:bg-slate-100 dark:hover:bg-neutral-850'
+                  : 'bg-white dark:bg-neutral-900 text-neutral-600 dark:text-neutral-400 border border-slate-200 dark:border-neutral-800 hover:bg-slate-100 dark:hover:bg-neutral-800'
               }`}
             >
               {c.name}
@@ -79,7 +80,7 @@ export function BlogList({ articles }: { articles: Article[] }) {
               )}
               <h2 className="text-xl font-bold text-neutral-900 dark:text-white">{article.title}</h2>
               <p className="mt-2 text-sm text-neutral-600 dark:text-neutral-400 line-clamp-2">
-                {article.content}
+                {article.content ? stripMarkdown(article.content) : ''}
               </p>
               {article.published_at && (
                 <p className="mt-3 text-xs text-neutral-400">
@@ -90,7 +91,7 @@ export function BlogList({ articles }: { articles: Article[] }) {
           ))}
         </div>
       ) : (
-        <div className="py-16 text-center bg-white dark:bg-neutral-900 border border-dashed border-slate-200 dark:border-neutral-850 rounded-2xl">
+        <div className="py-16 text-center bg-white dark:bg-neutral-900 border border-dashed border-slate-200 dark:border-neutral-800 rounded-2xl">
           <span className="text-4xl">📝</span>
           <p className="mt-4 text-sm text-neutral-500">Bu kategoride henüz yazı yok.</p>
         </div>

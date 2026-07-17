@@ -58,7 +58,7 @@ function FerrySearchForm() {
             <select
               value={fromPort}
               onChange={(e) => setFromPort(e.target.value)}
-              className="w-full rounded-xl border border-slate-200 dark:border-neutral-850 bg-slate-50 dark:bg-neutral-950 py-3 px-4 text-sm text-neutral-850 dark:text-white outline-none focus:border-sky-500 focus:bg-white dark:focus:bg-neutral-900 transition-all cursor-pointer"
+              className="w-full rounded-xl border border-slate-200 dark:border-neutral-800 bg-slate-50 dark:bg-neutral-950 py-3 px-4 text-sm text-neutral-800 dark:text-white outline-none focus:border-sky-500 focus:bg-white dark:focus:bg-neutral-900 transition-all cursor-pointer"
             >
               {PORTS.map(port => (
                 <option key={port} value={port}>{port}</option>
@@ -73,7 +73,7 @@ function FerrySearchForm() {
             <select
               value={toPort}
               onChange={(e) => setToPort(e.target.value)}
-              className="w-full rounded-xl border border-slate-200 dark:border-neutral-850 bg-slate-50 dark:bg-neutral-950 py-3 px-4 text-sm text-neutral-850 dark:text-white outline-none focus:border-sky-500 focus:bg-white dark:focus:bg-neutral-900 transition-all cursor-pointer"
+              className="w-full rounded-xl border border-slate-200 dark:border-neutral-800 bg-slate-50 dark:bg-neutral-950 py-3 px-4 text-sm text-neutral-800 dark:text-white outline-none focus:border-sky-500 focus:bg-white dark:focus:bg-neutral-900 transition-all cursor-pointer"
             >
               {PORTS.map(port => (
                 <option key={port} value={port} disabled={port === fromPort}>{port}</option>
@@ -149,7 +149,7 @@ function FerrySearchForm() {
                       </div>
                     </div>
 
-                    <div className="flex flex-row md:flex-col items-center md:items-end justify-between md:justify-center border-t md:border-t-0 border-slate-100 dark:border-neutral-850 pt-4 md:pt-0 gap-2">
+                    <div className="flex flex-row md:flex-col items-center md:items-end justify-between md:justify-center border-t md:border-t-0 border-slate-100 dark:border-neutral-800 pt-4 md:pt-0 gap-2">
                       <div className="text-left md:text-right">
                         <p className="text-xs text-neutral-400 dark:text-neutral-500">Kişi Başı Başlayan</p>
                         <p className="text-2xl font-extrabold text-sky-600 dark:text-sky-400">{route.price_min} €</p>
