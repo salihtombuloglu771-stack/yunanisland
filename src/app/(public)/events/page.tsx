@@ -28,7 +28,7 @@ export default async function EventsPage() {
       <Header />
 
       <PageHero
-        image="/mykonos.jpg"
+        image="/kos.jpg"
         badge="Etkinlik Takvimi"
         title="Yaklaşan Etkinlikler"
         subtitle="Festivaller, dini bayramlar ve mevsimlik kutlamalar — seyahatini bu tarihlere göre planla."
