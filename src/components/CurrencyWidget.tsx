@@ -8,6 +8,7 @@ interface Rates {
 }
 
 const TARGETS = [
+  { code: 'EUR', label: '🇪🇺 Euro', flag: '🇪🇺' },
   { code: 'TRY', label: '🇹🇷 Türk Lirası', flag: '🇹🇷' },
   { code: 'USD', label: '🇺🇸 Amerikan Doları', flag: '🇺🇸' },
   { code: 'GBP', label: '🇬🇧 İngiliz Sterlini', flag: '🇬🇧' },
@@ -22,7 +23,8 @@ export function CurrencyWidget() {
     fetch('https://api.frankfurter.dev/v1/latest?from=EUR&to=TRY,USD,GBP')
       .then((res) => res.json())
       .then((json) => {
-        if (isMounted) setData(json)
+        // the base currency (EUR) isn't included in `rates` by the API, add it explicitly
+        if (isMounted) setData({ ...json, rates: { EUR: 1, ...json.rates } })
       })
       .catch(() => {
         if (isMounted) setError(true)
@@ -34,7 +36,7 @@ export function CurrencyWidget() {
     <div className="bg-white dark:bg-neutral-900 p-5 rounded-2xl border border-slate-100 dark:border-neutral-900 shadow-sm mb-8">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-sm font-bold text-neutral-700 dark:text-neutral-300 flex items-center gap-2">
-          💱 Döviz Kuru <span className="text-xs font-normal text-neutral-400">(1 Euro)</span>
+          💱 Güncel Döviz Kurları <span className="text-xs font-normal text-neutral-400">(1 € karşılığı)</span>
         </h3>
         {data?.date && <span className="text-[10px] text-neutral-400">{data.date}</span>}
       </div>
@@ -48,7 +50,7 @@ export function CurrencyWidget() {
           ))}
         </div>
       ) : (
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-4 gap-3">
           {TARGETS.map((t) => (
             <div key={t.code} className="bg-slate-50 dark:bg-neutral-950 rounded-xl p-3 text-center">
               <p className="text-lg">{t.flag}</p>
