@@ -58,6 +58,9 @@ export function Header() {
           <Link href="/map" className="text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
             Harita
           </Link>
+          <Link href="/compare" className="text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
+            Karşılaştır
+          </Link>
           <Link href="/search" className="text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
             Ara
           </Link>
@@ -109,6 +112,7 @@ export function Header() {
           <Link href="/blog" className="block text-sm font-medium text-neutral-600 dark:text-neutral-400">Gezi Blogu</Link>
           <Link href="/budget-calculator" className="block text-sm font-medium text-neutral-600 dark:text-neutral-400">Bütçe Hesaplayıcı</Link>
           <Link href="/map" className="block text-sm font-medium text-neutral-600 dark:text-neutral-400">Harita</Link>
+          <Link href="/compare" className="block text-sm font-medium text-neutral-600 dark:text-neutral-400">Karşılaştır</Link>
           <Link href="/search" className="block text-sm font-medium text-neutral-600 dark:text-neutral-400">Ara</Link>
           {isAdmin && <Link href="/admin/dashboard" className="block text-sm font-medium text-neutral-600 dark:text-neutral-400">Admin Paneli</Link>}
           <div className="pt-3 border-t border-slate-100 dark:border-neutral-900">

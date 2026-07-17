@@ -6,6 +6,7 @@ import Image from 'next/image'
 import { Header } from '@/components/Header'
 import { BeachCard } from '@/components/BeachCard'
 import { RestaurantCard } from '@/components/RestaurantCard'
+import { HotelCard, type Hotel } from '@/components/HotelCard'
 import { FavoriteButton } from '@/components/FavoriteButton'
 import { ReviewSection } from '@/components/ReviewSection'
 import type { Island, Beach, Restaurant } from '@/lib/mockData'
@@ -16,8 +17,8 @@ const BUDGET_LEVEL_LABELS = {
   luxury: { label: 'Lüks', color: 'bg-amber-500/10 text-amber-600 dark:text-amber-450 border-amber-500/20' },
 }
 
-export function IslandDetailClient({ island, allBeaches, allRestaurants }: { island: Island; allBeaches: Beach[]; allRestaurants: Restaurant[] }) {
-  const [activeTab, setActiveTab] = useState<'about' | 'beaches' | 'restaurants'>('about')
+export function IslandDetailClient({ island, allBeaches, allRestaurants, allHotels }: { island: Island; allBeaches: Beach[]; allRestaurants: Restaurant[]; allHotels: Hotel[] }) {
+  const [activeTab, setActiveTab] = useState<'about' | 'beaches' | 'restaurants' | 'hotels'>('about')
 
   const [beachTypeFilter, setBeachTypeFilter] = useState<'all' | 'sand' | 'pebble'>('all')
   const [beachFamilyFilter, setBeachFamilyFilter] = useState(false)
@@ -167,6 +168,7 @@ export function IslandDetailClient({ island, allBeaches, allRestaurants }: { isl
                 { id: 'about' as const, label: '📖 Hakkında' },
                 { id: 'beaches' as const, label: `🏖️ Plajlar (${allBeaches.length})` },
                 { id: 'restaurants' as const, label: `🍽️ Restoranlar (${allRestaurants.length})` },
+                { id: 'hotels' as const, label: `🏨 Oteller (${allHotels.length})` },
               ].map((tab) => (
                 <button
                   key={tab.id}
@@ -372,6 +374,25 @@ export function IslandDetailClient({ island, allBeaches, allRestaurants }: { isl
                     </div>
                   )}
 
+                </div>
+              )}
+
+              {activeTab === 'hotels' && (
+                <div>
+                  {allHotels.length > 0 ? (
+                    <div className="grid gap-6 sm:grid-cols-2">
+                      {allHotels.map(hotel => (
+                        <HotelCard key={hotel.id} hotel={hotel} />
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="py-12 text-center bg-white dark:bg-neutral-900 border border-slate-100 dark:border-neutral-900 rounded-2xl">
+                      <span className="text-3xl">🏨</span>
+                      <p className="mt-2 text-sm text-neutral-500 dark:text-neutral-400">
+                        Bu ada için henüz otel eklenmedi.
+                      </p>
+                    </div>
+                  )}
                 </div>
               )}
 

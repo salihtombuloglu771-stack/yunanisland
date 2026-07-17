@@ -16,6 +16,11 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Yunanisland",
   description: "Yunan Adaları için kapsamlı gezi rehberi",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "Yunanisland",
+  },
 };
 
 export default function RootLayout({

@@ -14,8 +14,8 @@ export default async function AdminDashboardPage() {
 
   const stats = [
     { label: 'Adalar', count: islands.count ?? 0, href: '/admin/islands', emoji: '🏝️' },
-    { label: 'Plajlar', count: beaches.count ?? 0, href: '/map', emoji: '🏖️' },
-    { label: 'Restoranlar', count: restaurants.count ?? 0, href: '/map', emoji: '🍽️' },
+    { label: 'Plajlar', count: beaches.count ?? 0, href: '/admin/beaches', emoji: '🏖️' },
+    { label: 'Restoranlar', count: restaurants.count ?? 0, href: '/admin/restaurants', emoji: '🍽️' },
     { label: 'Kullanıcılar', count: users.count ?? 0, href: '#', emoji: '👤' },
     { label: 'Yorumlar', count: reviews.count ?? 0, href: '#', emoji: '⭐' },
   ]
@@ -40,6 +40,21 @@ export default async function AdminDashboardPage() {
         <div className="flex flex-wrap gap-3">
           <Link href="/admin/islands" className="rounded-xl bg-sky-600 px-5 py-2.5 text-sm font-semibold text-white shadow-md hover:bg-sky-500 transition-colors">
             🏝️ Adaları Yönet
+          </Link>
+          <Link href="/admin/beaches" className="rounded-xl bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 px-5 py-2.5 text-sm font-semibold text-neutral-700 dark:text-neutral-300 hover:bg-slate-50 dark:hover:bg-neutral-850 transition-colors">
+            🏖️ Plajları Yönet
+          </Link>
+          <Link href="/admin/restaurants" className="rounded-xl bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 px-5 py-2.5 text-sm font-semibold text-neutral-700 dark:text-neutral-300 hover:bg-slate-50 dark:hover:bg-neutral-850 transition-colors">
+            🍽️ Restoranları Yönet
+          </Link>
+          <Link href="/admin/hotels" className="rounded-xl bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 px-5 py-2.5 text-sm font-semibold text-neutral-700 dark:text-neutral-300 hover:bg-slate-50 dark:hover:bg-neutral-850 transition-colors">
+            🏨 Otelleri Yönet
+          </Link>
+          <Link href="/admin/ferry-routes" className="rounded-xl bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 px-5 py-2.5 text-sm font-semibold text-neutral-700 dark:text-neutral-300 hover:bg-slate-50 dark:hover:bg-neutral-850 transition-colors">
+            🚢 Feribot Rotalarını Yönet
+          </Link>
+          <Link href="/admin/articles" className="rounded-xl bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 px-5 py-2.5 text-sm font-semibold text-neutral-700 dark:text-neutral-300 hover:bg-slate-50 dark:hover:bg-neutral-850 transition-colors">
+            📝 Blog Yazılarını Yönet
           </Link>
         </div>
       </div>
