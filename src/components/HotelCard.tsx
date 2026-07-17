@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { FavoriteButton } from '@/components/FavoriteButton'
+import { RatingBadge } from '@/components/RatingBadge'
 
 export interface Hotel {
   id: string
@@ -11,6 +12,8 @@ export interface Hotel {
   price_range: string | null
   affiliate_link: string | null
   cover_image_url: string | null
+  avgRating?: number | null
+  reviewCount?: number
 }
 
 const CATEGORY_LABELS = {
@@ -53,7 +56,10 @@ export function HotelCard({ hotel }: { hotel: Hotel }) {
           )}
         </div>
 
-        <h3 className="mt-3 text-lg font-bold text-neutral-900 dark:text-white">{hotel.name}</h3>
+        <div className="mt-3 flex items-center justify-between gap-2">
+          <h3 className="text-lg font-bold text-neutral-900 dark:text-white">{hotel.name}</h3>
+          <RatingBadge avgRating={hotel.avgRating} reviewCount={hotel.reviewCount} />
+        </div>
 
         <p className="mt-2 text-sm text-neutral-600 dark:text-neutral-400 line-clamp-2">
           {hotel.description || 'Bu otel hakkında henüz bir açıklama eklenmedi.'}

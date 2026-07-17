@@ -1,9 +1,10 @@
 import Link from 'next/link'
 import { Restaurant } from '@/lib/mockData'
 import { FavoriteButton } from '@/components/FavoriteButton'
+import { RatingBadge } from '@/components/RatingBadge'
 
 interface RestaurantCardProps {
-  restaurant: Restaurant
+  restaurant: Restaurant & { avgRating?: number | null; reviewCount?: number }
 }
 
 const PRICE_LEVEL_LABELS = {
@@ -29,6 +30,7 @@ export function RestaurantCard({ restaurant }: RestaurantCardProps) {
             <h3 className="text-lg font-bold text-neutral-900 dark:text-white mt-1 group-hover:text-sky-600 dark:group-hover:text-sky-400 transition-colors">
               {restaurant.name}
             </h3>
+            <div className="mt-1"><RatingBadge avgRating={restaurant.avgRating} reviewCount={restaurant.reviewCount} /></div>
           </div>
           <div className="flex items-center gap-2">
             <span className={`inline-flex items-center rounded-lg px-2.5 py-1 text-xs font-semibold ${price.color}`}>

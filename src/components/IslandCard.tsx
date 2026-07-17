@@ -3,6 +3,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { FavoriteButton } from '@/components/FavoriteButton'
+import { RatingBadge } from '@/components/RatingBadge'
 import { useLanguage } from '@/lib/i18n/LanguageProvider'
 
 export interface Island {
@@ -16,6 +17,8 @@ export interface Island {
   best_time_to_visit: string | null
   best_time_to_visit_en?: string | null
   cover_image_url: string | null
+  avgRating?: number | null
+  reviewCount?: number
 }
 
 interface IslandCardProps {
@@ -74,9 +77,12 @@ export function IslandCard({ island }: IslandCardProps) {
           )}
         </div>
 
-        <h3 className="mt-2 text-base font-semibold text-neutral-900 dark:text-white">
-          {island.name}
-        </h3>
+        <div className="mt-2 flex items-center justify-between gap-2">
+          <h3 className="text-base font-semibold text-neutral-900 dark:text-white">
+            {island.name}
+          </h3>
+          <RatingBadge avgRating={island.avgRating} reviewCount={island.reviewCount} />
+        </div>
 
         <p className="mt-1 line-clamp-2 text-xs text-neutral-600 dark:text-neutral-300">
           {description || (locale === 'en' ? 'No description added yet.' : 'Bu ada hakkında henüz bir açıklama eklenmedi.')}

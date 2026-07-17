@@ -5,6 +5,7 @@ import { AdBanner } from '@/components/AdBanner'
 import { CurrencyWidget } from '@/components/CurrencyWidget'
 import { SiteFooter } from '@/components/SiteFooter'
 import { createClient } from '@/lib/supabase/server'
+import { getRatingsMap } from '@/lib/ratings'
 
 export default async function Home() {
   const supabase = await createClient()
@@ -14,6 +15,9 @@ export default async function Home() {
     .eq('is_published', true)
     .order('name')
 
+  const ratings = await getRatingsMap(supabase, 'island', (islands ?? []).map((i) => i.id))
+  const islandsWithRatings = (islands ?? []).map((i) => ({ ...i, ...ratings[i.id] }))
+
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-neutral-950 transition-colors duration-300">
       <Header />
@@ -22,7 +26,7 @@ export default async function Home() {
       <main className="mx-auto max-w-7xl px-6 py-12">
         <AdBanner placement="homepage" />
         <CurrencyWidget />
-        <HomeClient islands={islands ?? []} />
+        <HomeClient islands={islandsWithRatings} />
       </main>
 
       <SiteFooter />

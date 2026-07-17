@@ -4,6 +4,7 @@ import { Header } from '@/components/Header'
 import { IslandDetailClient } from '@/components/IslandDetailClient'
 import { JsonLd } from '@/components/JsonLd'
 import { createClient } from '@/lib/supabase/server'
+import { getRatingsMap } from '@/lib/ratings'
 
 const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://yunanisland.vercel.app'
 
@@ -75,6 +76,19 @@ export default async function IslandPage({ params }: PageProps) {
   const reviewCount = reviews?.length ?? 0
   const avgRating = reviewCount > 0 ? reviews!.reduce((s, r) => s + r.rating, 0) / reviewCount : null
 
+  const [beachRatings, restaurantRatings, hotelRatings] = await Promise.all([
+    getRatingsMap(supabase, 'beach', (allBeaches ?? []).map((b) => b.id)),
+    getRatingsMap(supabase, 'restaurant', (allRestaurants ?? []).map((r) => r.id)),
+    getRatingsMap(supabase, 'hotel', (allHotels ?? []).map((h) => h.id)),
+  ])
+
+  const beachesWithRatings = (allBeaches ?? []).map((b) => ({ ...b, ...beachRatings[b.id] }))
+  const restaurantsWithRatings = (allRestaurants ?? []).map((r) => ({ ...r, ...restaurantRatings[r.id] }))
+  const hotelsWithRatings = (allHotels ?? []).map((h) => ({ ...h, ...hotelRatings[h.id] }))
+
+  const similarIslandRatings = await getRatingsMap(supabase, 'island', (similarIslands ?? []).map((i) => i.id))
+  const similarIslandsWithRatings = (similarIslands ?? []).map((i) => ({ ...i, ...similarIslandRatings[i.id] }))
+
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'TouristAttraction',
@@ -95,11 +109,11 @@ export default async function IslandPage({ params }: PageProps) {
       <JsonLd data={jsonLd} />
       <IslandDetailClient
         island={island}
-        allBeaches={allBeaches ?? []}
-        allRestaurants={allRestaurants ?? []}
-        allHotels={allHotels ?? []}
+        allBeaches={beachesWithRatings}
+        allRestaurants={restaurantsWithRatings}
+        allHotels={hotelsWithRatings}
         media={media ?? []}
-        similarIslands={similarIslands ?? []}
+        similarIslands={similarIslandsWithRatings}
       />
     </>
   )

@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { useLanguage } from '@/lib/i18n/LanguageProvider'
+import { ThemeToggle } from '@/components/ThemeToggle'
 
 export function Header() {
   const router = useRouter()
@@ -114,6 +115,7 @@ export function Header() {
               </button>
             )}
           </div>
+          <ThemeToggle />
           <button
             onClick={() => setLocale(locale === 'tr' ? 'en' : 'tr')}
             className="text-xs font-bold text-neutral-500 dark:text-neutral-400 hover:text-sky-600 dark:hover:text-sky-400 border border-slate-200 dark:border-neutral-800 rounded-lg px-2 py-1 transition-colors"

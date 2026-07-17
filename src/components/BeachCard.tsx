@@ -2,9 +2,10 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Beach } from '@/lib/mockData'
 import { FavoriteButton } from '@/components/FavoriteButton'
+import { RatingBadge } from '@/components/RatingBadge'
 
 interface BeachCardProps {
-  beach: Beach
+  beach: Beach & { avgRating?: number | null; reviewCount?: number }
 }
 
 const BEACH_TYPE_LABELS = {
@@ -63,6 +64,8 @@ export function BeachCard({ beach }: BeachCardProps) {
             {BEACH_TYPE_LABELS[beach.beach_type] || beach.beach_type}
           </span>
         </div>
+
+        <RatingBadge avgRating={beach.avgRating} reviewCount={beach.reviewCount} />
 
         <p className="mt-2 text-sm text-neutral-600 dark:text-neutral-450 line-clamp-2">
           {beach.description || 'Bu plaj hakkında henüz bir açıklama eklenmedi.'}
