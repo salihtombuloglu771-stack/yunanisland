@@ -44,7 +44,7 @@ function SearchForm() {
     const [islandsRes, beachesRes, restaurantsRes, hotelsRes] = await Promise.all([
       supabase.from('islands').select('id, name, slug, description').ilike('name', ilikeTerm).limit(10),
       supabase.from('beaches').select('id, name, slug, description, islands(slug)').ilike('name', ilikeTerm).limit(10),
-      supabase.from('restaurants').select('id, name, slug, description, islands(slug)').ilike('name', ilikeTerm).limit(10),
+      supabase.from('restaurants').select('id, name, slug, cuisine, islands(slug)').ilike('name', ilikeTerm).limit(10),
       supabase.from('hotels').select('id, name, slug, description, islands(slug)').ilike('name', ilikeTerm).limit(10),
     ])
 
@@ -56,7 +56,7 @@ function SearchForm() {
       }),
       ...(restaurantsRes.data ?? []).map((r) => {
         const island = Array.isArray(r.islands) ? r.islands[0] : r.islands
-        return { type: 'restaurant' as const, id: r.id, name: r.name, slug: r.slug, islandSlug: island?.slug, description: r.description }
+        return { type: 'restaurant' as const, id: r.id, name: r.name, slug: r.slug, islandSlug: island?.slug, description: r.cuisine }
       }),
       ...(hotelsRes.data ?? []).map((h) => {
         const island = Array.isArray(h.islands) ? h.islands[0] : h.islands
