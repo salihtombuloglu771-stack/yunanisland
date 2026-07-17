@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import { useLanguage } from '@/lib/i18n/LanguageProvider'
 
 export function HomeHero() {
@@ -7,6 +8,14 @@ export function HomeHero() {
 
   return (
     <section className="relative overflow-hidden bg-slate-900 py-24 text-white dark:bg-black">
+      <Image
+        src="/santorini.jpg"
+        alt=""
+        fill
+        priority
+        className="object-cover opacity-40"
+      />
+      <div className="absolute inset-0 bg-gradient-to-b from-slate-950/70 via-slate-950/60 to-slate-950" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(14,165,233,0.15),rgba(255,255,255,0))]" />
       <div className="relative mx-auto max-w-4xl px-6 text-center">
         <span className="inline-flex items-center rounded-full bg-sky-500/10 px-3 py-1 text-xs font-medium text-sky-400 ring-1 ring-inset ring-sky-500/20">
