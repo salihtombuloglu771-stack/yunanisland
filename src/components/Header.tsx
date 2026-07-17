@@ -55,6 +55,9 @@ export function Header() {
           <Link href="/budget-calculator" className="text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
             Bütçe Hesaplayıcı
           </Link>
+          <Link href="/trip-tools" className="text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
+            Seyahat Araçları
+          </Link>
           <Link href="/map" className="text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
             Harita
           </Link>
@@ -111,6 +114,7 @@ export function Header() {
           <Link href="/ferry-guide" className="block text-sm font-medium text-neutral-600 dark:text-neutral-400">Feribot Rehberi</Link>
           <Link href="/blog" className="block text-sm font-medium text-neutral-600 dark:text-neutral-400">Gezi Blogu</Link>
           <Link href="/budget-calculator" className="block text-sm font-medium text-neutral-600 dark:text-neutral-400">Bütçe Hesaplayıcı</Link>
+          <Link href="/trip-tools" className="block text-sm font-medium text-neutral-600 dark:text-neutral-400">Seyahat Araçları</Link>
           <Link href="/map" className="block text-sm font-medium text-neutral-600 dark:text-neutral-400">Harita</Link>
           <Link href="/compare" className="block text-sm font-medium text-neutral-600 dark:text-neutral-400">Karşılaştır</Link>
           <Link href="/search" className="block text-sm font-medium text-neutral-600 dark:text-neutral-400">Ara</Link>

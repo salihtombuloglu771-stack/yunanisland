@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { IslandForm } from '@/components/admin/IslandForm'
 import { createClient } from '@/lib/supabase/server'
@@ -15,7 +16,12 @@ export default async function EditIslandPage({ params }: PageProps) {
 
   return (
     <main className="max-w-2xl mx-auto px-6 py-16">
-      <h1 className="text-2xl font-bold text-neutral-900 dark:text-white mb-8">{island.name} Düzenle</h1>
+      <div className="flex items-center justify-between mb-8">
+        <h1 className="text-2xl font-bold text-neutral-900 dark:text-white">{island.name} Düzenle</h1>
+        <Link href={`/admin/islands/${island.id}/media`} className="text-sm font-semibold text-sky-600 hover:underline">
+          📸 Galeriyi Yönet
+        </Link>
+      </div>
       <IslandForm
         initial={{
           id: island.id,

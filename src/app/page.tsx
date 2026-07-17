@@ -1,5 +1,6 @@
 import { Header } from '@/components/Header'
 import { HomeClient } from '@/components/HomeClient'
+import { AdBanner } from '@/components/AdBanner'
 import { createClient } from '@/lib/supabase/server'
 
 export default async function Home() {
@@ -31,6 +32,7 @@ export default async function Home() {
       </section>
 
       <main className="mx-auto max-w-7xl px-6 py-12">
+        <AdBanner placement="homepage" />
         <HomeClient islands={islands ?? []} />
       </main>
 

@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { Header } from '@/components/Header'
+import { AdBanner } from '@/components/AdBanner'
 import { createClient } from '@/lib/supabase/server'
 
 export default async function BlogPage() {
@@ -30,6 +31,7 @@ export default async function BlogPage() {
       </section>
 
       <main className="mx-auto max-w-4xl px-6 py-12">
+        <AdBanner placement="blog" />
         {articles && articles.length > 0 ? (
           <div className="space-y-6">
             {articles.map((article) => {

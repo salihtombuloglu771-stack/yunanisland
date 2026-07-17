@@ -56,6 +56,9 @@ export default async function AdminDashboardPage() {
           <Link href="/admin/articles" className="rounded-xl bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 px-5 py-2.5 text-sm font-semibold text-neutral-700 dark:text-neutral-300 hover:bg-slate-50 dark:hover:bg-neutral-850 transition-colors">
             📝 Blog Yazılarını Yönet
           </Link>
+          <Link href="/admin/advertisements" className="rounded-xl bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 px-5 py-2.5 text-sm font-semibold text-neutral-700 dark:text-neutral-300 hover:bg-slate-50 dark:hover:bg-neutral-850 transition-colors">
+            📢 Reklamları Yönet
+          </Link>
         </div>
       </div>
     </main>

@@ -54,10 +54,11 @@ export default async function IslandPage({ params }: PageProps) {
     )
   }
 
-  const [{ data: allBeaches }, { data: allRestaurants }, { data: allHotels }] = await Promise.all([
+  const [{ data: allBeaches }, { data: allRestaurants }, { data: allHotels }, { data: media }] = await Promise.all([
     supabase.from('beaches').select('*').eq('island_id', island.id),
     supabase.from('restaurants').select('*').eq('island_id', island.id),
     supabase.from('hotels').select('*').eq('island_id', island.id),
+    supabase.from('media').select('id, url, media_type').eq('entity_type', 'island').eq('entity_id', island.id),
   ])
 
   return (
@@ -66,6 +67,7 @@ export default async function IslandPage({ params }: PageProps) {
       allBeaches={allBeaches ?? []}
       allRestaurants={allRestaurants ?? []}
       allHotels={allHotels ?? []}
+      media={media ?? []}
     />
   )
 }

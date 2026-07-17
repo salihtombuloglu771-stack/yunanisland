@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import Link from 'next/link'
 import { FavoriteButton } from '@/components/FavoriteButton'
 
 export interface Hotel {
@@ -68,6 +69,13 @@ export function HotelCard({ hotel }: { hotel: Hotel }) {
             Fiyatları Gör ↗
           </a>
         )}
+
+        <Link
+          href={`/hotels/${hotel.slug}`}
+          className="mt-2 block text-center rounded-xl border border-sky-600/20 hover:border-sky-600/40 text-sky-600 dark:text-sky-400 py-2 text-xs font-semibold transition-colors"
+        >
+          Detayları Gör & Yorum Yap
+        </Link>
       </div>
     </div>
   )

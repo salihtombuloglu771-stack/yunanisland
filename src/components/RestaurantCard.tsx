@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { Restaurant } from '@/lib/mockData'
 import { FavoriteButton } from '@/components/FavoriteButton'
 
@@ -104,6 +105,13 @@ export function RestaurantCard({ restaurant }: RestaurantCardProps) {
             </a>
           )}
         </div>
+
+        <Link
+          href={`/restaurants/${restaurant.slug}`}
+          className="mt-4 block text-center rounded-xl border border-sky-600/20 hover:border-sky-600/40 text-sky-600 dark:text-sky-400 py-2 text-xs font-semibold transition-colors"
+        >
+          Detayları Gör & Yorum Yap
+        </Link>
 
       </div>
 
