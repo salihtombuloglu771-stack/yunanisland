@@ -1,4 +1,4 @@
-export type Locale = 'tr' | 'en'
+export type Locale = 'tr' | 'en' | 'el'
 
 export const dictionary = {
   tr: {
@@ -42,6 +42,27 @@ export const dictionary = {
     'home.subtitle': 'Your most comprehensive travel planner for the Greek Islands\' hidden coves, unique beaches, finest restaurants, and ferry routes.',
     'home.destinations': 'Popular Destinations',
     'footer.rights': 'All rights reserved.',
+  },
+  el: {
+    'nav.home': 'Αρχική',
+    'nav.ferryGuide': 'Οδηγός Πλοίων',
+    'nav.blog': 'Ταξιδιωτικό Blog',
+    'nav.budgetCalculator': 'Υπολογιστής Προϋπολογισμού',
+    'nav.tripTools': 'Εργαλεία Ταξιδιού',
+    'nav.map': 'Χάρτης',
+    'nav.compare': 'Σύγκριση',
+    'nav.events': 'Εκδηλώσεις',
+    'nav.search': 'Αναζήτηση',
+    'nav.admin': 'Πίνακας Διαχείρισης',
+    'nav.account': 'Ο Λογαριασμός μου',
+    'nav.logout': 'Αποσύνδεση',
+    'nav.login': 'Σύνδεση',
+    'nav.register': 'Εγγραφή',
+    'home.badge': 'Οδηγός Ελληνικών Νησιών',
+    'home.title': 'Ανακαλύψτε τον Παραμυθένιο Κόσμο του Αιγαίου',
+    'home.subtitle': 'Ο πιο ολοκληρωμένος σχεδιαστής ταξιδιών για τους κρυμμένους όρμους, τις μοναδικές παραλίες, τα καλύτερα εστιατόρια και τις γραμμές πλοίων των Ελληνικών Νησιών.',
+    'home.destinations': 'Δημοφιλείς Προορισμοί',
+    'footer.rights': 'Με επιφύλαξη παντός δικαιώματος.',
   },
 } as const satisfies Record<Locale, Record<string, string>>
 

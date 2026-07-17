@@ -6,10 +6,11 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { useLanguage } from '@/lib/i18n/LanguageProvider'
 import { ThemeToggle } from '@/components/ThemeToggle'
+import { LanguageSwitcher } from '@/components/LanguageSwitcher'
 
 export function Header() {
   const router = useRouter()
-  const { locale, setLocale, t } = useLanguage()
+  const { t } = useLanguage()
   const [email, setEmail] = useState<string | null>(null)
   const [isAdmin, setIsAdmin] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
@@ -116,12 +117,7 @@ export function Header() {
             )}
           </div>
           <ThemeToggle />
-          <button
-            onClick={() => setLocale(locale === 'tr' ? 'en' : 'tr')}
-            className="text-xs font-bold text-neutral-500 dark:text-neutral-400 hover:text-sky-600 dark:hover:text-sky-400 border border-slate-200 dark:border-neutral-800 rounded-lg px-2 py-1 transition-colors"
-          >
-            {locale === 'tr' ? '🇬🇧 EN' : '🇹🇷 TR'}
-          </button>
+          <LanguageSwitcher />
           {email ? (
             <div className="hidden sm:flex items-center gap-4">
               <Link href="/account" className="text-sm font-semibold text-neutral-700 dark:text-neutral-300 hover:text-sky-600 transition-colors">

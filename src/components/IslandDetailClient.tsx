@@ -27,9 +27,15 @@ const BUDGET_LEVEL_LABELS = {
 
 export function IslandDetailClient({ island, allBeaches, allRestaurants, allHotels, media, similarIslands }: { island: Island & { faqs?: Faq[] }; allBeaches: Beach[]; allRestaurants: Restaurant[]; allHotels: Hotel[]; media: MediaItem[]; similarIslands: IslandCardType[] }) {
   const { locale } = useLanguage()
-  const description = locale === 'en' ? (island.description_en || island.description) : island.description
-  const history = locale === 'en' ? (island.history_en || island.history) : island.history
-  const bestTime = locale === 'en' ? (island.best_time_to_visit_en || island.best_time_to_visit) : island.best_time_to_visit
+  const description = locale === 'en' ? (island.description_en || island.description)
+    : locale === 'el' ? (island.description_el || island.description)
+    : island.description
+  const history = locale === 'en' ? (island.history_en || island.history)
+    : locale === 'el' ? (island.history_el || island.history)
+    : island.history
+  const bestTime = locale === 'en' ? (island.best_time_to_visit_en || island.best_time_to_visit)
+    : locale === 'el' ? (island.best_time_to_visit_el || island.best_time_to_visit)
+    : island.best_time_to_visit
 
   const [activeTab, setActiveTab] = useState<'about' | 'beaches' | 'restaurants' | 'hotels' | 'gallery'>('about')
 
@@ -116,13 +122,17 @@ export function IslandDetailClient({ island, allBeaches, allRestaurants, allHote
     return true
   })
 
-  const filteredRestaurants = allRestaurants.filter(rest => {
-    if (restPriceFilter !== 'all' && rest.price_level !== restPriceFilter) return false
-    if (restSeaViewFilter && !rest.sea_view) return false
-    if (restVeganFilter && !rest.vegan) return false
-    if (restOutdoorFilter && !rest.outdoor_seating) return false
-    return true
-  })
+  const RESTAURANT_PRICE_ORDER: Record<string, number> = { budget: 0, mid: 1, expensive: 2 }
+
+  const filteredRestaurants = allRestaurants
+    .filter(rest => {
+      if (restPriceFilter !== 'all' && rest.price_level !== restPriceFilter) return false
+      if (restSeaViewFilter && !rest.sea_view) return false
+      if (restVeganFilter && !rest.vegan) return false
+      if (restOutdoorFilter && !rest.outdoor_seating) return false
+      return true
+    })
+    .sort((a, b) => RESTAURANT_PRICE_ORDER[a.price_level] - RESTAURANT_PRICE_ORDER[b.price_level])
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-neutral-950 transition-colors duration-300">
@@ -166,12 +176,12 @@ export function IslandDetailClient({ island, allBeaches, allRestaurants, allHote
             </span>
             {bestTime && (
               <span className="text-xs bg-white/10 backdrop-blur-md px-3 py-1 rounded-full font-medium">
-                📅 {locale === 'en' ? 'Best time to visit' : 'Ziyaret Zamanı'}: {bestTime}
+                📅 {locale === 'en' ? 'Best time to visit' : locale === 'el' ? 'Καλύτερη εποχή' : 'Ziyaret Zamanı'}: {bestTime}
               </span>
             )}
             {island.population && (
               <span className="text-xs bg-white/10 backdrop-blur-md px-3 py-1 rounded-full font-medium">
-                👥 {locale === 'en' ? 'Population' : 'Nüfus'}: {island.population.toLocaleString(locale === 'en' ? 'en-US' : 'tr-TR')}
+                👥 {locale === 'en' ? 'Population' : locale === 'el' ? 'Πληθυσμός' : 'Nüfus'}: {island.population.toLocaleString(locale === 'en' ? 'en-US' : locale === 'el' ? 'el-GR' : 'tr-TR')}
               </span>
             )}
           </div>
@@ -188,11 +198,11 @@ export function IslandDetailClient({ island, allBeaches, allRestaurants, allHote
 
             <div className="flex border-b border-slate-200 dark:border-neutral-850 mb-8 overflow-x-auto">
               {[
-                { id: 'about' as const, label: locale === 'en' ? '📖 About' : '📖 Hakkında' },
-                { id: 'beaches' as const, label: `🏖️ ${locale === 'en' ? 'Beaches' : 'Plajlar'} (${allBeaches.length})` },
-                { id: 'restaurants' as const, label: `🍽️ ${locale === 'en' ? 'Restaurants' : 'Restoranlar'} (${allRestaurants.length})` },
-                { id: 'hotels' as const, label: `🏨 ${locale === 'en' ? 'Hotels' : 'Oteller'} (${allHotels.length})` },
-                { id: 'gallery' as const, label: `📸 ${locale === 'en' ? 'Gallery' : 'Galeri'} (${media.length})` },
+                { id: 'about' as const, label: locale === 'en' ? '📖 About' : locale === 'el' ? '📖 Σχετικά' : '📖 Hakkında' },
+                { id: 'beaches' as const, label: `🏖️ ${locale === 'en' ? 'Beaches' : locale === 'el' ? 'Παραλίες' : 'Plajlar'} (${allBeaches.length})` },
+                { id: 'restaurants' as const, label: `🍽️ ${locale === 'en' ? 'Restaurants' : locale === 'el' ? 'Εστιατόρια' : 'Restoranlar'} (${allRestaurants.length})` },
+                { id: 'hotels' as const, label: `🏨 ${locale === 'en' ? 'Hotels' : locale === 'el' ? 'Ξενοδοχεία' : 'Oteller'} (${allHotels.length})` },
+                { id: 'gallery' as const, label: `📸 ${locale === 'en' ? 'Gallery' : locale === 'el' ? 'Γκαλερί' : 'Galeri'} (${media.length})` },
               ].map((tab) => (
                 <button
                   key={tab.id}
@@ -214,7 +224,7 @@ export function IslandDetailClient({ island, allBeaches, allRestaurants, allHote
                 <>
                   <article className="prose max-w-none dark:prose-invert">
                     <h2 className="text-2xl font-bold text-neutral-900 dark:text-white mb-4">
-                      {locale === 'en' ? 'Overview' : 'Genel Bakış'}
+                      {locale === 'en' ? 'Overview' : locale === 'el' ? 'Επισκόπηση' : 'Genel Bakış'}
                     </h2>
                     <p className="text-neutral-700 dark:text-neutral-300 leading-relaxed text-base">
                       {description}
@@ -223,7 +233,7 @@ export function IslandDetailClient({ island, allBeaches, allRestaurants, allHote
                     {history && (
                       <div className="mt-8 bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-slate-100 dark:border-neutral-900 shadow-sm">
                         <h3 className="text-lg font-bold text-neutral-900 dark:text-white flex items-center gap-2 mb-3">
-                          🏛️ {locale === 'en' ? 'History & Culture' : 'Tarihçesi & Kültürü'}
+                          🏛️ {locale === 'en' ? 'History & Culture' : locale === 'el' ? 'Ιστορία & Πολιτισμός' : 'Tarihçesi & Kültürü'}
                         </h3>
                         <p className="text-neutral-600 dark:text-neutral-350 text-sm leading-relaxed">
                           {history}

@@ -15,7 +15,7 @@ const COOKIE_NAME = 'yunanisland-locale'
 
 function readCookieLocale(): Locale {
   if (typeof document === 'undefined') return 'tr'
-  const match = document.cookie.match(new RegExp(`${COOKIE_NAME}=(tr|en)`))
+  const match = document.cookie.match(new RegExp(`${COOKIE_NAME}=(tr|en|el)`))
   return (match?.[1] as Locale) ?? 'tr'
 }
 

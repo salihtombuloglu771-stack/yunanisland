@@ -12,10 +12,12 @@ export interface Island {
   slug: string
   description: string | null
   description_en?: string | null
+  description_el?: string | null
   budget_level: 'budget' | 'mid' | 'luxury'
   population: number | null
   best_time_to_visit: string | null
   best_time_to_visit_en?: string | null
+  best_time_to_visit_el?: string | null
   cover_image_url: string | null
   avgRating?: number | null
   reviewCount?: number
@@ -34,8 +36,12 @@ const BUDGET_LABELS = {
 export function IslandCard({ island }: IslandCardProps) {
   const { locale } = useLanguage()
   const budget = BUDGET_LABELS[island.budget_level]
-  const description = locale === 'en' ? (island.description_en || island.description) : island.description
-  const bestTime = locale === 'en' ? (island.best_time_to_visit_en || island.best_time_to_visit) : island.best_time_to_visit
+  const description = locale === 'en' ? (island.description_en || island.description)
+    : locale === 'el' ? (island.description_el || island.description)
+    : island.description
+  const bestTime = locale === 'en' ? (island.best_time_to_visit_en || island.best_time_to_visit)
+    : locale === 'el' ? (island.best_time_to_visit_el || island.best_time_to_visit)
+    : island.best_time_to_visit
 
   return (
     <div className="group relative overflow-hidden rounded-2xl border border-neutral-100 dark:border-neutral-800 bg-white dark:bg-neutral-900 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
@@ -85,19 +91,19 @@ export function IslandCard({ island }: IslandCardProps) {
         </div>
 
         <p className="mt-1 line-clamp-2 text-xs text-neutral-600 dark:text-neutral-300">
-          {description || (locale === 'en' ? 'No description added yet.' : 'Bu ada hakkında henüz bir açıklama eklenmedi.')}
+          {description || (locale === 'en' ? 'No description added yet.' : locale === 'el' ? 'Δεν έχει προστεθεί ακόμη περιγραφή.' : 'Bu ada hakkında henüz bir açıklama eklenmedi.')}
         </p>
 
         {/* Alt Bilgi ve Link */}
         <div className="mt-3 flex items-center justify-between border-t border-neutral-100 dark:border-neutral-800 pt-2.5">
           <span className="text-[11px] text-neutral-500 dark:text-neutral-400">
-            {island.population ? `👥 ${island.population.toLocaleString(locale === 'en' ? 'en-US' : 'tr-TR')}` : ''}
+            {island.population ? `👥 ${island.population.toLocaleString(locale === 'en' ? 'en-US' : locale === 'el' ? 'el-GR' : 'tr-TR')}` : ''}
           </span>
           <Link
             href={`/islands/${island.slug}`}
             className="inline-flex items-center gap-1 text-xs font-semibold text-sky-600 hover:text-sky-500 dark:text-sky-400 dark:hover:text-sky-300 transition-colors"
           >
-            {locale === 'en' ? 'View Details' : 'Detayları Gör'}
+            {locale === 'en' ? 'View Details' : locale === 'el' ? 'Δείτε Λεπτομέρειες' : 'Detayları Gör'}
             <span className="transition-transform duration-200 group-hover:translate-x-1">→</span>
           </Link>
         </div>
