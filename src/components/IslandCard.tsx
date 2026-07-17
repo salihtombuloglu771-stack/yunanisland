@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
+import { FavoriteButton } from '@/components/FavoriteButton'
 
 export interface Island {
   id: string
@@ -46,6 +47,10 @@ export function IslandCard({ island }: IslandCardProps) {
         )}
         {/* Karartma Katmanı */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+
+        <div className="absolute top-3 right-3">
+          <FavoriteButton entityType="island" entityId={island.id} />
+        </div>
       </div>
 
       {/* İçerik Alanı */}

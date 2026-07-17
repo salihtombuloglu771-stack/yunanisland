@@ -1,4 +1,5 @@
 import { Restaurant } from '@/lib/mockData'
+import { FavoriteButton } from '@/components/FavoriteButton'
 
 interface RestaurantCardProps {
   restaurant: Restaurant
@@ -28,9 +29,12 @@ export function RestaurantCard({ restaurant }: RestaurantCardProps) {
               {restaurant.name}
             </h3>
           </div>
-          <span className={`inline-flex items-center rounded-lg px-2.5 py-1 text-xs font-semibold ${price.color}`}>
-            {price.label}
-          </span>
+          <div className="flex items-center gap-2">
+            <span className={`inline-flex items-center rounded-lg px-2.5 py-1 text-xs font-semibold ${price.color}`}>
+              {price.label}
+            </span>
+            <FavoriteButton entityType="restaurant" entityId={restaurant.id} className="text-base leading-none" />
+          </div>
         </div>
 
         {/* Çalışma Saatleri */}

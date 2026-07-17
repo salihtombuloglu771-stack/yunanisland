@@ -1,0 +1,76 @@
+import Link from 'next/link'
+import type { Metadata } from 'next'
+import { Header } from '@/components/Header'
+import { createClient } from '@/lib/supabase/server'
+
+interface PageProps {
+  params: Promise<{ slug: string }>
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { slug } = await params
+  const supabase = await createClient()
+  const { data: article } = await supabase.from('articles').select('title, content').eq('slug', slug).maybeSingle()
+
+  if (!article) return { title: 'Yazı Bulunamadı — Yunanisland' }
+
+  return {
+    title: `${article.title} — Yunanisland Blog`,
+    description: article.content?.slice(0, 160) ?? undefined,
+  }
+}
+
+export default async function ArticlePage({ params }: PageProps) {
+  const { slug } = await params
+  const supabase = await createClient()
+
+  const { data: article } = await supabase
+    .from('articles')
+    .select('id, title, content, published_at, categories(name)')
+    .eq('slug', slug)
+    .eq('is_published', true)
+    .maybeSingle()
+
+  const category = article && (Array.isArray(article.categories) ? article.categories[0] : article.categories)
+
+  return (
+    <div className="min-h-screen bg-slate-50 dark:bg-neutral-950 transition-colors duration-300">
+      <Header />
+
+      <main className="mx-auto max-w-3xl px-6 py-16">
+        {article ? (
+          <article className="prose max-w-none dark:prose-invert">
+            {category && (
+              <span className="inline-flex items-center rounded-full bg-sky-500/10 text-sky-600 dark:text-sky-400 px-2.5 py-0.5 text-xs font-semibold mb-4 not-prose">
+                {category.name}
+              </span>
+            )}
+            <h1 className="text-3xl font-bold text-neutral-900 dark:text-white">{article.title}</h1>
+            {article.published_at && (
+              <p className="text-xs text-neutral-400 not-prose mb-6">
+                {new Date(article.published_at).toLocaleDateString('tr-TR')}
+              </p>
+            )}
+            <p className="text-neutral-700 dark:text-neutral-300 leading-relaxed whitespace-pre-line">
+              {article.content}
+            </p>
+          </article>
+        ) : (
+          <div className="text-center py-16">
+            <span className="text-5xl">📝❌</span>
+            <h1 className="mt-4 text-2xl font-bold text-neutral-900 dark:text-white">Yazı Bulunamadı</h1>
+            <Link href="/blog" className="mt-6 inline-block rounded-xl bg-sky-600 px-6 py-2.5 text-sm font-semibold text-white shadow-md hover:bg-sky-500 transition-colors">
+              Bloga Dön
+            </Link>
+          </div>
+        )}
+      </main>
+
+      <footer className="border-t border-slate-100 dark:border-neutral-900 bg-white dark:bg-neutral-950 py-8 mt-24">
+        <div className="mx-auto max-w-7xl px-6 text-center">
+          <p className="text-sm text-neutral-500 dark:text-neutral-400">&copy; 2026 Yunanisland. Tüm hakları saklıdır.</p>
+        </div>
+      </footer>
+    </div>
+  )
+}

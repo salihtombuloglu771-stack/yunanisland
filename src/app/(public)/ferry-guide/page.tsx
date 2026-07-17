@@ -2,8 +2,9 @@
 
 import { useState, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
-import Link from 'next/link'
-import { searchFerryRoutes, FerryRoute } from '@/lib/mockData'
+import { Header } from '@/components/Header'
+import { createClient } from '@/lib/supabase/client'
+import { FerryRoute } from '@/lib/mockData'
 
 const PORTS = ['Bodrum', 'Kos', 'Atina (Pire)', 'Santorini', 'Rhodes']
 
@@ -23,13 +24,21 @@ function FerrySearchForm() {
   const [routes, setRoutes] = useState<FerryRoute[]>([])
   const [hasSearched, setHasSearched] = useState(false)
   const [selectedRouteForTicket, setSelectedRouteForTicket] = useState<FerryRoute | null>(null)
+  const [searching, setSearching] = useState(false)
 
-  const handleSearch = (e: React.FormEvent) => {
+  const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault()
-    const results = searchFerryRoutes(fromPort, toPort)
-    setRoutes(results)
+    setSearching(true)
+    const supabase = createClient()
+    const { data } = await supabase
+      .from('ferry_routes')
+      .select('*')
+      .ilike('from_port', fromPort)
+      .ilike('to_port', toPort)
+    setRoutes((data as FerryRoute[]) ?? [])
     setHasSearched(true)
     setSelectedRouteForTicket(null)
+    setSearching(false)
   }
 
   return (
@@ -73,9 +82,10 @@ function FerrySearchForm() {
 
           <button
             type="submit"
-            className="w-full mt-2 rounded-xl bg-sky-600 hover:bg-sky-500 py-3 text-sm font-semibold text-white shadow-md transition-colors"
+            disabled={searching}
+            className="w-full mt-2 rounded-xl bg-sky-600 hover:bg-sky-500 py-3 text-sm font-semibold text-white shadow-md transition-colors disabled:opacity-50"
           >
-            Seferleri Ara 🔍
+            {searching ? 'Aranıyor...' : 'Seferleri Ara 🔍'}
           </button>
         </form>
       </div>
@@ -182,21 +192,7 @@ function FerrySearchForm() {
 export default function FerryGuidePage() {
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-neutral-950 transition-colors duration-300">
-      
-      {/* Sticky Header */}
-      <header className="sticky top-0 z-50 w-full border-b border-slate-100 dark:border-neutral-900 bg-white/80 dark:bg-neutral-950/80 backdrop-blur-md">
-        <div className="mx-auto flex max-w-7xl h-16 items-center justify-between px-6">
-          <Link href="/" className="flex items-center gap-2 font-bold text-xl text-sky-600 dark:text-sky-400">
-            <span>🏝️</span>
-            <span>Yunanisland</span>
-          </Link>
-          <nav className="flex items-center gap-6">
-            <Link href="/" className="text-sm font-semibold text-neutral-600 dark:text-neutral-450 hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
-              ← Ana Sayfa
-            </Link>
-          </nav>
-        </div>
-      </header>
+      <Header />
 
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-slate-900 py-16 text-white dark:bg-black">

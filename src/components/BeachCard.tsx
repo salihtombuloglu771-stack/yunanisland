@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import { Beach } from '@/lib/mockData'
+import { FavoriteButton } from '@/components/FavoriteButton'
 
 interface BeachCardProps {
   beach: Beach
@@ -45,6 +46,10 @@ export function BeachCard({ beach }: BeachCardProps) {
             💙 Mavi Bayrak
           </div>
         )}
+
+        <div className="absolute bottom-3 right-3">
+          <FavoriteButton entityType="beach" entityId={beach.id} />
+        </div>
       </div>
 
       {/* İçerik */}
