@@ -9,7 +9,7 @@ export function HomeHero() {
   return (
     <section className="relative overflow-hidden bg-slate-900 py-24 text-white dark:bg-black">
       <Image
-        src="/santorini.jpg"
+        src="/greek-islands-collage.jpg"
         alt=""
         fill
         priority
