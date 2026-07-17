@@ -16,7 +16,7 @@ export default async function AdminDashboardPage() {
     { label: 'Adalar', count: islands.count ?? 0, href: '/admin/islands', emoji: '🏝️' },
     { label: 'Plajlar', count: beaches.count ?? 0, href: '/admin/beaches', emoji: '🏖️' },
     { label: 'Restoranlar', count: restaurants.count ?? 0, href: '/admin/restaurants', emoji: '🍽️' },
-    { label: 'Kullanıcılar', count: users.count ?? 0, href: '#', emoji: '👤' },
+    { label: 'Kullanıcılar', count: users.count ?? 0, href: '/admin/users', emoji: '👤' },
     { label: 'Yorumlar', count: reviews.count ?? 0, href: '#', emoji: '⭐' },
   ]
 
@@ -58,6 +58,12 @@ export default async function AdminDashboardPage() {
           </Link>
           <Link href="/admin/advertisements" className="rounded-xl bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 px-5 py-2.5 text-sm font-semibold text-neutral-700 dark:text-neutral-300 hover:bg-slate-50 dark:hover:bg-neutral-850 transition-colors">
             📢 Reklamları Yönet
+          </Link>
+          <Link href="/admin/users" className="rounded-xl bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 px-5 py-2.5 text-sm font-semibold text-neutral-700 dark:text-neutral-300 hover:bg-slate-50 dark:hover:bg-neutral-850 transition-colors">
+            👤 Kullanıcıları Yönet
+          </Link>
+          <Link href="/admin/events" className="rounded-xl bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 px-5 py-2.5 text-sm font-semibold text-neutral-700 dark:text-neutral-300 hover:bg-slate-50 dark:hover:bg-neutral-850 transition-colors">
+            📅 Etkinlikleri Yönet
           </Link>
         </div>
       </div>
