@@ -2,6 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { FavoriteButton } from '@/components/FavoriteButton'
 import { RatingBadge } from '@/components/RatingBadge'
+import { FuelBadge } from '@/components/FuelBadge'
 
 export interface Hotel {
   id: string
@@ -12,6 +13,8 @@ export interface Hotel {
   price_range: string | null
   affiliate_link: string | null
   cover_image_url: string | null
+  latitude?: number | null
+  longitude?: number | null
   avgRating?: number | null
   reviewCount?: number
 }
@@ -22,7 +25,14 @@ const CATEGORY_LABELS = {
   luxury: { label: '💎 Lüks', color: 'bg-amber-500/10 text-amber-600 dark:text-amber-400' },
 }
 
-export function HotelCard({ hotel }: { hotel: Hotel }) {
+interface HotelCardProps {
+  hotel: Hotel
+  islandLat?: number | null
+  islandLng?: number | null
+  carId?: string
+}
+
+export function HotelCard({ hotel, islandLat, islandLng, carId }: HotelCardProps) {
   const category = CATEGORY_LABELS[hotel.category]
 
   return (
@@ -64,6 +74,12 @@ export function HotelCard({ hotel }: { hotel: Hotel }) {
         <p className="mt-2 text-sm text-neutral-600 dark:text-neutral-400 line-clamp-2">
           {hotel.description || 'Bu otel hakkında henüz bir açıklama eklenmedi.'}
         </p>
+
+        {carId && (
+          <div className="mt-3">
+            <FuelBadge originLat={islandLat ?? null} originLng={islandLng ?? null} destLat={hotel.latitude ?? null} destLng={hotel.longitude ?? null} carId={carId} />
+          </div>
+        )}
 
         {hotel.affiliate_link && (
           <a

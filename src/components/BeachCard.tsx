@@ -3,9 +3,13 @@ import Link from 'next/link'
 import { Beach } from '@/lib/mockData'
 import { FavoriteButton } from '@/components/FavoriteButton'
 import { RatingBadge } from '@/components/RatingBadge'
+import { FuelBadge } from '@/components/FuelBadge'
 
 interface BeachCardProps {
   beach: Beach & { avgRating?: number | null; reviewCount?: number }
+  islandLat?: number | null
+  islandLng?: number | null
+  carId?: string
 }
 
 const BEACH_TYPE_LABELS = {
@@ -14,7 +18,7 @@ const BEACH_TYPE_LABELS = {
   mixed: '⛱️ Karışık Plaj',
 }
 
-export function BeachCard({ beach }: BeachCardProps) {
+export function BeachCard({ beach, islandLat, islandLng, carId }: BeachCardProps) {
   return (
     <div className="group relative overflow-hidden rounded-2xl border border-neutral-100 dark:border-neutral-900 bg-white dark:bg-neutral-900 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
       
@@ -70,6 +74,12 @@ export function BeachCard({ beach }: BeachCardProps) {
         <p className="mt-2 text-sm text-neutral-600 dark:text-neutral-400 line-clamp-2">
           {beach.description || 'Bu plaj hakkında henüz bir açıklama eklenmedi.'}
         </p>
+
+        {carId && (
+          <div className="mt-3">
+            <FuelBadge originLat={islandLat ?? null} originLng={islandLng ?? null} destLat={beach.latitude} destLng={beach.longitude} carId={carId} />
+          </div>
+        )}
 
         {/* Detaylar ve Tesisler */}
         <div className="mt-4 border-t border-neutral-100 dark:border-neutral-800 pt-4">

@@ -13,7 +13,10 @@ import { Gallery, type MediaItem } from '@/components/Gallery'
 import { Breadcrumbs } from '@/components/Breadcrumbs'
 import { FaqAccordion, type Faq } from '@/components/FaqAccordion'
 import { SimilarIslands } from '@/components/SimilarIslands'
+import { CarSelector } from '@/components/CarSelector'
 import { useLanguage } from '@/lib/i18n/LanguageProvider'
+import { useLocalStorageState } from '@/lib/useLocalStorageState'
+import { DEFAULT_CAR_ID, type CarType } from '@/lib/fuelEstimate'
 import type { Island, Beach, Restaurant } from '@/lib/mockData'
 import type { Island as IslandCardType } from '@/components/IslandCard'
 
@@ -38,6 +41,8 @@ export function IslandDetailClient({ island, allBeaches, allRestaurants, allHote
     : island.best_time_to_visit
 
   const [activeTab, setActiveTab] = useState<'about' | 'beaches' | 'restaurants' | 'hotels' | 'gallery'>('about')
+
+  const [carId, setCarId] = useLocalStorageState<CarType['id']>('yunanisland-car', DEFAULT_CAR_ID)
 
   const [beachTypeFilter, setBeachTypeFilter] = useState<'all' | 'sand' | 'pebble'>('all')
   const [beachFamilyFilter, setBeachFamilyFilter] = useState(false)
@@ -316,10 +321,14 @@ export function IslandDetailClient({ island, allBeaches, allRestaurants, allHote
 
                   </div>
 
+                  <div className="mb-6">
+                    <CarSelector carId={carId} onChange={setCarId} />
+                  </div>
+
                   {filteredBeaches.length > 0 ? (
                     <div className="grid gap-6 sm:grid-cols-2">
                       {filteredBeaches.map(beach => (
-                        <BeachCard key={beach.id} beach={beach} />
+                        <BeachCard key={beach.id} beach={beach} islandLat={island.latitude} islandLng={island.longitude} carId={carId} />
                       ))}
                     </div>
                   ) : (
@@ -414,10 +423,15 @@ export function IslandDetailClient({ island, allBeaches, allRestaurants, allHote
 
               {activeTab === 'hotels' && (
                 <div>
+                  {allHotels.length > 0 && (
+                    <div className="mb-6">
+                      <CarSelector carId={carId} onChange={setCarId} />
+                    </div>
+                  )}
                   {allHotels.length > 0 ? (
                     <div className="grid gap-6 sm:grid-cols-2">
                       {allHotels.map(hotel => (
-                        <HotelCard key={hotel.id} hotel={hotel} />
+                        <HotelCard key={hotel.id} hotel={hotel} islandLat={island.latitude} islandLng={island.longitude} carId={carId} />
                       ))}
                     </div>
                   ) : (
