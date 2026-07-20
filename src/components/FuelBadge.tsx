@@ -1,4 +1,4 @@
-import { estimateFuel, getCarType } from '@/lib/fuelEstimate'
+import { estimateFuel, getCarType, FUEL_PRICE_EUR_PER_LITER } from '@/lib/fuelEstimate'
 
 interface FuelBadgeProps {
   originLat: number | null
@@ -21,7 +21,7 @@ export function FuelBadge({ originLat, originLng, destLat, destLng, carId }: Fue
   return (
     <span
       className="inline-flex items-center gap-1 text-[11px] font-medium text-neutral-500 dark:text-neutral-400 bg-slate-50 dark:bg-neutral-950 border border-slate-200 dark:border-neutral-800 rounded-md px-2 py-0.5"
-      title="Ada merkezinden tek yön, yaklaşık tahmin"
+      title={`Ada merkezinden tek yön, yaklaşık tahmin (benzin ${FUEL_PRICE_EUR_PER_LITER.toFixed(2)} €/L, Temmuz 2026 güncel fiyatı)`}
     >
       {car.icon} ~{distanceLabel} · ~{litersLabel} · ~{costLabel}
     </span>

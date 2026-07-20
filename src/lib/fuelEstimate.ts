@@ -13,8 +13,11 @@ export const CAR_TYPES: CarType[] = [
 
 export const DEFAULT_CAR_ID: CarType['id'] = 'compact'
 
-// Yunanistan ortalama benzin fiyatı, yaklaşık (€/L)
-export const FUEL_PRICE_EUR_PER_LITER = 1.85
+// Yunanistan ortalama kurşunsuz benzin fiyatı (€/L) — GlobalPetrolPrices.com ve
+// fuel-prices.eu kaynaklı, Temmuz 2026 itibarıyla güncel gerçek fiyat. Ücretsiz,
+// anahtar gerektirmeyen canlı bir API bulunamadığı için sabit değer olarak
+// tutuluyor; fiyat önemli ölçüde değiştiğinde elle güncellenmeli.
+export const FUEL_PRICE_EUR_PER_LITER = 1.98
 
 // Kuş uçuşu mesafeyi ada içi yol mesafesine yaklaştırmak için çarpan
 const ROAD_DISTANCE_FACTOR = 1.35
