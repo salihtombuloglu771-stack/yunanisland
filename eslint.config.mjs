@@ -10,6 +10,10 @@ const eslintConfig = defineConfig([
       // React Compiler prep rule — flags idiomatic fetch-on-mount effects
       // (setState inside a named effect helper) as cascading-render risk.
       'react-hooks/set-state-in-effect': 'warn',
+      // Same React Compiler prep rule set — flags Date.now()/new Date() calls
+      // in async Server Components as "impure during render", but Server
+      // Components execute once per request (no re-renders), so it doesn't apply.
+      'react-hooks/purity': 'warn',
     },
   },
   globalIgnores(['.next/**', 'out/**', 'build/**', 'next-env.d.ts']),

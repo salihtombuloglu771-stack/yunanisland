@@ -29,7 +29,7 @@ function SearchForm() {
   const [loading, setLoading] = useState(false)
   const [searched, setSearched] = useState(false)
 
-  const runSearch = async (term: string) => {
+  const runSearch = async (term: string, logSearch = false) => {
     if (!term.trim()) {
       setResults([])
       setSearched(false)
@@ -66,11 +66,15 @@ function SearchForm() {
 
     setResults(combined)
     setLoading(false)
+
+    if (logSearch) {
+      supabase.from('search_logs').insert({ query: term.trim(), results_count: combined.length }).then(() => {})
+    }
   }
 
   useEffect(() => {
     const initialQ = searchParams.get('q')
-    if (initialQ) runSearch(initialQ)
+    if (initialQ) runSearch(initialQ, true)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -84,7 +88,7 @@ function SearchForm() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    runSearch(query)
+    runSearch(query, true)
   }
 
   return (

@@ -65,6 +65,9 @@ export default async function AdminDashboardPage() {
           <Link href="/admin/events" className="rounded-xl bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 px-5 py-2.5 text-sm font-semibold text-neutral-700 dark:text-neutral-300 hover:bg-slate-50 dark:hover:bg-neutral-800 transition-colors">
             📅 Etkinlikleri Yönet
           </Link>
+          <Link href="/admin/analytics" className="rounded-xl bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 px-5 py-2.5 text-sm font-semibold text-neutral-700 dark:text-neutral-300 hover:bg-slate-50 dark:hover:bg-neutral-800 transition-colors">
+            📊 Analitik
+          </Link>
         </div>
       </div>
     </main>
