@@ -49,8 +49,11 @@ export async function GET() {
         const res = await fetch(endpoint, {
           method: 'POST',
           body: `data=${encodeURIComponent(query)}`,
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          next: { revalidate },
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'User-Agent': 'Yunanisland/1.0 (https://yunanisland.vercel.app; travel guide POI layer)',
+            'Accept': 'application/json, text/plain, */*',
+          },
           signal: AbortSignal.timeout(15000),
         })
         debug.push(`${endpoint}: status ${res.status}`)
