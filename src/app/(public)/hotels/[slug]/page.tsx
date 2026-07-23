@@ -1,11 +1,8 @@
 import Link from 'next/link'
-import Image from 'next/image'
 import type { Metadata } from 'next'
 import { Header } from '@/components/Header'
-import { FavoriteButton } from '@/components/FavoriteButton'
-import { ReviewSection } from '@/components/ReviewSection'
-import { Breadcrumbs } from '@/components/Breadcrumbs'
 import { JsonLd } from '@/components/JsonLd'
+import { HotelDetailClient } from '@/components/HotelDetailClient'
 import { createClient } from '@/lib/supabase/server'
 
 const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://yunanisland.vercel.app'
@@ -13,8 +10,6 @@ const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://yunanisland.vercel.
 interface PageProps {
   params: Promise<{ slug: string }>
 }
-
-const CATEGORY_LABELS: Record<string, string> = { budget: '💰 Bütçe Dostu', 'mid-range': '💳 Orta Segment', luxury: '💎 Lüks' }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params
@@ -63,63 +58,9 @@ export default async function HotelDetailPage({ params }: PageProps) {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-neutral-950 transition-colors duration-300">
+    <>
       <JsonLd data={jsonLd} />
-      <Header />
-
-      <div className="mx-auto max-w-4xl px-6 pt-4">
-        <Breadcrumbs
-          baseUrl={SITE_URL}
-          items={[
-            { label: 'Ana Sayfa', href: '/' },
-            ...(island ? [{ label: island.name, href: `/islands/${island.slug}` }] : []),
-            { label: hotel.name },
-          ]}
-        />
-      </div>
-
-      <section className="relative h-[300px] w-full overflow-hidden bg-slate-900">
-        {hotel.cover_image_url ? (
-          <>
-            <Image src={hotel.cover_image_url} alt={hotel.name} fill priority className="object-cover" />
-            <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent" />
-          </>
-        ) : (
-          <div className="absolute inset-0 bg-gradient-to-br from-violet-600 via-purple-800 to-indigo-950" />
-        )}
-        <div className="absolute top-20 right-6">
-          <FavoriteButton entityType="hotel" entityId={hotel.id} />
-        </div>
-        <div className="absolute bottom-0 left-0 right-0 max-w-4xl mx-auto px-6 pb-8 text-white">
-          {island && (
-            <Link href={`/islands/${island.slug}`} className="text-xs text-sky-300 hover:underline">
-              ← {island.name}
-            </Link>
-          )}
-          <h1 className="mt-2 text-3xl md:text-5xl font-extrabold tracking-tight">{hotel.name}</h1>
-          <div className="mt-3 flex flex-wrap gap-2">
-            <span className="text-xs bg-white/10 backdrop-blur-md px-3 py-1 rounded-full font-medium">{CATEGORY_LABELS[hotel.category]}</span>
-            {hotel.price_range && <span className="text-xs bg-white/10 backdrop-blur-md px-3 py-1 rounded-full font-medium">{hotel.price_range}</span>}
-          </div>
-        </div>
-      </section>
-
-      <main className="mx-auto max-w-4xl px-6 py-12">
-        <p className="text-neutral-700 dark:text-neutral-300 leading-relaxed">{hotel.description}</p>
-
-        {hotel.affiliate_link && (
-          <a
-            href={hotel.affiliate_link}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-6 inline-block rounded-xl bg-sky-600 hover:bg-sky-500 px-6 py-3 text-sm font-semibold text-white shadow-md transition-colors"
-          >
-            Fiyatları Gör ↗
-          </a>
-        )}
-
-        <ReviewSection entityType="hotel" entityId={hotel.id} />
-      </main>
-    </div>
+      <HotelDetailClient hotel={hotel} island={island} />
+    </>
   )
 }
