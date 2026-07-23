@@ -46,6 +46,9 @@ export function IslandMap({ points, activePoiTypes = [] }: { points: MapPoint[];
     })
   }, [])
 
+  const defaultIcon = useMemo(() => new L.Icon.Default(), [])
+  const poiIcons = useMemo(() => Object.fromEntries(POI_TYPES.map((t) => [t, poiDivIcon(t)])), [])
+
   const visiblePoints = useMemo(
     () => points.filter((p) => !POI_TYPES.includes(p.type) || activePoiTypes.includes(p.type)),
     [points, activePoiTypes]
@@ -65,7 +68,7 @@ export function IslandMap({ points, activePoiTypes = [] }: { points: MapPoint[];
         <Marker
           key={`${p.type}-${p.id}`}
           position={[p.latitude, p.longitude]}
-          icon={POI_TYPES.includes(p.type) ? poiDivIcon(p.type) : undefined}
+          icon={POI_TYPES.includes(p.type) ? poiIcons[p.type] : defaultIcon}
         >
           <Popup>
             <div className="text-sm">
