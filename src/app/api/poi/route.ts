@@ -43,6 +43,7 @@ export async function GET() {
     const query = buildQuery(validIslands)
 
     let data: { elements?: { id: number; lat: number; lon: number; tags?: Record<string, string> }[] } | null = null
+    const debug: string[] = []
     for (const endpoint of OVERPASS_ENDPOINTS) {
       try {
         const res = await fetch(endpoint, {
@@ -52,16 +53,20 @@ export async function GET() {
           next: { revalidate },
           signal: AbortSignal.timeout(15000),
         })
+        debug.push(`${endpoint}: status ${res.status}`)
         if (res.ok) {
           data = await res.json()
           break
+        } else {
+          debug.push(await res.text().then(t => t.slice(0, 300)))
         }
-      } catch {
+      } catch (e) {
+        debug.push(`${endpoint}: error ${e instanceof Error ? e.message : String(e)}`)
         continue
       }
     }
 
-    if (!data?.elements) return NextResponse.json({ points: [] })
+    if (!data?.elements) return NextResponse.json({ points: [], debug, islandCount: validIslands.length })
 
     const points: PoiPoint[] = data.elements
       .filter((el) => el.tags?.amenity && AMENITY_LABEL[el.tags.amenity])
