@@ -12,7 +12,7 @@ export default async function Home() {
   const supabase = await createClient()
   const { data: islands } = await supabase
     .from('islands')
-    .select('id, name, slug, description, description_en, budget_level, population, best_time_to_visit, best_time_to_visit_en, cover_image_url')
+    .select('id, name, slug, description, description_en, budget_level, moods, population, best_time_to_visit, best_time_to_visit_en, cover_image_url')
     .eq('is_published', true)
     .order('name')
 

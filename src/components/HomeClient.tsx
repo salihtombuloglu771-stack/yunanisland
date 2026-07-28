@@ -4,18 +4,28 @@ import { useState } from 'react'
 import { IslandCard, type Island } from '@/components/IslandCard'
 import { useLanguage } from '@/lib/i18n/LanguageProvider'
 
+const MOODS = [
+  { id: 'honeymoon', label: '❤️ Balayı' },
+  { id: 'family', label: '👨‍👩‍👧 Aile' },
+  { id: 'nightlife', label: '🎉 Gece Hayatı' },
+  { id: 'nature', label: '🌿 Doğa' },
+  { id: 'history', label: '🏛️ Tarih' },
+]
+
 export function HomeClient({ islands }: { islands: Island[] }) {
   const { t } = useLanguage()
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedBudget, setSelectedBudget] = useState<string>('all')
+  const [selectedMood, setSelectedMood] = useState<string | null>(null)
 
   const filteredIslands = islands.filter((island) => {
     const matchesSearch = island.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       (island.description && island.description.toLowerCase().includes(searchQuery.toLowerCase()))
 
     const matchesBudget = selectedBudget === 'all' || island.budget_level === selectedBudget
+    const matchesMood = !selectedMood || (island.moods ?? []).includes(selectedMood)
 
-    return matchesSearch && matchesBudget
+    return matchesSearch && matchesBudget && matchesMood
   })
 
   return (
@@ -61,6 +71,26 @@ export function HomeClient({ islands }: { islands: Island[] }) {
 
       </div>
 
+      {/* Ruh Haline Göre Hızlı Filtre */}
+      <div className="flex flex-wrap items-center gap-2 mb-10">
+        <span className="text-xs font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider mr-1">
+          Ruh Haline Göre:
+        </span>
+        {MOODS.map((mood) => (
+          <button
+            key={mood.id}
+            onClick={() => setSelectedMood((prev) => (prev === mood.id ? null : mood.id))}
+            className={`rounded-full px-3.5 py-1.5 text-xs font-semibold border transition-all ${
+              selectedMood === mood.id
+                ? 'bg-rose-500 border-rose-500 text-white shadow-md shadow-rose-500/20'
+                : 'bg-white dark:bg-neutral-900 border-slate-200 dark:border-neutral-800 text-neutral-600 dark:text-neutral-400 hover:border-rose-300 dark:hover:border-rose-800'
+            }`}
+          >
+            {mood.label}
+          </button>
+        ))}
+      </div>
+
       {/* Adalar Listesi */}
       <div>
         <div className="flex items-center justify-between mb-6">
@@ -86,7 +116,7 @@ export function HomeClient({ islands }: { islands: Island[] }) {
               Arama kriterlerinize uygun ada bulunamadı. Lütfen farklı kelimelerle deneyin veya filtreyi sıfırlayın.
             </p>
             <button
-              onClick={() => { setSearchQuery(''); setSelectedBudget('all'); }}
+              onClick={() => { setSearchQuery(''); setSelectedBudget('all'); setSelectedMood(null); }}
               className="mt-4 rounded-xl bg-slate-100 dark:bg-neutral-800 px-4 py-2 text-xs font-semibold text-neutral-700 dark:text-neutral-300 hover:bg-slate-200 dark:hover:bg-neutral-700 transition-colors"
             >
               Filtreleri Temizle

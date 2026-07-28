@@ -14,6 +14,7 @@ export interface Island {
   description_en?: string | null
   description_el?: string | null
   budget_level: 'budget' | 'mid' | 'luxury'
+  moods?: string[]
   population: number | null
   best_time_to_visit: string | null
   best_time_to_visit_en?: string | null
