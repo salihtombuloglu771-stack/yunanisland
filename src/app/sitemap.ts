@@ -5,12 +5,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://yunanisland.vercel.app'
   const supabase = await createClient()
 
-  const [{ data: islands }, { data: articles }, { data: beaches }, { data: restaurants }, { data: hotels }] = await Promise.all([
+  const [{ data: islands }, { data: articles }, { data: beaches }, { data: restaurants }, { data: hotels }, { data: attractions }] = await Promise.all([
     supabase.from('islands').select('slug').eq('is_published', true),
     supabase.from('articles').select('slug').eq('is_published', true),
     supabase.from('beaches').select('slug'),
     supabase.from('restaurants').select('slug'),
     supabase.from('hotels').select('slug'),
+    supabase.from('attractions').select('slug'),
   ])
 
   const staticRoutes: MetadataRoute.Sitemap = [
@@ -55,5 +56,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.6,
   }))
 
-  return [...staticRoutes, ...islandRoutes, ...articleRoutes, ...beachRoutes, ...restaurantRoutes, ...hotelRoutes]
+  const attractionRoutes: MetadataRoute.Sitemap = (attractions ?? []).map((a) => ({
+    url: `${baseUrl}/attractions/${a.slug}`,
+    changeFrequency: 'monthly',
+    priority: 0.6,
+  }))
+
+  return [...staticRoutes, ...islandRoutes, ...articleRoutes, ...beachRoutes, ...restaurantRoutes, ...hotelRoutes, ...attractionRoutes]
 }

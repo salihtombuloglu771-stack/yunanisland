@@ -55,6 +55,7 @@ export default async function AccountPage() {
     beach: (tripNotes ?? []).filter(n => n.entity_type === 'beach').map(n => n.entity_id),
     restaurant: (tripNotes ?? []).filter(n => n.entity_type === 'restaurant').map(n => n.entity_id),
     hotel: (tripNotes ?? []).filter(n => n.entity_type === 'hotel').map(n => n.entity_id),
+    attraction: (tripNotes ?? []).filter(n => n.entity_type === 'attraction').map(n => n.entity_id),
   }
   const [{ data: islands }, { data: beaches }, { data: restaurants }] = await Promise.all([
     islandIds.length ? supabase.from('islands').select('id, name, slug').in('id', islandIds) : Promise.resolve({ data: [] }),
@@ -62,11 +63,12 @@ export default async function AccountPage() {
     restaurantIds.length ? supabase.from('restaurants').select('id, name, slug, islands(slug)').in('id', restaurantIds) : Promise.resolve({ data: [] }),
   ])
 
-  const [{ data: noteIslands }, { data: noteBeaches }, { data: noteRestaurants }, { data: noteHotels }] = await Promise.all([
+  const [{ data: noteIslands }, { data: noteBeaches }, { data: noteRestaurants }, { data: noteHotels }, { data: noteAttractions }] = await Promise.all([
     noteIdsByType.island.length ? supabase.from('islands').select('id, name, slug').in('id', noteIdsByType.island) : Promise.resolve({ data: [] }),
     noteIdsByType.beach.length ? supabase.from('beaches').select('id, name, slug').in('id', noteIdsByType.beach) : Promise.resolve({ data: [] }),
     noteIdsByType.restaurant.length ? supabase.from('restaurants').select('id, name, slug').in('id', noteIdsByType.restaurant) : Promise.resolve({ data: [] }),
     noteIdsByType.hotel.length ? supabase.from('hotels').select('id, name, slug').in('id', noteIdsByType.hotel) : Promise.resolve({ data: [] }),
+    noteIdsByType.attraction.length ? supabase.from('attractions').select('id, name, slug').in('id', noteIdsByType.attraction) : Promise.resolve({ data: [] }),
   ])
 
   type NoteEntity = { id: string; name: string; href: string; icon: string }
@@ -78,6 +80,7 @@ export default async function AccountPage() {
   }
   for (const r of noteRestaurants ?? []) entityMap.set(r.id, { id: r.id, name: r.name, href: `/restaurants/${r.slug}`, icon: '🍽️' })
   for (const h of noteHotels ?? []) entityMap.set(h.id, { id: h.id, name: h.name, href: `/hotels/${h.slug}`, icon: '🏨' })
+  for (const a of noteAttractions ?? []) entityMap.set(a.id, { id: a.id, name: a.name, href: `/attractions/${a.slug}`, icon: '📍' })
 
   const stats: Stats = {
     favoritesCount: (favorites ?? []).length,

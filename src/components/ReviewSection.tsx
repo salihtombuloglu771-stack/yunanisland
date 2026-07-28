@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 
-type EntityType = 'island' | 'beach' | 'restaurant' | 'hotel'
+type EntityType = 'island' | 'beach' | 'restaurant' | 'hotel' | 'attraction'
 
 interface Review {
   id: string

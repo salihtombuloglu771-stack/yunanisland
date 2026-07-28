@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 
-type EntityType = 'island' | 'beach' | 'restaurant' | 'hotel'
+type EntityType = 'island' | 'beach' | 'restaurant' | 'hotel' | 'attraction'
 
 export function FavoriteButton({ entityType, entityId, className }: { entityType: EntityType; entityId: string; className?: string }) {
   const router = useRouter()

@@ -58,10 +58,11 @@ export default async function IslandPage({ params }: PageProps) {
     )
   }
 
-  const [{ data: allBeaches }, { data: allRestaurants }, { data: allHotels }, { data: media }, { data: reviews }, { data: similarIslands }] = await Promise.all([
+  const [{ data: allBeaches }, { data: allRestaurants }, { data: allHotels }, { data: allAttractions }, { data: media }, { data: reviews }, { data: similarIslands }] = await Promise.all([
     supabase.from('beaches').select('*').eq('island_id', island.id),
     supabase.from('restaurants').select('*').eq('island_id', island.id),
     supabase.from('hotels').select('*').eq('island_id', island.id),
+    supabase.from('attractions').select('*').eq('island_id', island.id),
     supabase.from('media').select('id, url, media_type').eq('entity_type', 'island').eq('entity_id', island.id),
     supabase.from('reviews').select('rating').eq('entity_type', 'island').eq('entity_id', island.id),
     supabase
@@ -76,15 +77,17 @@ export default async function IslandPage({ params }: PageProps) {
   const reviewCount = reviews?.length ?? 0
   const avgRating = reviewCount > 0 ? reviews!.reduce((s, r) => s + r.rating, 0) / reviewCount : null
 
-  const [beachRatings, restaurantRatings, hotelRatings] = await Promise.all([
+  const [beachRatings, restaurantRatings, hotelRatings, attractionRatings] = await Promise.all([
     getRatingsMap(supabase, 'beach', (allBeaches ?? []).map((b) => b.id)),
     getRatingsMap(supabase, 'restaurant', (allRestaurants ?? []).map((r) => r.id)),
     getRatingsMap(supabase, 'hotel', (allHotels ?? []).map((h) => h.id)),
+    getRatingsMap(supabase, 'attraction', (allAttractions ?? []).map((a) => a.id)),
   ])
 
   const beachesWithRatings = (allBeaches ?? []).map((b) => ({ ...b, ...beachRatings[b.id] }))
   const restaurantsWithRatings = (allRestaurants ?? []).map((r) => ({ ...r, ...restaurantRatings[r.id] }))
   const hotelsWithRatings = (allHotels ?? []).map((h) => ({ ...h, ...hotelRatings[h.id] }))
+  const attractionsWithRatings = (allAttractions ?? []).map((a) => ({ ...a, ...attractionRatings[a.id] }))
 
   const similarIslandRatings = await getRatingsMap(supabase, 'island', (similarIslands ?? []).map((i) => i.id))
   const similarIslandsWithRatings = (similarIslands ?? []).map((i) => ({ ...i, ...similarIslandRatings[i.id] }))
@@ -112,6 +115,7 @@ export default async function IslandPage({ params }: PageProps) {
         allBeaches={beachesWithRatings}
         allRestaurants={restaurantsWithRatings}
         allHotels={hotelsWithRatings}
+        allAttractions={attractionsWithRatings}
         media={media ?? []}
         similarIslands={similarIslandsWithRatings}
       />

@@ -7,7 +7,7 @@ import { Header } from '@/components/Header'
 import { createClient } from '@/lib/supabase/client'
 
 interface Result {
-  type: 'island' | 'beach' | 'restaurant' | 'hotel'
+  type: 'island' | 'beach' | 'restaurant' | 'hotel' | 'attraction'
   id: string
   name: string
   slug: string
@@ -20,6 +20,7 @@ const TYPE_LABELS: Record<Result['type'], string> = {
   beach: '🏖️ Plaj',
   restaurant: '🍽️ Restoran',
   hotel: '🏨 Otel',
+  attraction: '📍 Gezilecek Yer',
 }
 
 function SearchForm() {
@@ -41,11 +42,12 @@ function SearchForm() {
     const supabase = createClient()
     const ilikeTerm = `%${term.trim()}%`
 
-    const [islandsRes, beachesRes, restaurantsRes, hotelsRes] = await Promise.all([
+    const [islandsRes, beachesRes, restaurantsRes, hotelsRes, attractionsRes] = await Promise.all([
       supabase.from('islands').select('id, name, slug, description').ilike('name', ilikeTerm).limit(10),
       supabase.from('beaches').select('id, name, slug, description, islands(slug)').ilike('name', ilikeTerm).limit(10),
       supabase.from('restaurants').select('id, name, slug, cuisine, islands(slug)').ilike('name', ilikeTerm).limit(10),
       supabase.from('hotels').select('id, name, slug, description, islands(slug)').ilike('name', ilikeTerm).limit(10),
+      supabase.from('attractions').select('id, name, slug, description, islands(slug)').ilike('name', ilikeTerm).limit(10),
     ])
 
     const combined: Result[] = [
@@ -61,6 +63,10 @@ function SearchForm() {
       ...(hotelsRes.data ?? []).map((h) => {
         const island = Array.isArray(h.islands) ? h.islands[0] : h.islands
         return { type: 'hotel' as const, id: h.id, name: h.name, slug: h.slug, islandSlug: island?.slug, description: h.description }
+      }),
+      ...(attractionsRes.data ?? []).map((a) => {
+        const island = Array.isArray(a.islands) ? a.islands[0] : a.islands
+        return { type: 'attraction' as const, id: a.id, name: a.name, slug: a.slug, islandSlug: island?.slug, description: a.description }
       }),
     ]
 
@@ -97,7 +103,7 @@ function SearchForm() {
 
       <main className="mx-auto max-w-3xl px-6 py-16">
         <h1 className="text-2xl font-bold text-neutral-900 dark:text-white">Yunanisland&apos;da Ara</h1>
-        <p className="mt-2 text-sm text-neutral-500">Adalar, plajlar ve restoranlar arasında arama yap.</p>
+        <p className="mt-2 text-sm text-neutral-500">Adalar, plajlar, restoranlar, oteller ve gezilecek yerler arasında arama yap.</p>
 
         <form onSubmit={handleSubmit} className="mt-6 relative">
           <input
@@ -124,6 +130,7 @@ function SearchForm() {
               beach: `/beaches/${r.slug}`,
               restaurant: `/restaurants/${r.slug}`,
               hotel: `/hotels/${r.slug}`,
+              attraction: `/attractions/${r.slug}`,
             }
             return (
             <Link

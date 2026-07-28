@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 
-type EntityType = 'island' | 'beach' | 'restaurant' | 'hotel'
+type EntityType = 'island' | 'beach' | 'restaurant' | 'hotel' | 'attraction'
 
 export function TripNoteBox({ entityType, entityId }: { entityType: EntityType; entityId: string }) {
   const [userId, setUserId] = useState<string | null>(null)

@@ -7,7 +7,7 @@ export interface RatingInfo {
 
 export async function getRatingsMap(
   supabase: SupabaseClient,
-  entityType: 'island' | 'beach' | 'restaurant' | 'hotel',
+  entityType: 'island' | 'beach' | 'restaurant' | 'hotel' | 'attraction',
   entityIds: string[]
 ): Promise<Record<string, RatingInfo>> {
   if (entityIds.length === 0) return {}

@@ -7,6 +7,7 @@ import { Header } from '@/components/Header'
 import { BeachCard } from '@/components/BeachCard'
 import { RestaurantCard } from '@/components/RestaurantCard'
 import { HotelCard, type Hotel } from '@/components/HotelCard'
+import { AttractionCard, type Attraction } from '@/components/AttractionCard'
 import { FavoriteButton } from '@/components/FavoriteButton'
 import { ReviewSection } from '@/components/ReviewSection'
 import { TripNoteBox } from '@/components/TripNoteBox'
@@ -29,7 +30,7 @@ const BUDGET_LEVEL_LABELS = {
   luxury: { label: 'Lüks', color: 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20' },
 }
 
-export function IslandDetailClient({ island, allBeaches, allRestaurants, allHotels, media, similarIslands }: { island: Island & { faqs?: Faq[] }; allBeaches: Beach[]; allRestaurants: Restaurant[]; allHotels: Hotel[]; media: MediaItem[]; similarIslands: IslandCardType[] }) {
+export function IslandDetailClient({ island, allBeaches, allRestaurants, allHotels, allAttractions, media, similarIslands }: { island: Island & { faqs?: Faq[] }; allBeaches: Beach[]; allRestaurants: Restaurant[]; allHotels: Hotel[]; allAttractions: Attraction[]; media: MediaItem[]; similarIslands: IslandCardType[] }) {
   const { locale } = useLanguage()
   const description = locale === 'en' ? (island.description_en || island.description)
     : locale === 'el' ? (island.description_el || island.description)
@@ -41,7 +42,7 @@ export function IslandDetailClient({ island, allBeaches, allRestaurants, allHote
     : locale === 'el' ? (island.best_time_to_visit_el || island.best_time_to_visit)
     : island.best_time_to_visit
 
-  const [activeTab, setActiveTab] = useState<'about' | 'beaches' | 'restaurants' | 'hotels' | 'gallery'>('about')
+  const [activeTab, setActiveTab] = useState<'about' | 'beaches' | 'restaurants' | 'hotels' | 'attractions' | 'gallery'>('about')
 
   const [carId, setCarId] = useLocalStorageState<CarType['id']>('yunanisland-car', DEFAULT_CAR_ID)
 
@@ -239,6 +240,7 @@ export function IslandDetailClient({ island, allBeaches, allRestaurants, allHote
                 { id: 'beaches' as const, label: `🏖️ ${locale === 'en' ? 'Beaches' : locale === 'el' ? 'Παραλίες' : 'Plajlar'} (${allBeaches.length})` },
                 { id: 'restaurants' as const, label: `🍽️ ${locale === 'en' ? 'Restaurants' : locale === 'el' ? 'Εστιατόρια' : 'Restoranlar'} (${allRestaurants.length})` },
                 { id: 'hotels' as const, label: `🏨 ${locale === 'en' ? 'Hotels' : locale === 'el' ? 'Ξενοδοχεία' : 'Oteller'} (${allHotels.length})` },
+                { id: 'attractions' as const, label: `📍 ${locale === 'en' ? 'Places to Visit' : locale === 'el' ? 'Αξιοθέατα' : 'Gezilecek Yerler'} (${allAttractions.length})` },
                 { id: 'gallery' as const, label: `📸 ${locale === 'en' ? 'Gallery' : locale === 'el' ? 'Γκαλερί' : 'Galeri'} (${media.length})` },
               ].map((tab) => (
                 <button
@@ -472,6 +474,25 @@ export function IslandDetailClient({ island, allBeaches, allRestaurants, allHote
                       <span className="text-3xl">🏨</span>
                       <p className="mt-2 text-sm text-neutral-500 dark:text-neutral-400">
                         Bu ada için henüz otel eklenmedi.
+                      </p>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {activeTab === 'attractions' && (
+                <div>
+                  {allAttractions.length > 0 ? (
+                    <div className="grid gap-6 sm:grid-cols-2">
+                      {allAttractions.map(attraction => (
+                        <AttractionCard key={attraction.id} attraction={attraction} />
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="py-12 text-center bg-white dark:bg-neutral-900 border border-slate-100 dark:border-neutral-900 rounded-2xl">
+                      <span className="text-3xl">📍</span>
+                      <p className="mt-2 text-sm text-neutral-500 dark:text-neutral-400">
+                        Bu ada için henüz gezilecek yer eklenmedi.
                       </p>
                     </div>
                   )}
