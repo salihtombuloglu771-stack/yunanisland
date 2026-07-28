@@ -50,7 +50,7 @@ export async function GET() {
           body: `data=${encodeURIComponent(query)}`,
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
-            'User-Agent': 'Yunanisland/1.0 (https://yunanisland.vercel.app; travel guide POI layer)',
+            'User-Agent': 'Yunanisland/1.0 (https://yunanisland.com; travel guide POI layer)',
             'Accept': 'application/json, text/plain, */*',
           },
           signal: AbortSignal.timeout(15000),
