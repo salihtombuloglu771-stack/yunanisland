@@ -16,6 +16,14 @@ export function Header() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
   const [quickQuery, setQuickQuery] = useState('')
+  const [toolsOpen, setToolsOpen] = useState(false)
+
+  const toolLinks = [
+    { href: '/ferry-guide', label: t('nav.ferryGuide') },
+    { href: '/budget-calculator', label: t('nav.budgetCalculator') },
+    { href: '/trip-tools', label: t('nav.tripTools') },
+    { href: '/compare', label: t('nav.compare') },
+  ]
 
   useEffect(() => {
     const supabase = createClient()
@@ -59,34 +67,49 @@ export function Header() {
           <span>Yunanisland</span>
         </Link>
 
-        <nav className="hidden md:flex items-center gap-6">
+        <nav className="hidden xl:flex items-center gap-7">
           <Link href="/" className="text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
             {t('nav.home')}
-          </Link>
-          <Link href="/ferry-guide" className="text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
-            {t('nav.ferryGuide')}
           </Link>
           <Link href="/blog" className="text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
             {t('nav.blog')}
           </Link>
-          <Link href="/budget-calculator" className="text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
-            {t('nav.budgetCalculator')}
-          </Link>
-          <Link href="/trip-tools" className="text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
-            {t('nav.tripTools')}
+          <Link href="/gezi-hikayeleri" className="text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
+            {t('nav.stories')}
           </Link>
           <Link href="/map" className="text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
             {t('nav.map')}
           </Link>
-          <Link href="/compare" className="text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
-            {t('nav.compare')}
-          </Link>
           <Link href="/events" className="text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
             {t('nav.events')}
           </Link>
-          <Link href="/gezi-hikayeleri" className="text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
-            {t('nav.stories')}
-          </Link>
+
+          <div className="relative">
+            <button
+              onClick={() => setToolsOpen((v) => !v)}
+              onBlur={() => setTimeout(() => setToolsOpen(false), 150)}
+              className="flex items-center gap-1 text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:text-sky-600 dark:hover:text-sky-400 transition-colors"
+            >
+              {t('nav.tools')}
+              <svg className={`h-3.5 w-3.5 transition-transform ${toolsOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            {toolsOpen && (
+              <div className="absolute left-0 mt-2 w-48 bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 rounded-xl shadow-lg overflow-hidden z-50">
+                {toolLinks.map((link) => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className="block px-4 py-2.5 text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:bg-slate-50 dark:hover:bg-neutral-800 hover:text-sky-600 dark:hover:text-sky-400 transition-colors"
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
+
           {isAdmin && (
             <Link href="/admin/dashboard" className="text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
               {t('nav.admin')}
@@ -145,7 +168,7 @@ export function Header() {
           )}
           <button
             onClick={() => setMenuOpen((v) => !v)}
-            className="md:hidden text-neutral-600 dark:text-neutral-300"
+            className="xl:hidden text-neutral-600 dark:text-neutral-300"
             aria-label="Menü"
           >
             <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -156,7 +179,7 @@ export function Header() {
       </div>
 
       {menuOpen && (
-        <div className="md:hidden border-t border-slate-100 dark:border-neutral-900 px-6 py-4 space-y-3 bg-white dark:bg-neutral-950">
+        <div className="xl:hidden border-t border-slate-100 dark:border-neutral-900 px-6 py-4 space-y-3 bg-white dark:bg-neutral-950">
           <Link href="/" className="block text-sm font-medium text-neutral-600 dark:text-neutral-400">{t('nav.home')}</Link>
           <Link href="/ferry-guide" className="block text-sm font-medium text-neutral-600 dark:text-neutral-400">{t('nav.ferryGuide')}</Link>
           <Link href="/blog" className="block text-sm font-medium text-neutral-600 dark:text-neutral-400">{t('nav.blog')}</Link>
