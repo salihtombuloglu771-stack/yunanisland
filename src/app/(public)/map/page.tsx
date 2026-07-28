@@ -6,10 +6,12 @@ import type { MapPoint } from '@/components/IslandMap'
 export default async function MapPage() {
   const supabase = await createClient()
 
-  const [{ data: islands }, { data: beaches }, { data: restaurants }] = await Promise.all([
+  const [{ data: islands }, { data: beaches }, { data: restaurants }, { data: hotels }, { data: attractions }] = await Promise.all([
     supabase.from('islands').select('id, name, slug, latitude, longitude').eq('is_published', true),
     supabase.from('beaches').select('id, name, slug, latitude, longitude, islands(slug)'),
     supabase.from('restaurants').select('id, name, slug, latitude, longitude, islands(slug)'),
+    supabase.from('hotels').select('id, name, slug, latitude, longitude, islands(slug)'),
+    supabase.from('attractions').select('id, name, slug, latitude, longitude, islands(slug)'),
   ])
 
   const points: MapPoint[] = [
@@ -27,6 +29,18 @@ export default async function MapPage() {
       .map((r) => {
         const island = Array.isArray(r.islands) ? r.islands[0] : r.islands
         return { id: r.id, type: 'restaurant' as const, name: r.name, slug: r.slug, islandSlug: island?.slug, latitude: r.latitude!, longitude: r.longitude! }
+      }),
+    ...(hotels ?? [])
+      .filter((h) => h.latitude && h.longitude)
+      .map((h) => {
+        const island = Array.isArray(h.islands) ? h.islands[0] : h.islands
+        return { id: h.id, type: 'hotel' as const, name: h.name, slug: h.slug, islandSlug: island?.slug, latitude: h.latitude!, longitude: h.longitude! }
+      }),
+    ...(attractions ?? [])
+      .filter((a) => a.latitude && a.longitude)
+      .map((a) => {
+        const island = Array.isArray(a.islands) ? a.islands[0] : a.islands
+        return { id: a.id, type: 'attraction' as const, name: a.name, slug: a.slug, islandSlug: island?.slug, latitude: a.latitude!, longitude: a.longitude! }
       }),
   ]
 

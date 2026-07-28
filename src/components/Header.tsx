@@ -7,6 +7,7 @@ import { createClient } from '@/lib/supabase/client'
 import { useLanguage } from '@/lib/i18n/LanguageProvider'
 import { ThemeToggle } from '@/components/ThemeToggle'
 import { LanguageSwitcher } from '@/components/LanguageSwitcher'
+import { HeaderSearch } from '@/components/HeaderSearch'
 
 export function Header() {
   const router = useRouter()
@@ -14,8 +15,6 @@ export function Header() {
   const [email, setEmail] = useState<string | null>(null)
   const [isAdmin, setIsAdmin] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
-  const [searchOpen, setSearchOpen] = useState(false)
-  const [quickQuery, setQuickQuery] = useState('')
   const [toolsOpen, setToolsOpen] = useState(false)
 
   const toolLinks = [
@@ -49,14 +48,6 @@ export function Header() {
     await supabase.auth.signOut()
     router.push('/')
     router.refresh()
-  }
-
-  const handleQuickSearch = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!quickQuery.trim()) return
-    router.push(`/search?q=${encodeURIComponent(quickQuery.trim())}`)
-    setSearchOpen(false)
-    setQuickQuery('')
   }
 
   return (
@@ -119,28 +110,7 @@ export function Header() {
 
         <div className="flex items-center gap-3">
           <div className="hidden md:flex items-center">
-            {searchOpen ? (
-              <form onSubmit={handleQuickSearch} className="flex items-center">
-                <input
-                  autoFocus
-                  value={quickQuery}
-                  onChange={(e) => setQuickQuery(e.target.value)}
-                  onBlur={() => { if (!quickQuery) setSearchOpen(false) }}
-                  placeholder={t('nav.search')}
-                  className="w-40 rounded-lg border border-slate-200 dark:border-neutral-800 bg-slate-50 dark:bg-neutral-950 py-1.5 px-3 text-sm outline-none focus:border-sky-500 transition-all"
-                />
-              </form>
-            ) : (
-              <button
-                onClick={() => setSearchOpen(true)}
-                aria-label={t('nav.search')}
-                className="text-neutral-500 dark:text-neutral-400 hover:text-sky-600 dark:hover:text-sky-400 transition-colors"
-              >
-                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-              </button>
-            )}
+            <HeaderSearch />
           </div>
           <ThemeToggle />
           <LanguageSwitcher />

@@ -3,6 +3,7 @@ import { HomeHero } from '@/components/HomeHero'
 import { HomeClient } from '@/components/HomeClient'
 import { AdBanner } from '@/components/AdBanner'
 import { CurrencyWidget } from '@/components/CurrencyWidget'
+import { RecentlyViewedBar } from '@/components/RecentlyViewedBar'
 import { SiteFooter } from '@/components/SiteFooter'
 import { createClient } from '@/lib/supabase/server'
 import { getRatingsMap } from '@/lib/ratings'
@@ -25,6 +26,7 @@ export default async function Home() {
 
       <main className="mx-auto max-w-7xl px-6 py-12">
         <AdBanner placement="homepage" />
+        <RecentlyViewedBar />
         <CurrencyWidget />
         <HomeClient islands={islandsWithRatings} />
       </main>

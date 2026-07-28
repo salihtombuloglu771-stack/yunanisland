@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useMemo } from 'react'
+import { useMemo } from 'react'
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
@@ -8,7 +8,7 @@ import Link from 'next/link'
 
 export interface MapPoint {
   id: string
-  type: 'island' | 'beach' | 'restaurant' | 'hospital' | 'pharmacy' | 'atm'
+  type: 'island' | 'beach' | 'restaurant' | 'hotel' | 'attraction' | 'hospital' | 'pharmacy' | 'atm'
   name: string
   slug?: string
   islandSlug?: string
@@ -20,9 +20,19 @@ const TYPE_EMOJI: Record<MapPoint['type'], string> = {
   island: '🏝️',
   beach: '🏖️',
   restaurant: '🍽️',
+  hotel: '🏨',
+  attraction: '📍',
   hospital: '🏥',
   pharmacy: '💊',
   atm: '🏧',
+}
+
+const TYPE_HREF: Partial<Record<MapPoint['type'], (p: MapPoint) => string>> = {
+  island: (p) => `/islands/${p.slug}`,
+  beach: (p) => `/beaches/${p.slug}`,
+  restaurant: (p) => `/restaurants/${p.slug}`,
+  hotel: (p) => `/hotels/${p.slug}`,
+  attraction: (p) => `/attractions/${p.slug}`,
 }
 
 const POI_TYPES: MapPoint['type'][] = ['hospital', 'pharmacy', 'atm']
@@ -36,22 +46,17 @@ function poiDivIcon(type: MapPoint['type']) {
   })
 }
 
-export function IslandMap({ points, activePoiTypes = [] }: { points: MapPoint[]; activePoiTypes?: MapPoint['type'][] }) {
-  useEffect(() => {
-    delete (L.Icon.Default.prototype as unknown as { _getIconUrl?: unknown })._getIconUrl
-    L.Icon.Default.mergeOptions({
-      iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
-      iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
-      shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
-    })
-  }, [])
-
-  const defaultIcon = useMemo(() => new L.Icon.Default(), [])
-  const poiIcons = useMemo(() => Object.fromEntries(POI_TYPES.map((t) => [t, poiDivIcon(t)])), [])
+export function IslandMap({ points, activePoiTypes = [], activeBaseTypes }: { points: MapPoint[]; activePoiTypes?: MapPoint['type'][]; activeBaseTypes?: MapPoint['type'][] }) {
+  const allIcons = useMemo(() => Object.fromEntries(
+    (Object.keys(TYPE_EMOJI) as MapPoint['type'][]).map((t) => [t, poiDivIcon(t)])
+  ), [])
 
   const visiblePoints = useMemo(
-    () => points.filter((p) => !POI_TYPES.includes(p.type) || activePoiTypes.includes(p.type)),
-    [points, activePoiTypes]
+    () => points.filter((p) => {
+      if (POI_TYPES.includes(p.type)) return activePoiTypes.includes(p.type)
+      return !activeBaseTypes || activeBaseTypes.includes(p.type)
+    }),
+    [points, activePoiTypes, activeBaseTypes]
   )
 
   const center: [number, number] = points.length
@@ -64,24 +69,27 @@ export function IslandMap({ points, activePoiTypes = [] }: { points: MapPoint[];
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> katkıda bulunanlar'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      {visiblePoints.map((p) => (
-        <Marker
-          key={`${p.type}-${p.id}`}
-          position={[p.latitude, p.longitude]}
-          icon={POI_TYPES.includes(p.type) ? poiIcons[p.type] : defaultIcon}
-        >
-          <Popup>
-            <div className="text-sm">
-              <p className="font-semibold">{TYPE_EMOJI[p.type]} {p.name}</p>
-              {p.type !== 'atm' && p.type !== 'hospital' && p.type !== 'pharmacy' && (
-                <Link href={`/islands/${p.type === 'island' ? p.slug : p.islandSlug}`} className="text-sky-600 hover:underline text-xs">
-                  Detayları gör →
-                </Link>
-              )}
-            </div>
-          </Popup>
-        </Marker>
-      ))}
+      {visiblePoints.map((p) => {
+        const hrefBuilder = TYPE_HREF[p.type]
+        return (
+          <Marker
+            key={`${p.type}-${p.id}`}
+            position={[p.latitude, p.longitude]}
+            icon={allIcons[p.type]}
+          >
+            <Popup>
+              <div className="text-sm">
+                <p className="font-semibold">{TYPE_EMOJI[p.type]} {p.name}</p>
+                {hrefBuilder && (
+                  <Link href={hrefBuilder(p)} className="text-sky-600 hover:underline text-xs">
+                    Detayları gör →
+                  </Link>
+                )}
+              </div>
+            </Popup>
+          </Marker>
+        )
+      })}
     </MapContainer>
   )
 }

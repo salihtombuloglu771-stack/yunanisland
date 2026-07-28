@@ -18,6 +18,7 @@ import { SimilarIslands } from '@/components/SimilarIslands'
 import { CarSelector } from '@/components/CarSelector'
 import { useLanguage } from '@/lib/i18n/LanguageProvider'
 import { useLocalStorageState } from '@/lib/useLocalStorageState'
+import { addRecentlyViewed } from '@/lib/useRecentlyViewed'
 import { DEFAULT_CAR_ID, type CarType } from '@/lib/fuelEstimate'
 import type { Island, Beach, Restaurant } from '@/lib/mockData'
 import type { Island as IslandCardType } from '@/components/IslandCard'
@@ -148,6 +149,10 @@ export function IslandDetailClient({ island, allBeaches, allRestaurants, allHote
       isMounted = false
     }
   }, [island])
+
+  useEffect(() => {
+    addRecentlyViewed({ type: 'island', id: island.id, name: island.name, slug: island.slug })
+  }, [island.id, island.name, island.slug])
 
   const budget = BUDGET_LEVEL_LABELS[island.budget_level]
 

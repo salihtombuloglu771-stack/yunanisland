@@ -1,8 +1,10 @@
 'use client'
 
+import { useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Header } from '@/components/Header'
+import { addRecentlyViewed } from '@/lib/useRecentlyViewed'
 import { FavoriteButton } from '@/components/FavoriteButton'
 import { ReviewSection } from '@/components/ReviewSection'
 import { TripNoteBox } from '@/components/TripNoteBox'
@@ -51,6 +53,10 @@ export function BeachDetailClient({ beach, island }: BeachDetailClientProps) {
     umbrella: locale === 'en' ? 'Umbrella' : locale === 'el' ? 'Ομπρέλα' : 'Şemsiye',
     freeOrNone: locale === 'en' ? 'Free/None' : locale === 'el' ? 'Δωρεάν/Καμία' : 'Ücretsiz/Yok',
   }
+
+  useEffect(() => {
+    addRecentlyViewed({ type: 'beach', id: beach.id, name: beach.name, slug: beach.slug })
+  }, [beach.id, beach.name, beach.slug])
 
   const facts: { label: string; show: boolean }[] = [
     { label: t.parking, show: beach.has_parking },

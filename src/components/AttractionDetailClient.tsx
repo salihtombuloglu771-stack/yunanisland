@@ -1,8 +1,10 @@
 'use client'
 
+import { useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Header } from '@/components/Header'
+import { addRecentlyViewed } from '@/lib/useRecentlyViewed'
 import { FavoriteButton } from '@/components/FavoriteButton'
 import { ReviewSection } from '@/components/ReviewSection'
 import { TripNoteBox } from '@/components/TripNoteBox'
@@ -32,6 +34,10 @@ interface AttractionDetailClientProps {
 }
 
 export function AttractionDetailClient({ attraction, island }: AttractionDetailClientProps) {
+  useEffect(() => {
+    addRecentlyViewed({ type: 'attraction', id: attraction.id, name: attraction.name, slug: attraction.slug })
+  }, [attraction.id, attraction.name, attraction.slug])
+
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-neutral-950 transition-colors duration-300">
       <Header />

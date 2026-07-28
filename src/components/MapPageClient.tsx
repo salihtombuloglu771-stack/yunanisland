@@ -13,6 +13,14 @@ const IslandMap = dynamic(() => import('@/components/IslandMap').then((m) => m.I
   ),
 })
 
+const BASE_LAYERS: { type: MapPoint['type']; label: string; emoji: string }[] = [
+  { type: 'island', label: 'Adalar', emoji: '🏝️' },
+  { type: 'beach', label: 'Plajlar', emoji: '🏖️' },
+  { type: 'restaurant', label: 'Restoranlar', emoji: '🍽️' },
+  { type: 'hotel', label: 'Oteller', emoji: '🏨' },
+  { type: 'attraction', label: 'Gezilecek Yerler', emoji: '📍' },
+]
+
 const POI_LAYERS: { type: MapPoint['type']; label: string; emoji: string }[] = [
   { type: 'hospital', label: 'Hastaneler', emoji: '🏥' },
   { type: 'pharmacy', label: 'Eczaneler', emoji: '💊' },
@@ -22,6 +30,7 @@ const POI_LAYERS: { type: MapPoint['type']; label: string; emoji: string }[] = [
 export function MapPageClient({ points }: { points: MapPoint[] }) {
   const [poiPoints, setPoiPoints] = useState<MapPoint[]>([])
   const [activeLayers, setActiveLayers] = useState<MapPoint['type'][]>(['hospital', 'pharmacy', 'atm'])
+  const [activeBaseTypes, setActiveBaseTypes] = useState<MapPoint['type'][]>(BASE_LAYERS.map((l) => l.type))
   const [loadingPoi, setLoadingPoi] = useState(true)
 
   useEffect(() => {
@@ -43,8 +52,29 @@ export function MapPageClient({ points }: { points: MapPoint[] }) {
     setActiveLayers((prev) => prev.includes(type) ? prev.filter((t) => t !== type) : [...prev, type])
   }
 
+  const toggleBaseType = (type: MapPoint['type']) => {
+    setActiveBaseTypes((prev) => prev.includes(type) ? prev.filter((t) => t !== type) : [...prev, type])
+  }
+
   return (
     <div>
+      <div className="mb-2 flex flex-wrap items-center gap-2">
+        <span className="text-xs font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider mr-1">İçerik:</span>
+        {BASE_LAYERS.map((layer) => (
+          <button
+            key={layer.type}
+            type="button"
+            onClick={() => toggleBaseType(layer.type)}
+            className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium border transition-colors ${
+              activeBaseTypes.includes(layer.type)
+                ? 'bg-emerald-600 border-emerald-600 text-white'
+                : 'bg-white dark:bg-neutral-900 border-slate-200 dark:border-neutral-800 text-neutral-600 dark:text-neutral-400'
+            }`}
+          >
+            {layer.emoji} {layer.label}
+          </button>
+        ))}
+      </div>
       <div className="mb-4 flex flex-wrap items-center gap-2">
         <span className="text-xs font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider mr-1">Katmanlar:</span>
         {POI_LAYERS.map((layer) => (
@@ -63,7 +93,7 @@ export function MapPageClient({ points }: { points: MapPoint[] }) {
         ))}
         {loadingPoi && <span className="text-xs text-neutral-400">Yükleniyor...</span>}
       </div>
-      <IslandMap points={[...points, ...poiPoints]} activePoiTypes={activeLayers} />
+      <IslandMap points={[...points, ...poiPoints]} activePoiTypes={activeLayers} activeBaseTypes={activeBaseTypes} />
     </div>
   )
 }

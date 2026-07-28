@@ -1,8 +1,10 @@
 'use client'
 
+import { useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Header } from '@/components/Header'
+import { addRecentlyViewed } from '@/lib/useRecentlyViewed'
 import { FavoriteButton } from '@/components/FavoriteButton'
 import { ReviewSection } from '@/components/ReviewSection'
 import { TripNoteBox } from '@/components/TripNoteBox'
@@ -47,6 +49,10 @@ export function RestaurantDetailClient({ restaurant, island }: RestaurantDetailC
     glutenFree: locale === 'en' ? '🌾 Gluten-Free' : locale === 'el' ? '🌾 Χωρίς Γλουτένη' : '🌾 Glütensiz',
     website: locale === 'en' ? '🌐 Website' : locale === 'el' ? '🌐 Ιστότοπος' : '🌐 Website',
   }
+
+  useEffect(() => {
+    addRecentlyViewed({ type: 'restaurant', id: restaurant.id, name: restaurant.name, slug: restaurant.slug })
+  }, [restaurant.id, restaurant.name, restaurant.slug])
 
   const facts: { label: string; show: boolean }[] = [
     { label: t.seaView, show: restaurant.sea_view },

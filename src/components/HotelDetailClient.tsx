@@ -1,8 +1,10 @@
 'use client'
 
+import { useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Header } from '@/components/Header'
+import { addRecentlyViewed } from '@/lib/useRecentlyViewed'
 import { FavoriteButton } from '@/components/FavoriteButton'
 import { ReviewSection } from '@/components/ReviewSection'
 import { TripNoteBox } from '@/components/TripNoteBox'
@@ -37,6 +39,10 @@ export function HotelDetailClient({ hotel, island }: HotelDetailClientProps) {
     home: locale === 'en' ? 'Home' : locale === 'el' ? 'Αρχική' : 'Ana Sayfa',
     seePrices: locale === 'en' ? 'See Prices ↗' : locale === 'el' ? 'Δείτε Τιμές ↗' : 'Fiyatları Gör ↗',
   }
+
+  useEffect(() => {
+    addRecentlyViewed({ type: 'hotel', id: hotel.id, name: hotel.name, slug: hotel.slug })
+  }, [hotel.id, hotel.name, hotel.slug])
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-neutral-950 transition-colors duration-300">
