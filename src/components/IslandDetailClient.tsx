@@ -9,6 +9,7 @@ import { RestaurantCard } from '@/components/RestaurantCard'
 import { HotelCard, type Hotel } from '@/components/HotelCard'
 import { FavoriteButton } from '@/components/FavoriteButton'
 import { ReviewSection } from '@/components/ReviewSection'
+import { TripNoteBox } from '@/components/TripNoteBox'
 import { Gallery, type MediaItem } from '@/components/Gallery'
 import { Breadcrumbs } from '@/components/Breadcrumbs'
 import { FaqAccordion, type Faq } from '@/components/FaqAccordion'
@@ -59,6 +60,7 @@ export function IslandDetailClient({ island, allBeaches, allRestaurants, allHote
     temp: number
     humidity: number
     windSpeed: number
+    uvIndex: number | null
     description: string
     icon: string
     loading: boolean
@@ -67,18 +69,26 @@ export function IslandDetailClient({ island, allBeaches, allRestaurants, allHote
     temp: 28,
     humidity: 50,
     windSpeed: 12,
+    uvIndex: null,
     description: 'Açık / Güneşli',
     icon: '☀️',
     loading: true,
     error: false,
   })
 
+  const [marine, setMarine] = useState<{
+    seaTemp: number | null
+    waveHeight: number | null
+    loading: boolean
+    error: boolean
+  }>({ seaTemp: null, waveHeight: null, loading: true, error: false })
+
   useEffect(() => {
     if (!island.latitude || !island.longitude) return
 
     let isMounted = true
 
-    fetch(`https://api.open-meteo.com/v1/forecast?latitude=${island.latitude}&longitude=${island.longitude}&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m`)
+    fetch(`https://api.open-meteo.com/v1/forecast?latitude=${island.latitude}&longitude=${island.longitude}&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m,uv_index`)
       .then(res => res.json())
       .then(data => {
         if (!isMounted) return
@@ -99,6 +109,7 @@ export function IslandDetailClient({ island, allBeaches, allRestaurants, allHote
             temp: Math.round(current.temperature_2m),
             humidity: current.relative_humidity_2m,
             windSpeed: Math.round(current.wind_speed_10m),
+            uvIndex: typeof current.uv_index === 'number' ? Math.round(current.uv_index * 10) / 10 : null,
             description: desc,
             icon: icon,
             loading: false,
@@ -109,6 +120,27 @@ export function IslandDetailClient({ island, allBeaches, allRestaurants, allHote
       .catch(() => {
         if (!isMounted) return
         setWeather(prev => ({ ...prev, loading: false, error: true }))
+      })
+
+    fetch(`https://marine-api.open-meteo.com/v1/marine?latitude=${island.latitude}&longitude=${island.longitude}&current=wave_height,sea_surface_temperature`)
+      .then(res => res.json())
+      .then(data => {
+        if (!isMounted) return
+        const current = data.current
+        if (current && typeof current.sea_surface_temperature === 'number') {
+          setMarine({
+            seaTemp: Math.round(current.sea_surface_temperature * 10) / 10,
+            waveHeight: Math.round(current.wave_height * 10) / 10,
+            loading: false,
+            error: false,
+          })
+        } else {
+          setMarine(prev => ({ ...prev, loading: false, error: true }))
+        }
+      })
+      .catch(() => {
+        if (!isMounted) return
+        setMarine(prev => ({ ...prev, loading: false, error: true }))
       })
 
     return () => {
@@ -249,6 +281,7 @@ export function IslandDetailClient({ island, allBeaches, allRestaurants, allHote
 
                   <FaqAccordion faqs={island.faqs ?? []} />
                   <ReviewSection entityType="island" entityId={island.id} />
+                  <TripNoteBox entityType="island" entityId={island.id} />
                 </>
               )}
 
@@ -501,8 +534,18 @@ export function IslandDetailClient({ island, allBeaches, allRestaurants, allHote
                   <div className="grid grid-cols-2 gap-2 mt-4 border-t border-slate-200 dark:border-neutral-800 pt-4 text-xs text-neutral-500 dark:text-neutral-400">
                     <div>🌬️ Rüzgar: {weather.windSpeed} km/sa</div>
                     <div>💧 Nem: %{weather.humidity}</div>
+                    {weather.uvIndex !== null && (
+                      <div>🔆 UV İndeksi: {weather.uvIndex}</div>
+                    )}
                   </div>
                 </>
+              )}
+
+              {!marine.loading && !marine.error && marine.seaTemp !== null && (
+                <div className="grid grid-cols-2 gap-2 mt-2 border-t border-slate-200 dark:border-neutral-800 pt-4 text-xs text-neutral-500 dark:text-neutral-400">
+                  <div>🌊 Deniz Sıcaklığı: {marine.seaTemp}°C</div>
+                  <div>🌊 Dalga Yüksekliği: {marine.waveHeight} m</div>
+                </div>
               )}
             </div>
 

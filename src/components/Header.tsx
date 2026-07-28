@@ -84,6 +84,9 @@ export function Header() {
           <Link href="/events" className="text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
             {t('nav.events')}
           </Link>
+          <Link href="/gezi-hikayeleri" className="text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
+            {t('nav.stories')}
+          </Link>
           {isAdmin && (
             <Link href="/admin/dashboard" className="text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
               {t('nav.admin')}
@@ -162,6 +165,7 @@ export function Header() {
           <Link href="/map" className="block text-sm font-medium text-neutral-600 dark:text-neutral-400">{t('nav.map')}</Link>
           <Link href="/compare" className="block text-sm font-medium text-neutral-600 dark:text-neutral-400">{t('nav.compare')}</Link>
           <Link href="/events" className="block text-sm font-medium text-neutral-600 dark:text-neutral-400">{t('nav.events')}</Link>
+          <Link href="/gezi-hikayeleri" className="block text-sm font-medium text-neutral-600 dark:text-neutral-400">{t('nav.stories')}</Link>
           <Link href="/search" className="block text-sm font-medium text-neutral-600 dark:text-neutral-400">{t('nav.search')}</Link>
           {isAdmin && <Link href="/admin/dashboard" className="block text-sm font-medium text-neutral-600 dark:text-neutral-400">{t('nav.admin')}</Link>}
           <div className="pt-3 border-t border-slate-100 dark:border-neutral-900">

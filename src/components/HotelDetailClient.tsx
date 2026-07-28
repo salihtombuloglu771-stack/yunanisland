@@ -5,6 +5,7 @@ import Image from 'next/image'
 import { Header } from '@/components/Header'
 import { FavoriteButton } from '@/components/FavoriteButton'
 import { ReviewSection } from '@/components/ReviewSection'
+import { TripNoteBox } from '@/components/TripNoteBox'
 import { Breadcrumbs } from '@/components/Breadcrumbs'
 import { useLanguage } from '@/lib/i18n/LanguageProvider'
 
@@ -95,6 +96,7 @@ export function HotelDetailClient({ hotel, island }: HotelDetailClientProps) {
         )}
 
         <ReviewSection entityType="hotel" entityId={hotel.id} />
+        <TripNoteBox entityType="hotel" entityId={hotel.id} />
       </main>
     </div>
   )
