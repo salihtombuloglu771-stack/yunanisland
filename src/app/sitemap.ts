@@ -24,6 +24,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${baseUrl}/events`, changeFrequency: 'weekly', priority: 0.6 },
     { url: `${baseUrl}/trip-tools`, changeFrequency: 'monthly', priority: 0.5 },
     { url: `${baseUrl}/trip-planner`, changeFrequency: 'monthly', priority: 0.7 },
+    { url: `${baseUrl}/gezi-hikayeleri`, changeFrequency: 'weekly', priority: 0.6 },
+    { url: `${baseUrl}/gizlilik-politikasi`, changeFrequency: 'yearly', priority: 0.3 },
   ]
 
   const islandRoutes: MetadataRoute.Sitemap = (islands ?? []).map((i) => ({
