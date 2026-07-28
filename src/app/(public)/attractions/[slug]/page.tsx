@@ -14,9 +14,17 @@ interface PageProps {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params
   const supabase = await createClient()
-  const { data: attraction } = await supabase.from('attractions').select('name, description').eq('slug', slug).maybeSingle()
+  const { data: attraction } = await supabase.from('attractions').select('name, description, cover_image_url').eq('slug', slug).maybeSingle()
   if (!attraction) return { title: 'Yer Bulunamadı — Yunanisland' }
-  return { title: `${attraction.name} — Yunanisland`, description: attraction.description ?? undefined }
+  return {
+    title: `${attraction.name} — Yunanisland`,
+    description: attraction.description ?? undefined,
+    openGraph: {
+      title: `${attraction.name} — Yunanisland`,
+      description: attraction.description ?? undefined,
+      images: attraction.cover_image_url ? [attraction.cover_image_url] : undefined,
+    },
+  }
 }
 
 export default async function AttractionDetailPage({ params }: PageProps) {

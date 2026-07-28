@@ -14,9 +14,17 @@ interface PageProps {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params
   const supabase = await createClient()
-  const { data: restaurant } = await supabase.from('restaurants').select('name, cuisine').eq('slug', slug).maybeSingle()
+  const { data: restaurant } = await supabase.from('restaurants').select('name, cuisine, cover_image_url').eq('slug', slug).maybeSingle()
   if (!restaurant) return { title: 'Restoran Bulunamadı — Yunanisland' }
-  return { title: `${restaurant.name} — Yunanisland`, description: restaurant.cuisine ?? undefined }
+  return {
+    title: `${restaurant.name} — Yunanisland`,
+    description: restaurant.cuisine ?? undefined,
+    openGraph: {
+      title: `${restaurant.name} — Yunanisland`,
+      description: restaurant.cuisine ?? undefined,
+      images: restaurant.cover_image_url ? [restaurant.cover_image_url] : undefined,
+    },
+  }
 }
 
 export default async function RestaurantDetailPage({ params }: PageProps) {

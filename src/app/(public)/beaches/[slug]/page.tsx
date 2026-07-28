@@ -14,9 +14,17 @@ interface PageProps {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params
   const supabase = await createClient()
-  const { data: beach } = await supabase.from('beaches').select('name, description').eq('slug', slug).maybeSingle()
+  const { data: beach } = await supabase.from('beaches').select('name, description, cover_image_url').eq('slug', slug).maybeSingle()
   if (!beach) return { title: 'Plaj Bulunamadı — Yunanisland' }
-  return { title: `${beach.name} — Yunanisland`, description: beach.description ?? undefined }
+  return {
+    title: `${beach.name} — Yunanisland`,
+    description: beach.description ?? undefined,
+    openGraph: {
+      title: `${beach.name} — Yunanisland`,
+      description: beach.description ?? undefined,
+      images: beach.cover_image_url ? [beach.cover_image_url] : undefined,
+    },
+  }
 }
 
 export default async function BeachDetailPage({ params }: PageProps) {

@@ -14,9 +14,17 @@ interface PageProps {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params
   const supabase = await createClient()
-  const { data: hotel } = await supabase.from('hotels').select('name, description').eq('slug', slug).maybeSingle()
+  const { data: hotel } = await supabase.from('hotels').select('name, description, cover_image_url').eq('slug', slug).maybeSingle()
   if (!hotel) return { title: 'Otel Bulunamadı — Yunanisland' }
-  return { title: `${hotel.name} — Yunanisland`, description: hotel.description ?? undefined }
+  return {
+    title: `${hotel.name} — Yunanisland`,
+    description: hotel.description ?? undefined,
+    openGraph: {
+      title: `${hotel.name} — Yunanisland`,
+      description: hotel.description ?? undefined,
+      images: hotel.cover_image_url ? [hotel.cover_image_url] : undefined,
+    },
+  }
 }
 
 export default async function HotelDetailPage({ params }: PageProps) {
