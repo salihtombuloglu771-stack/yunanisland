@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import { createClient } from '@/lib/supabase/client'
 
 export function AdInquiryForm() {
   const [companyName, setCompanyName] = useState('')
@@ -25,20 +24,23 @@ export function AdInquiryForm() {
     setError(null)
     setSubmitting(true)
 
-    const supabase = createClient()
-    const { error: insertError } = await supabase.from('ad_inquiries').insert({
-      company_name: companyName.trim(),
-      contact_name: contactName.trim(),
-      email: email.trim(),
-      phone: phone.trim() || null,
-      placement_interest: placementInterest || null,
-      budget_range: budgetRange.trim() || null,
-      message: message.trim() || null,
+    const res = await fetch('/api/ad-inquiry', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        companyName: companyName.trim(),
+        contactName: contactName.trim(),
+        email: email.trim(),
+        phone: phone.trim() || undefined,
+        placementInterest: placementInterest || undefined,
+        budgetRange: budgetRange.trim() || undefined,
+        message: message.trim() || undefined,
+      }),
     })
 
     setSubmitting(false)
 
-    if (insertError) {
+    if (!res.ok) {
       setError('Talebiniz gönderilemedi, lütfen tekrar deneyin.')
       return
     }
