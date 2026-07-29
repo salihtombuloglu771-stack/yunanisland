@@ -8,6 +8,7 @@ import { addRecentlyViewed } from '@/lib/useRecentlyViewed'
 import { FavoriteButton } from '@/components/FavoriteButton'
 import { ReviewSection } from '@/components/ReviewSection'
 import { TripNoteBox } from '@/components/TripNoteBox'
+import { TryPrice } from '@/components/TryPrice'
 import { Breadcrumbs } from '@/components/Breadcrumbs'
 import { useLanguage } from '@/lib/i18n/LanguageProvider'
 
@@ -126,11 +127,15 @@ export function BeachDetailClient({ beach, island }: BeachDetailClientProps) {
         <div className="mt-6 grid grid-cols-2 gap-4 text-sm">
           <div className="bg-white dark:bg-neutral-900 rounded-xl p-4 border border-slate-100 dark:border-neutral-900">
             <p className="text-xs text-neutral-400">{t.sunbed}</p>
-            <p className="font-semibold text-neutral-800 dark:text-neutral-200">{beach.sunbed_price ? `${beach.sunbed_price} €` : t.freeOrNone}</p>
+            <p className="font-semibold text-neutral-800 dark:text-neutral-200">
+              {beach.sunbed_price ? <>{beach.sunbed_price} €<TryPrice eur={beach.sunbed_price} /></> : t.freeOrNone}
+            </p>
           </div>
           <div className="bg-white dark:bg-neutral-900 rounded-xl p-4 border border-slate-100 dark:border-neutral-900">
             <p className="text-xs text-neutral-400">{t.umbrella}</p>
-            <p className="font-semibold text-neutral-800 dark:text-neutral-200">{beach.umbrella_price ? `${beach.umbrella_price} €` : t.freeOrNone}</p>
+            <p className="font-semibold text-neutral-800 dark:text-neutral-200">
+              {beach.umbrella_price ? <>{beach.umbrella_price} €<TryPrice eur={beach.umbrella_price} /></> : t.freeOrNone}
+            </p>
           </div>
         </div>
 

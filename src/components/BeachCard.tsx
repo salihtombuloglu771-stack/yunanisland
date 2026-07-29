@@ -6,6 +6,7 @@ import { Beach } from '@/lib/mockData'
 import { FavoriteButton } from '@/components/FavoriteButton'
 import { RatingBadge } from '@/components/RatingBadge'
 import { FuelBadge } from '@/components/FuelBadge'
+import { TryPrice } from '@/components/TryPrice'
 import { useLanguage } from '@/lib/i18n/LanguageProvider'
 
 interface BeachCardProps {
@@ -154,7 +155,7 @@ export function BeachCard({ beach, islandLat, islandLng, carId }: BeachCardProps
           <span>
             {beach.sunbed_price ? (
               <span className="font-semibold text-neutral-700 dark:text-neutral-300">
-                {t.sunbed}: {beach.sunbed_price} €
+                {t.sunbed}: {beach.sunbed_price} €<TryPrice eur={beach.sunbed_price} />
               </span>
             ) : (
               `${t.sunbed}: ${t.freeOrNone}`

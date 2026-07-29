@@ -9,6 +9,7 @@ import { FavoriteButton } from '@/components/FavoriteButton'
 import { ReviewSection } from '@/components/ReviewSection'
 import { TripNoteBox } from '@/components/TripNoteBox'
 import { Breadcrumbs } from '@/components/Breadcrumbs'
+import { TryPrice } from '@/components/TryPrice'
 import { useLanguage } from '@/lib/i18n/LanguageProvider'
 
 const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://yunanisland.vercel.app'
@@ -117,7 +118,7 @@ export function RestaurantDetailClient({ restaurant, island }: RestaurantDetailC
           {restaurant.average_cost && (
             <div className="bg-white dark:bg-neutral-900 rounded-xl p-4 border border-slate-100 dark:border-neutral-900">
               <p className="text-xs text-neutral-400">{t.avgPerPerson}</p>
-              <p className="font-semibold text-neutral-800 dark:text-neutral-200">{restaurant.average_cost} €</p>
+              <p className="font-semibold text-neutral-800 dark:text-neutral-200">{restaurant.average_cost} €<TryPrice eur={restaurant.average_cost} /></p>
             </div>
           )}
         </div>

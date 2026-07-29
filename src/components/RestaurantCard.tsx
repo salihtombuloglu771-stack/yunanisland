@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { Restaurant } from '@/lib/mockData'
 import { FavoriteButton } from '@/components/FavoriteButton'
 import { RatingBadge } from '@/components/RatingBadge'
+import { TryPrice } from '@/components/TryPrice'
 import { useLanguage } from '@/lib/i18n/LanguageProvider'
 
 interface RestaurantCardProps {
@@ -125,7 +126,7 @@ export function RestaurantCard({ restaurant }: RestaurantCardProps) {
         <div className="mt-5 flex items-center justify-between border-t border-neutral-100 dark:border-neutral-800 pt-4 text-xs text-neutral-500 dark:text-neutral-400">
           <span>
             {restaurant.average_cost ? (
-              <span>{t.avgPerPerson}: <strong className="text-neutral-800 dark:text-neutral-200">{restaurant.average_cost} €</strong></span>
+              <span>{t.avgPerPerson}: <strong className="text-neutral-800 dark:text-neutral-200">{restaurant.average_cost} €</strong><TryPrice eur={restaurant.average_cost} /></span>
             ) : (
               t.avgPriceNotSpecified
             )}
