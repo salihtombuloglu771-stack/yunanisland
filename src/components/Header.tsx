@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
@@ -16,6 +16,18 @@ export function Header() {
   const [isAdmin, setIsAdmin] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const [toolsOpen, setToolsOpen] = useState(false)
+  const toolsRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!toolsOpen) return
+    const handleOutsideClick = (e: MouseEvent) => {
+      if (toolsRef.current && !toolsRef.current.contains(e.target as Node)) {
+        setToolsOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleOutsideClick)
+    return () => document.removeEventListener('mousedown', handleOutsideClick)
+  }, [toolsOpen])
 
   const toolLinks = [
     { href: '/ferry-guide', label: t('nav.ferryGuide') },
@@ -76,10 +88,9 @@ export function Header() {
             {t('nav.events')}
           </Link>
 
-          <div className="relative">
+          <div className="relative" ref={toolsRef}>
             <button
               onClick={() => setToolsOpen((v) => !v)}
-              onBlur={() => setTimeout(() => setToolsOpen(false), 150)}
               className="flex items-center gap-1 text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:text-sky-600 dark:hover:text-sky-400 transition-colors"
             >
               {t('nav.tools')}
@@ -93,6 +104,7 @@ export function Header() {
                   <Link
                     key={link.href}
                     href={link.href}
+                    onClick={() => setToolsOpen(false)}
                     className="block px-4 py-2.5 text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:bg-slate-50 dark:hover:bg-neutral-800 hover:text-sky-600 dark:hover:text-sky-400 transition-colors"
                   >
                     {link.label}
