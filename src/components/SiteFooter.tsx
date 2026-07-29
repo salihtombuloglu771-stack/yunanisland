@@ -12,9 +12,14 @@ export function SiteFooter() {
         <p className="text-sm text-neutral-500 dark:text-neutral-400">
           &copy; 2026 Yunanisland. {t('footer.rights')}
         </p>
-        <Link href="/gizlilik-politikasi" className="inline-block text-xs text-neutral-400 hover:text-sky-600 dark:hover:text-sky-400 hover:underline">
-          Gizlilik Politikası
-        </Link>
+        <div className="flex items-center justify-center gap-4">
+          <Link href="/gizlilik-politikasi" className="inline-block text-xs text-neutral-400 hover:text-sky-600 dark:hover:text-sky-400 hover:underline">
+            Gizlilik Politikası
+          </Link>
+          <Link href="/reklam-ver" className="inline-block text-xs text-neutral-400 hover:text-sky-600 dark:hover:text-sky-400 hover:underline">
+            Reklam Ver
+          </Link>
+        </div>
       </div>
     </footer>
   )
