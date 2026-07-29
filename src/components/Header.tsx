@@ -22,6 +22,7 @@ export function Header() {
     { href: '/budget-calculator', label: t('nav.budgetCalculator') },
     { href: '/trip-tools', label: t('nav.tripTools') },
     { href: '/compare', label: t('nav.compare') },
+    { href: '/reklam-ver', label: '📢 Reklam Ver' },
   ]
 
   useEffect(() => {
@@ -159,6 +160,7 @@ export function Header() {
           <Link href="/compare" className="block text-sm font-medium text-neutral-600 dark:text-neutral-400">{t('nav.compare')}</Link>
           <Link href="/events" className="block text-sm font-medium text-neutral-600 dark:text-neutral-400">{t('nav.events')}</Link>
           <Link href="/gezi-hikayeleri" className="block text-sm font-medium text-neutral-600 dark:text-neutral-400">{t('nav.stories')}</Link>
+          <Link href="/reklam-ver" className="block text-sm font-medium text-neutral-600 dark:text-neutral-400">📢 Reklam Ver</Link>
           <Link href="/search" className="block text-sm font-medium text-neutral-600 dark:text-neutral-400">{t('nav.search')}</Link>
           {isAdmin && <Link href="/admin/dashboard" className="block text-sm font-medium text-neutral-600 dark:text-neutral-400">{t('nav.admin')}</Link>}
           <div className="pt-3 border-t border-slate-100 dark:border-neutral-900">
