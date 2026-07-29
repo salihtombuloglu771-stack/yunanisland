@@ -1,0 +1,47 @@
+-- Her attraction'a kendi gerçek fotoğrafı (Wikimedia Commons, özgür lisanslı) atanıyor.
+-- kelebekler-vadisi-paros haric (gercek fotograf bulunamadi, jenerik doga gorselinde kaliyor).
+
+update public.attractions
+set cover_image_url = case slug
+  when 'akrotiri-arkeolojik-alani' then '/attractions/akrotiri-arkeolojik-alani.jpg'
+  when 'apiranthos-mermer-koyu' then '/attractions/apiranthos-mermer-koyu.jpg'
+  when 'armenistis-feneri' then '/attractions/armenistis-feneri.jpg'
+  when 'asklepion-antik-saglik-merkezi' then '/attractions/asklepion-antik-saglik-merkezi.jpg'
+  when 'bochali-tepesi-gun-batimi' then '/attractions/bochali-tepesi-gun-batimi.jpg'
+  when 'delos-antik-kenti' then '/attractions/delos-antik-kenti.jpg'
+  when 'demeter-tapinagi' then '/attractions/demeter-tapinagi.jpg'
+  when 'eski-thira-antik-kenti' then '/attractions/eski-thira-antik-kenti.jpg'
+  when 'hipokrat-cinari' then '/attractions/hipokrat-cinari.jpg'
+  when 'kato-mili-yel-degirmenleri' then '/attractions/kato-mili-yel-degirmenleri.jpg'
+  when 'kelebekler-vadisi-rodos' then '/attractions/kelebekler-vadisi-rodos.jpg'
+  when 'klima-balikci-koyu' then '/attractions/klima-balikci-koyu.jpg'
+  when 'kos-arkeoloji-muzesi' then '/attractions/kos-arkeoloji-muzesi.jpg'
+  when 'laganas-korfezi-caretta-caretta-alani' then '/attractions/laganas-korfezi-caretta-caretta-alani.jpg'
+  when 'lefkes-dag-koyu' then '/attractions/lefkes-dag-koyu.jpg'
+  when 'lindos-akropolu' then '/attractions/lindos-akropolu.jpg'
+  when 'little-venice-alefkandra' then '/attractions/little-venice-alefkandra.jpg'
+  when 'marathi-mermer-ocaklari' then '/attractions/marathi-mermer-ocaklari.jpg'
+  when 'mavi-magaralar-zakynthos' then '/attractions/mavi-magaralar-zakynthos.jpg'
+  when 'melanes-kuroslari' then '/attractions/melanes-kuroslari.jpg'
+  when 'milos-antik-tiyatrosu' then '/attractions/milos-antik-tiyatrosu.jpg'
+  when 'milos-katakomplari' then '/attractions/milos-katakomplari.jpg'
+  when 'naoussa-eski-liman-kalesi' then '/attractions/naoussa-eski-liman-kalesi.jpg'
+  when 'navagio-gemi-enkazi-manzara-noktasi' then '/attractions/navagio-gemi-enkazi-manzara-noktasi.jpg'
+  when 'naxos-kalesi-eski-sehir' then '/attractions/naxos-kalesi-eski-sehir.jpg'
+  when 'neratzia-kalesi' then '/attractions/neratzia-kalesi.jpg'
+  when 'oia-kalesi-gun-batimi' then '/attractions/oia-kalesi-gun-batimi.jpg'
+  when 'panagia-ekatontapiliani-kilisesi' then '/attractions/panagia-ekatontapiliani-kilisesi.jpg'
+  when 'panagia-episkopi-kilisesi' then '/attractions/panagia-episkopi-kilisesi.jpg'
+  when 'panagia-paraportiani-kilisesi' then '/attractions/panagia-paraportiani-kilisesi.jpg'
+  when 'plaka-kalesi-gun-batimi' then '/attractions/plaka-kalesi-gun-batimi.jpg'
+  when 'portara-apollon-tapinagi-kapisi' then '/attractions/portara-apollon-tapinagi-kapisi.jpg'
+  when 'rodos-antik-sehir-surlari' then '/attractions/rodos-antik-sehir-surlari.jpg'
+  when 'rodos-ortacag-sehri-buyuk-ustat-sarayi' then '/attractions/rodos-ortacag-sehri-buyuk-ustat-sarayi.jpg'
+  when 'santo-wines-sarap-muzesi' then '/attractions/santo-wines-sarap-muzesi.jpg'
+  when 'sarakiniko-ay-yuzeyi-kayaliklari' then '/attractions/sarakiniko-ay-yuzeyi-kayaliklari.jpg'
+  when 'yedi-kaynaklar-epta-piges' then '/attractions/yedi-kaynaklar-epta-piges.jpg'
+  when 'zakynthos-venedik-kalesi' then '/attractions/zakynthos-venedik-kalesi.jpg'
+  when 'zia-koyu-gun-batimi' then '/attractions/zia-koyu-gun-batimi.jpg'
+  else cover_image_url
+end
+where slug in ('akrotiri-arkeolojik-alani', 'apiranthos-mermer-koyu', 'armenistis-feneri', 'asklepion-antik-saglik-merkezi', 'bochali-tepesi-gun-batimi', 'delos-antik-kenti', 'demeter-tapinagi', 'eski-thira-antik-kenti', 'hipokrat-cinari', 'kato-mili-yel-degirmenleri', 'kelebekler-vadisi-rodos', 'klima-balikci-koyu', 'kos-arkeoloji-muzesi', 'laganas-korfezi-caretta-caretta-alani', 'lefkes-dag-koyu', 'lindos-akropolu', 'little-venice-alefkandra', 'marathi-mermer-ocaklari', 'mavi-magaralar-zakynthos', 'melanes-kuroslari', 'milos-antik-tiyatrosu', 'milos-katakomplari', 'naoussa-eski-liman-kalesi', 'navagio-gemi-enkazi-manzara-noktasi', 'naxos-kalesi-eski-sehir', 'neratzia-kalesi', 'oia-kalesi-gun-batimi', 'panagia-ekatontapiliani-kilisesi', 'panagia-episkopi-kilisesi', 'panagia-paraportiani-kilisesi', 'plaka-kalesi-gun-batimi', 'portara-apollon-tapinagi-kapisi', 'rodos-antik-sehir-surlari', 'rodos-ortacag-sehri-buyuk-ustat-sarayi', 'santo-wines-sarap-muzesi', 'sarakiniko-ay-yuzeyi-kayaliklari', 'yedi-kaynaklar-epta-piges', 'zakynthos-venedik-kalesi', 'zia-koyu-gun-batimi');
