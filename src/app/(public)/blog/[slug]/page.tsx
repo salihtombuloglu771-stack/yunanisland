@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import { Header } from '@/components/Header'
 import { Breadcrumbs } from '@/components/Breadcrumbs'
 import { JsonLd } from '@/components/JsonLd'
+import { ShareButtons } from '@/components/ShareButtons'
 import { createClient } from '@/lib/supabase/server'
 import { stripMarkdown } from '@/lib/markdown'
 import { MarkdownContent } from '@/components/MarkdownContent'
@@ -72,11 +73,14 @@ export default async function ArticlePage({ params }: PageProps) {
               </span>
             )}
             <h1 className="text-3xl font-bold text-neutral-900 dark:text-white">{article.title}</h1>
-            {article.published_at && (
-              <p className="text-xs text-neutral-400 not-prose mb-6">
-                {new Date(article.published_at).toLocaleDateString('tr-TR')}
-              </p>
-            )}
+            <div className="flex items-center justify-between not-prose mb-6">
+              {article.published_at ? (
+                <p className="text-xs text-neutral-400">
+                  {new Date(article.published_at).toLocaleDateString('tr-TR')}
+                </p>
+              ) : <span />}
+              <ShareButtons url={`${SITE_URL}/blog/${slug}`} title={article.title} />
+            </div>
             {article.content && (
               <MarkdownContent
                 content={article.content}

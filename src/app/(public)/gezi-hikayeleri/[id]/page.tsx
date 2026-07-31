@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import { Header } from '@/components/Header'
 import { Breadcrumbs } from '@/components/Breadcrumbs'
 import { MarkdownContent } from '@/components/MarkdownContent'
+import { ShareButtons } from '@/components/ShareButtons'
 import { createClient } from '@/lib/supabase/server'
 
 const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://yunanisland.vercel.app'
@@ -61,15 +62,18 @@ export default async function TravelStoryPage({ params }: PageProps) {
 
             <article className="prose max-w-none dark:prose-invert">
               <h1 className="text-3xl font-bold text-neutral-900 dark:text-white">{story.title}</h1>
-              <p className="text-xs text-neutral-400 not-prose mb-6">
-                {author?.full_name || 'Bir gezgin'} · {new Date(story.created_at).toLocaleDateString('tr-TR')}
-                {island && (
-                  <>
-                    {' · '}
-                    <Link href={`/islands/${island.slug}`} className="text-sky-600 hover:underline">🏝️ {island.name}</Link>
-                  </>
-                )}
-              </p>
+              <div className="flex items-center justify-between not-prose mb-6">
+                <p className="text-xs text-neutral-400">
+                  {author?.full_name || 'Bir gezgin'} · {new Date(story.created_at).toLocaleDateString('tr-TR')}
+                  {island && (
+                    <>
+                      {' · '}
+                      <Link href={`/islands/${island.slug}`} className="text-sky-600 hover:underline">🏝️ {island.name}</Link>
+                    </>
+                  )}
+                </p>
+                <ShareButtons url={`${SITE_URL}/gezi-hikayeleri/${id}`} title={story.title} />
+              </div>
               <MarkdownContent
                 content={story.content}
                 className="text-neutral-700 dark:text-neutral-300 leading-relaxed"

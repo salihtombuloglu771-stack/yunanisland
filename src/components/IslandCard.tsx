@@ -22,6 +22,7 @@ export interface Island {
   cover_image_url: string | null
   avgRating?: number | null
   reviewCount?: number
+  isTrending?: boolean
 }
 
 interface IslandCardProps {
@@ -69,6 +70,14 @@ export function IslandCard({ island }: IslandCardProps) {
         <div className="absolute top-3 right-3">
           <FavoriteButton entityType="island" entityId={island.id} />
         </div>
+
+        {island.isTrending && (
+          <div className="absolute top-3 left-3">
+            <span className="inline-flex items-center gap-1 rounded-full bg-rose-500 text-white px-2.5 py-1 text-[11px] font-bold shadow-md">
+              🔥 Trend
+            </span>
+          </div>
+        )}
       </div>
 
       {/* İçerik Alanı */}

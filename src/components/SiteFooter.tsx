@@ -19,6 +19,9 @@ export function SiteFooter() {
           <Link href="/reklam-ver" className="inline-block text-xs text-neutral-400 hover:text-sky-600 dark:hover:text-sky-400 hover:underline">
             Reklam Ver
           </Link>
+          <Link href="/iletisim" className="inline-block text-xs text-neutral-400 hover:text-sky-600 dark:hover:text-sky-400 hover:underline">
+            İletişim
+          </Link>
         </div>
       </div>
     </footer>

@@ -6,6 +6,7 @@ import Image from 'next/image'
 import { Header } from '@/components/Header'
 import { addRecentlyViewed } from '@/lib/useRecentlyViewed'
 import { FavoriteButton } from '@/components/FavoriteButton'
+import { ShareButtons } from '@/components/ShareButtons'
 import { ReviewSection } from '@/components/ReviewSection'
 import { TripNoteBox } from '@/components/TripNoteBox'
 import { TryPrice } from '@/components/TryPrice'
@@ -93,8 +94,9 @@ export function BeachDetailClient({ beach, island }: BeachDetailClientProps) {
         ) : (
           <div className="absolute inset-0 bg-gradient-to-br from-sky-600 via-sky-800 to-indigo-900" />
         )}
-        <div className="absolute top-20 right-6">
+        <div className="absolute top-20 right-6 flex flex-col items-end gap-2">
           <FavoriteButton entityType="beach" entityId={beach.id} />
+          <ShareButtons url={`${SITE_URL}/beaches/${beach.slug}`} title={beach.name} />
         </div>
         <div className="absolute bottom-0 left-0 right-0 max-w-4xl mx-auto px-6 pb-8 text-white">
           {island && (

@@ -9,6 +9,7 @@ import { RestaurantCard } from '@/components/RestaurantCard'
 import { HotelCard, type Hotel } from '@/components/HotelCard'
 import { AttractionCard, type Attraction } from '@/components/AttractionCard'
 import { FavoriteButton } from '@/components/FavoriteButton'
+import { ShareButtons } from '@/components/ShareButtons'
 import { ReviewSection } from '@/components/ReviewSection'
 import { TripNoteBox } from '@/components/TripNoteBox'
 import { Gallery, type MediaItem } from '@/components/Gallery'
@@ -208,8 +209,9 @@ export function IslandDetailClient({ island, allBeaches, allRestaurants, allHote
           <div className="absolute inset-0 bg-gradient-to-br from-sky-600 via-sky-800 to-indigo-900" />
         )}
 
-        <div className="absolute top-20 right-6">
+        <div className="absolute top-20 right-6 flex flex-col items-end gap-2">
           <FavoriteButton entityType="island" entityId={island.id} />
+          <ShareButtons url={`${SITE_URL}/islands/${island.slug}`} title={island.name} />
         </div>
 
         <div className="absolute bottom-0 left-0 right-0 max-w-7xl mx-auto px-6 pb-12 text-white flex flex-col justify-end h-full">

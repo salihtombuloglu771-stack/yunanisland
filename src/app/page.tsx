@@ -17,7 +17,15 @@ export default async function Home() {
     .order('name')
 
   const ratings = await getRatingsMap(supabase, 'island', (islands ?? []).map((i) => i.id))
-  const islandsWithRatings = (islands ?? []).map((i) => ({ ...i, ...ratings[i.id] }))
+
+  const { data: trending } = await supabase.rpc('get_trending_islands', { days_back: 30, limit_count: 3 })
+  const trendingSlugs = new Set((trending ?? []).map((t: { slug: string }) => t.slug))
+
+  const islandsWithRatings = (islands ?? []).map((i) => ({
+    ...i,
+    ...ratings[i.id],
+    isTrending: trendingSlugs.has(i.slug),
+  }))
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-neutral-950 transition-colors duration-300">
