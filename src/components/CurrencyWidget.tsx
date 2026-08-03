@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { getConsent, onConsentChange } from '@/lib/cookieConsent'
 
 interface Rates {
   date: string
@@ -18,6 +19,12 @@ export function CurrencyWidget() {
   const [data, setData] = useState<Rates | null>(null)
   const [error, setError] = useState(false)
   const [open, setOpen] = useState(false)
+  const [bannerVisible, setBannerVisible] = useState(false)
+
+  useEffect(() => {
+    setBannerVisible(getConsent() === null)
+    return onConsentChange(() => setBannerVisible(false))
+  }, [])
 
   useEffect(() => {
     let isMounted = true
@@ -34,7 +41,7 @@ export function CurrencyWidget() {
   }, [])
 
   return (
-    <div className="fixed bottom-4 right-4 z-40 w-44 bg-white dark:bg-neutral-900 rounded-xl border border-slate-200 dark:border-neutral-800 shadow-lg overflow-hidden">
+    <div className={`fixed right-4 z-40 w-44 bg-white dark:bg-neutral-900 rounded-xl border border-slate-200 dark:border-neutral-800 shadow-lg overflow-hidden transition-[bottom] duration-200 ${bannerVisible ? 'bottom-20 sm:bottom-16' : 'bottom-4'}`}>
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
