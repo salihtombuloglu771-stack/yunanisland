@@ -17,6 +17,7 @@ const TARGETS = [
 export function CurrencyWidget() {
   const [data, setData] = useState<Rates | null>(null)
   const [error, setError] = useState(false)
+  const [open, setOpen] = useState(false)
 
   useEffect(() => {
     let isMounted = true
@@ -33,33 +34,44 @@ export function CurrencyWidget() {
   }, [])
 
   return (
-    <div className="bg-white dark:bg-neutral-900 p-5 rounded-2xl border border-slate-100 dark:border-neutral-900 shadow-sm mb-8">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-sm font-bold text-neutral-700 dark:text-neutral-300 flex items-center gap-2">
-          💱 Güncel Döviz Kurları <span className="text-xs font-normal text-neutral-400">(1 € karşılığı)</span>
-        </h3>
-        {data?.date && <span className="text-[10px] text-neutral-400">{data.date}</span>}
-      </div>
+    <div className="fixed bottom-4 right-4 z-40 w-44 bg-white dark:bg-neutral-900 rounded-xl border border-slate-200 dark:border-neutral-800 shadow-lg overflow-hidden">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        className="w-full flex items-center justify-between gap-2 px-3 py-2 text-xs font-bold text-neutral-700 dark:text-neutral-300 hover:bg-slate-50 dark:hover:bg-neutral-800 transition-colors"
+      >
+        <span className="flex items-center gap-1.5">
+          💱 {data && !error ? `1€ = ${data.rates.TRY?.toFixed(2)} ₺` : 'Döviz Kuru'}
+        </span>
+        <span className="text-[10px] flex-shrink-0">{open ? '▾' : '▴'}</span>
+      </button>
 
-      {error ? (
-        <p className="text-xs text-red-500">Döviz kuru verisi alınamadı.</p>
-      ) : !data ? (
-        <div className="flex gap-3 animate-pulse">
-          {TARGETS.map((t) => (
-            <div key={t.code} className="h-14 flex-1 bg-slate-100 dark:bg-neutral-800 rounded-xl" />
-          ))}
-        </div>
-      ) : (
-        <div className="grid grid-cols-4 gap-3">
-          {TARGETS.map((t) => (
-            <div key={t.code} className="bg-slate-50 dark:bg-neutral-950 rounded-xl p-3 text-center">
-              <p className="text-lg">{t.flag}</p>
-              <p className="text-sm font-bold text-neutral-800 dark:text-neutral-200 mt-1">
-                {data.rates[t.code]?.toFixed(2)}
-              </p>
-              <p className="text-[10px] text-neutral-400">{t.code}</p>
+      {open && (
+        <div className="px-3 pb-3 pt-1 border-t border-slate-100 dark:border-neutral-800">
+          {error ? (
+            <p className="text-[11px] text-red-500 pt-2">Döviz kuru verisi alınamadı.</p>
+          ) : !data ? (
+            <div className="grid grid-cols-2 gap-1.5 pt-2 animate-pulse">
+              {TARGETS.map((t) => (
+                <div key={t.code} className="h-10 bg-slate-100 dark:bg-neutral-800 rounded-lg" />
+              ))}
             </div>
-          ))}
+          ) : (
+            <>
+              <div className="grid grid-cols-2 gap-1.5 pt-2">
+                {TARGETS.map((t) => (
+                  <div key={t.code} className="bg-slate-50 dark:bg-neutral-950 rounded-lg p-1.5 text-center">
+                    <p className="text-xs">{t.flag}</p>
+                    <p className="text-[11px] font-bold text-neutral-800 dark:text-neutral-200">
+                      {data.rates[t.code]?.toFixed(2)}
+                    </p>
+                    <p className="text-[9px] text-neutral-400">{t.code}</p>
+                  </div>
+                ))}
+              </div>
+              <p className="text-[9px] text-neutral-400 mt-1.5 text-center">1 € karşılığı{data.date ? ` · ${data.date}` : ''}</p>
+            </>
+          )}
         </div>
       )}
     </div>
