@@ -5,7 +5,7 @@ const NOTIFY_EMAIL = 'salihtombuloglu771@gmail.com'
 
 export async function POST(request: Request) {
   const body = await request.json()
-  const { companyName, contactName, email, phone, placementInterest, budgetRange, message } = body as {
+  const { companyName, contactName, email, phone, placementInterest, budgetRange, message, website } = body as {
     companyName: string
     contactName: string
     email: string
@@ -13,6 +13,13 @@ export async function POST(request: Request) {
     placementInterest?: string
     budgetRange?: string
     message?: string
+    website?: string
+  }
+
+  // Honeypot: gizli alan, botlar doldurur gerçek kullanıcılar görmez —
+  // doluysa spam sayıp veritabanına hiç yazmadan sessizce "başarılı" dönüyoruz.
+  if (website) {
+    return NextResponse.json({ success: true })
   }
 
   if (!companyName?.trim() || !contactName?.trim() || !email?.includes('@')) {

@@ -10,6 +10,7 @@ export function AdInquiryForm() {
   const [placementInterest, setPlacementInterest] = useState('')
   const [budgetRange, setBudgetRange] = useState('')
   const [message, setMessage] = useState('')
+  const [website, setWebsite] = useState('') // honeypot — botlar doldurur, gerçek kullanıcılar görmez
   const [submitting, setSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -35,6 +36,7 @@ export function AdInquiryForm() {
         placementInterest: placementInterest || undefined,
         budgetRange: budgetRange.trim() || undefined,
         message: message.trim() || undefined,
+        website,
       }),
     })
 
@@ -60,6 +62,17 @@ export function AdInquiryForm() {
 
   return (
     <form onSubmit={handleSubmit} className="mt-8 space-y-4 bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-slate-100 dark:border-neutral-900 shadow-sm">
+      <input
+        type="text"
+        name="website"
+        value={website}
+        onChange={(e) => setWebsite(e.target.value)}
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden="true"
+        className="sr-only"
+      />
+
       <div className="grid sm:grid-cols-2 gap-4">
         <div>
           <label className="text-xs font-semibold text-neutral-500 dark:text-neutral-400">Firma Adı</label>

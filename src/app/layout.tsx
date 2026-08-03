@@ -4,6 +4,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { JsonLd } from "@/components/JsonLd";
 import { LanguageProvider } from "@/lib/i18n/LanguageProvider";
 import PageViewTracker from "@/components/PageViewTracker";
+import { CookieConsent } from "@/components/CookieConsent";
+import { AnalyticsScripts } from "@/components/AnalyticsScripts";
 import "./globals.css";
 
 const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || "https://yunanisland.vercel.app";
@@ -27,6 +29,9 @@ export const metadata: Metadata = {
     statusBarStyle: "black-translucent",
     title: "Yunanisland",
   },
+  ...(process.env.NEXT_PUBLIC_BING_VERIFICATION
+    ? { verification: { other: { "msvalidate.01": process.env.NEXT_PUBLIC_BING_VERIFICATION } } }
+    : {}),
 };
 
 export default function RootLayout({
@@ -68,7 +73,9 @@ export default function RootLayout({
           }}
         />
         <PageViewTracker />
+        <AnalyticsScripts />
         <LanguageProvider>{children}</LanguageProvider>
+        <CookieConsent />
       </body>
     </html>
   );
