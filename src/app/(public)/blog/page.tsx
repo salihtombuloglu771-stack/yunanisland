@@ -33,6 +33,14 @@ export default async function BlogPage() {
       />
 
       <main className="mx-auto max-w-4xl px-6 py-12">
+        <div className="flex justify-end mb-4">
+          <a
+            href="/feed.xml"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-orange-600 hover:text-orange-500 dark:text-orange-400 dark:hover:text-orange-300 transition-colors"
+          >
+            📡 RSS ile takip et
+          </a>
+        </div>
         <AdBanner placement="blog" />
         <BlogList articles={normalizedArticles} />
       </main>

@@ -29,6 +29,9 @@ export const metadata: Metadata = {
     statusBarStyle: "black-translucent",
     title: "Yunanisland",
   },
+  alternates: {
+    types: { "application/rss+xml": `${SITE_URL}/feed.xml` },
+  },
   ...(process.env.NEXT_PUBLIC_BING_VERIFICATION
     ? { verification: { other: { "msvalidate.01": process.env.NEXT_PUBLIC_BING_VERIFICATION } } }
     : {}),
