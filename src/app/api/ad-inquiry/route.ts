@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { checkRateLimit } from '@/lib/rateLimit'
 
 const NOTIFY_EMAIL = 'salihtombuloglu771@gmail.com'
 
@@ -27,6 +28,12 @@ export async function POST(request: Request) {
   }
 
   const supabase = await createClient()
+
+  const allowed = await checkRateLimit(supabase, request, 'ad-inquiry', 5, 3600)
+  if (!allowed) {
+    return NextResponse.json({ error: 'Çok fazla istek gönderildi, lütfen bir süre sonra tekrar dene.' }, { status: 429 })
+  }
+
   const { error: insertError } = await supabase.from('ad_inquiries').insert({
     company_name: companyName.trim(),
     contact_name: contactName.trim(),

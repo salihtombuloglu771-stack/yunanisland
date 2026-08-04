@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import OpenAI from 'openai'
 import { createClient } from '@/lib/supabase/server'
+import { checkRateLimit } from '@/lib/rateLimit'
 
 export async function POST(request: Request) {
   const body = await request.json()
@@ -17,6 +18,12 @@ export async function POST(request: Request) {
   }
 
   const supabase = await createClient()
+
+  // Bu rota gerçek OpenAI ücreti doğuruyor — diğerlerinden daha sıkı sınırlanıyor.
+  const allowed = await checkRateLimit(supabase, request, 'trip-planner', 5, 3600)
+  if (!allowed) {
+    return NextResponse.json({ error: 'Çok fazla istek gönderildi, lütfen bir saat sonra tekrar dene.' }, { status: 429 })
+  }
 
   let islandsQuery = supabase.from('islands').select('id, name, slug, description, budget_level, best_time_to_visit').eq('is_published', true)
   if (islandSlug) islandsQuery = islandsQuery.eq('slug', islandSlug)
