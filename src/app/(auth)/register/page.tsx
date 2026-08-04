@@ -12,6 +12,7 @@ export default function RegisterPage() {
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
+  const [awaitingConfirmation, setAwaitingConfirmation] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -19,20 +20,42 @@ export default function RegisterPage() {
     setError(null)
 
     const supabase = createClient()
-    const { error: signUpError } = await supabase.auth.signUp({
+    const { data, error: signUpError } = await supabase.auth.signUp({
       email,
       password,
       options: { data: { full_name: fullName } },
     })
 
+    setLoading(false)
+
     if (signUpError) {
       setError(signUpError.message)
-      setLoading(false)
+      return
+    }
+
+    // E-posta doğrulaması açıkken signUp() oturum açmaz — kullanıcı e-postasındaki
+    // linke tıklayana kadar giriş yapılmış sayılmaz.
+    if (!data.session) {
+      setAwaitingConfirmation(true)
       return
     }
 
     router.push('/')
     router.refresh()
+  }
+
+  if (awaitingConfirmation) {
+    return (
+      <main className="min-h-[70vh] flex items-center justify-center px-6 py-16">
+        <div className="w-full max-w-sm text-center">
+          <span className="text-4xl">📬</span>
+          <h1 className="mt-3 text-2xl font-bold text-neutral-900 dark:text-white">E-postanı Kontrol Et</h1>
+          <p className="mt-2 text-sm text-neutral-500">
+            <strong>{email}</strong> adresine bir onay linki gönderdik. Hesabını aktifleştirmek için o linke tıkla.
+          </p>
+        </div>
+      </main>
+    )
   }
 
   return (
