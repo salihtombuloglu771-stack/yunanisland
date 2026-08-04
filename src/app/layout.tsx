@@ -32,9 +32,12 @@ export const metadata: Metadata = {
   alternates: {
     types: { "application/rss+xml": `${SITE_URL}/feed.xml` },
   },
-  ...(process.env.NEXT_PUBLIC_BING_VERIFICATION
-    ? { verification: { other: { "msvalidate.01": process.env.NEXT_PUBLIC_BING_VERIFICATION } } }
-    : {}),
+  verification: {
+    ...(process.env.NEXT_PUBLIC_GSC_VERIFICATION ? { google: process.env.NEXT_PUBLIC_GSC_VERIFICATION } : {}),
+    ...(process.env.NEXT_PUBLIC_BING_VERIFICATION
+      ? { other: { "msvalidate.01": process.env.NEXT_PUBLIC_BING_VERIFICATION } }
+      : {}),
+  },
 };
 
 export default function RootLayout({
