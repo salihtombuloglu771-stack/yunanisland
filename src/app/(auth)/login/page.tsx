@@ -13,6 +13,18 @@ function LoginForm() {
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
 
+  // 2FA açık bir hesapla giriş yapılırsa şifre doğru olsa bile oturum "aal2"ye
+  // yükselene kadar tamamlanmış sayılmıyor — bu ikinci adım o yükseltmeyi yapıyor.
+  const [needsMfa, setNeedsMfa] = useState(false)
+  const [mfaFactorId, setMfaFactorId] = useState<string | null>(null)
+  const [mfaCode, setMfaCode] = useState('')
+
+  const finishLogin = () => {
+    const next = searchParams.get('next') || '/'
+    router.push(next)
+    router.refresh()
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
@@ -27,9 +39,85 @@ function LoginForm() {
       return
     }
 
-    const next = searchParams.get('next') || '/'
-    router.push(next)
-    router.refresh()
+    const { data: aal } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel()
+    setLoading(false)
+
+    if (aal && aal.nextLevel === 'aal2' && aal.nextLevel !== aal.currentLevel) {
+      const { data: factors } = await supabase.auth.mfa.listFactors()
+      const factor = factors?.totp?.find((f) => f.status === 'verified')
+      if (factor) {
+        setMfaFactorId(factor.id)
+        setNeedsMfa(true)
+        return
+      }
+    }
+
+    finishLogin()
+  }
+
+  const handleMfaSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!mfaFactorId || mfaCode.trim().length < 6) {
+      setError('Lütfen uygulamandaki 6 haneli kodu gir.')
+      return
+    }
+
+    setLoading(true)
+    setError(null)
+
+    const supabase = createClient()
+    const { data: challenge, error: challengeError } = await supabase.auth.mfa.challenge({ factorId: mfaFactorId })
+
+    if (challengeError) {
+      setError(challengeError.message)
+      setLoading(false)
+      return
+    }
+
+    const { error: verifyError } = await supabase.auth.mfa.verify({
+      factorId: mfaFactorId,
+      challengeId: challenge.id,
+      code: mfaCode.trim(),
+    })
+
+    setLoading(false)
+
+    if (verifyError) {
+      setError('Kod yanlış veya süresi dolmuş, tekrar dene.')
+      return
+    }
+
+    finishLogin()
+  }
+
+  if (needsMfa) {
+    return (
+      <div className="w-full max-w-sm">
+        <h1 className="text-2xl font-bold text-neutral-900 dark:text-white">İki Adımlı Doğrulama</h1>
+        <p className="mt-2 text-sm text-neutral-500">Authenticator uygulamandaki 6 haneli kodu gir.</p>
+
+        <form onSubmit={handleMfaSubmit} className="mt-8 space-y-4">
+          <input
+            value={mfaCode}
+            onChange={(e) => setMfaCode(e.target.value)}
+            placeholder="123456"
+            maxLength={6}
+            autoFocus
+            className="w-full rounded-xl border border-slate-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 px-4 py-2.5 text-sm text-center tracking-widest focus:outline-none focus:ring-2 focus:ring-sky-500"
+          />
+
+          {error && <p className="text-sm text-red-600">{error}</p>}
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full rounded-xl bg-sky-600 px-4 py-2.5 text-sm font-semibold text-white shadow-md hover:bg-sky-500 transition-colors disabled:opacity-50"
+          >
+            {loading ? 'Doğrulanıyor...' : 'Doğrula ve Giriş Yap'}
+          </button>
+        </form>
+      </div>
+    )
   }
 
   return (

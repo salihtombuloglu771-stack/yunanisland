@@ -34,6 +34,17 @@ export async function proxy(request: NextRequest) {
       return NextResponse.redirect(url)
     }
 
+    // Hesapta 2FA açıksa ama bu oturum henüz ikinci faktörü doğrulamadıysa
+    // (aal1'de kaldıysa) admin paneline girişi engelle — aksi halde "2FA aktif"
+    // sadece görünüşte kalır, şifre tek başına yine yeterli olurdu.
+    const { data: aal } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel()
+    if (aal && aal.nextLevel === 'aal2' && aal.nextLevel !== aal.currentLevel) {
+      const url = request.nextUrl.clone()
+      url.pathname = '/login'
+      url.searchParams.set('next', pathname)
+      return NextResponse.redirect(url)
+    }
+
     const { data: profile } = await supabase
       .from('users')
       .select('role')

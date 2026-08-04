@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { Header } from '@/components/Header'
+import { MfaEnrollment } from '@/components/MfaEnrollment'
 import { createClient } from '@/lib/supabase/server'
 
 const BADGES = [
@@ -99,6 +100,11 @@ export default async function AccountPage() {
         <p className="mt-2 text-sm text-neutral-500">
           {profile?.full_name || user.email} olarak giriş yaptın.
         </p>
+
+        <section className="mt-10">
+          <h2 className="text-lg font-bold text-neutral-900 dark:text-white mb-4">🔐 Güvenlik</h2>
+          <MfaEnrollment />
+        </section>
 
         <section className="mt-10">
           <h2 className="text-lg font-bold text-neutral-900 dark:text-white mb-4">🏅 Rozetler</h2>
