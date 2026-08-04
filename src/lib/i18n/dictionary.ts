@@ -4,6 +4,7 @@ export const dictionary = {
   tr: {
     'nav.home': 'Ana Sayfa',
     'nav.ferryGuide': 'Feribot Rehberi',
+    'nav.flightGuide': 'Uçak Bileti',
     'nav.blog': 'Gezi Blogu',
     'nav.budgetCalculator': 'Bütçe Hesaplayıcı',
     'nav.tripTools': 'Seyahat Araçları',
@@ -27,6 +28,7 @@ export const dictionary = {
   en: {
     'nav.home': 'Home',
     'nav.ferryGuide': 'Ferry Guide',
+    'nav.flightGuide': 'Flights',
     'nav.blog': 'Travel Blog',
     'nav.budgetCalculator': 'Budget Calculator',
     'nav.tripTools': 'Trip Tools',
@@ -50,6 +52,7 @@ export const dictionary = {
   el: {
     'nav.home': 'Αρχική',
     'nav.ferryGuide': 'Οδηγός Πλοίων',
+    'nav.flightGuide': 'Πτήσεις',
     'nav.blog': 'Ταξιδιωτικό Blog',
     'nav.budgetCalculator': 'Υπολογιστής Προϋπολογισμού',
     'nav.tripTools': 'Εργαλεία Ταξιδιού',

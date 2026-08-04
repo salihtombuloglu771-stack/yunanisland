@@ -31,6 +31,7 @@ export function Header() {
 
   const toolLinks = [
     { href: '/ferry-guide', label: t('nav.ferryGuide') },
+    { href: '/flight-guide', label: t('nav.flightGuide') },
     { href: '/budget-calculator', label: t('nav.budgetCalculator') },
     { href: '/trip-tools', label: t('nav.tripTools') },
     { href: '/compare', label: t('nav.compare') },
@@ -165,6 +166,7 @@ export function Header() {
         <div className="xl:hidden border-t border-slate-100 dark:border-neutral-900 px-6 py-4 space-y-3 bg-white dark:bg-neutral-950">
           <Link href="/" className="block text-sm font-medium text-neutral-600 dark:text-neutral-400">{t('nav.home')}</Link>
           <Link href="/ferry-guide" className="block text-sm font-medium text-neutral-600 dark:text-neutral-400">{t('nav.ferryGuide')}</Link>
+          <Link href="/flight-guide" className="block text-sm font-medium text-neutral-600 dark:text-neutral-400">{t('nav.flightGuide')}</Link>
           <Link href="/blog" className="block text-sm font-medium text-neutral-600 dark:text-neutral-400">{t('nav.blog')}</Link>
           <Link href="/budget-calculator" className="block text-sm font-medium text-neutral-600 dark:text-neutral-400">{t('nav.budgetCalculator')}</Link>
           <Link href="/trip-tools" className="block text-sm font-medium text-neutral-600 dark:text-neutral-400">{t('nav.tripTools')}</Link>

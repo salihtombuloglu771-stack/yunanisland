@@ -598,6 +598,12 @@ export function IslandDetailClient({ island, allBeaches, allRestaurants, allHote
               >
                 Bodrum - Kos Feribot Seferleri
               </Link>
+              <Link
+                href="/flight-guide"
+                className="mt-2 block text-center rounded-xl border border-sky-600/20 hover:border-sky-600/40 text-sky-600 dark:text-sky-400 py-2.5 text-xs font-semibold transition-colors"
+              >
+                ✈️ Uçak Bileti Fiyatlarını Karşılaştır
+              </Link>
             </div>
 
           </div>
