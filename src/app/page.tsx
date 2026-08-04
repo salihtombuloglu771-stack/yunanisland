@@ -4,6 +4,7 @@ import { HomeClient } from '@/components/HomeClient'
 import { AdBanner } from '@/components/AdBanner'
 import { CurrencyWidget } from '@/components/CurrencyWidget'
 import { RecentlyViewedBar } from '@/components/RecentlyViewedBar'
+import { NearbyIslands } from '@/components/NearbyIslands'
 import { SiteFooter } from '@/components/SiteFooter'
 import { createClient } from '@/lib/supabase/server'
 import { getRatingsMap } from '@/lib/ratings'
@@ -12,7 +13,7 @@ export default async function Home() {
   const supabase = await createClient()
   const { data: islands } = await supabase
     .from('islands')
-    .select('id, name, slug, description, description_en, budget_level, moods, population, best_time_to_visit, best_time_to_visit_en, cover_image_url')
+    .select('id, name, slug, description, description_en, budget_level, moods, population, best_time_to_visit, best_time_to_visit_en, cover_image_url, latitude, longitude')
     .eq('is_published', true)
     .order('name')
 
@@ -35,6 +36,7 @@ export default async function Home() {
       <main className="mx-auto max-w-7xl px-6 py-12">
         <AdBanner placement="homepage" />
         <RecentlyViewedBar />
+        <NearbyIslands islands={islandsWithRatings} />
         <CurrencyWidget />
         <HomeClient islands={islandsWithRatings} />
       </main>

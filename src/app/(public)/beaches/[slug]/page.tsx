@@ -47,7 +47,10 @@ export default async function BeachDetailPage({ params }: PageProps) {
 
   const island = Array.isArray(beach.islands) ? beach.islands[0] : beach.islands
 
-  const { data: reviews } = await supabase.from('reviews').select('rating').eq('entity_type', 'beach').eq('entity_id', beach.id)
+  const [{ data: reviews }, { data: media }] = await Promise.all([
+    supabase.from('reviews').select('rating').eq('entity_type', 'beach').eq('entity_id', beach.id),
+    supabase.from('media').select('id, url, media_type').eq('entity_type', 'beach').eq('entity_id', beach.id).eq('status', 'approved'),
+  ])
   const reviewCount = reviews?.length ?? 0
   const avgRating = reviewCount > 0 ? reviews!.reduce((s, r) => s + r.rating, 0) / reviewCount : null
 
@@ -68,7 +71,7 @@ export default async function BeachDetailPage({ params }: PageProps) {
   return (
     <>
       <JsonLd data={jsonLd} />
-      <BeachDetailClient beach={beach} island={island} />
+      <BeachDetailClient beach={beach} island={island} media={media ?? []} />
     </>
   )
 }

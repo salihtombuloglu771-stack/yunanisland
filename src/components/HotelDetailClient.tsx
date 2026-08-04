@@ -7,6 +7,7 @@ import { Header } from '@/components/Header'
 import { addRecentlyViewed } from '@/lib/useRecentlyViewed'
 import { FavoriteButton } from '@/components/FavoriteButton'
 import { ShareButtons } from '@/components/ShareButtons'
+import { LiveViewers } from '@/components/LiveViewers'
 import { ReviewSection } from '@/components/ReviewSection'
 import { TripNoteBox } from '@/components/TripNoteBox'
 import { Breadcrumbs } from '@/components/Breadcrumbs'
@@ -72,6 +73,7 @@ export function HotelDetailClient({ hotel, island }: HotelDetailClientProps) {
         <div className="absolute top-20 right-6 flex flex-col items-end gap-2">
           <FavoriteButton entityType="hotel" entityId={hotel.id} />
           <ShareButtons url={`${SITE_URL}/hotels/${hotel.slug}`} title={hotel.name} />
+          <LiveViewers />
         </div>
         <div className="absolute bottom-0 left-0 right-0 max-w-4xl mx-auto px-6 pb-8 text-white">
           {island && (

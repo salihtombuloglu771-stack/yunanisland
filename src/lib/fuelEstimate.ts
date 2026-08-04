@@ -1,3 +1,5 @@
+import { haversineKm } from '@/lib/geo'
+
 export interface CarType {
   id: 'compact' | 'sedan' | 'suv'
   label: string
@@ -24,16 +26,6 @@ const ROAD_DISTANCE_FACTOR = 1.35
 
 export function getCarType(id: string): CarType {
   return CAR_TYPES.find((c) => c.id === id) ?? CAR_TYPES[0]
-}
-
-function haversineKm(lat1: number, lng1: number, lat2: number, lng2: number): number {
-  const R = 6371
-  const dLat = ((lat2 - lat1) * Math.PI) / 180
-  const dLng = ((lng2 - lng1) * Math.PI) / 180
-  const a =
-    Math.sin(dLat / 2) ** 2 +
-    Math.cos((lat1 * Math.PI) / 180) * Math.cos((lat2 * Math.PI) / 180) * Math.sin(dLng / 2) ** 2
-  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
 }
 
 export interface FuelEstimateResult {

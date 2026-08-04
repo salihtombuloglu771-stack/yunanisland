@@ -10,9 +10,11 @@ import { HotelCard, type Hotel } from '@/components/HotelCard'
 import { AttractionCard, type Attraction } from '@/components/AttractionCard'
 import { FavoriteButton } from '@/components/FavoriteButton'
 import { ShareButtons } from '@/components/ShareButtons'
+import { LiveViewers } from '@/components/LiveViewers'
 import { ReviewSection } from '@/components/ReviewSection'
 import { TripNoteBox } from '@/components/TripNoteBox'
 import { Gallery, type MediaItem } from '@/components/Gallery'
+import { PhotoContribution } from '@/components/PhotoContribution'
 import { Breadcrumbs } from '@/components/Breadcrumbs'
 import { FaqAccordion, type Faq } from '@/components/FaqAccordion'
 import { SimilarIslands } from '@/components/SimilarIslands'
@@ -212,6 +214,7 @@ export function IslandDetailClient({ island, allBeaches, allRestaurants, allHote
         <div className="absolute top-20 right-6 flex flex-col items-end gap-2">
           <FavoriteButton entityType="island" entityId={island.id} />
           <ShareButtons url={`${SITE_URL}/islands/${island.slug}`} title={island.name} />
+          <LiveViewers />
         </div>
 
         <div className="absolute bottom-0 left-0 right-0 max-w-7xl mx-auto px-6 pb-12 text-white flex flex-col justify-end h-full">
@@ -506,7 +509,12 @@ export function IslandDetailClient({ island, allBeaches, allRestaurants, allHote
                 </div>
               )}
 
-              {activeTab === 'gallery' && <Gallery items={media} />}
+              {activeTab === 'gallery' && (
+                <>
+                  <Gallery items={media} />
+                  <PhotoContribution entityType="island" entityId={island.id} />
+                </>
+              )}
 
             </div>
 

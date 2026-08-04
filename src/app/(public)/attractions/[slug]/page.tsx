@@ -47,7 +47,10 @@ export default async function AttractionDetailPage({ params }: PageProps) {
 
   const island = Array.isArray(attraction.islands) ? attraction.islands[0] : attraction.islands
 
-  const { data: reviews } = await supabase.from('reviews').select('rating').eq('entity_type', 'attraction').eq('entity_id', attraction.id)
+  const [{ data: reviews }, { data: media }] = await Promise.all([
+    supabase.from('reviews').select('rating').eq('entity_type', 'attraction').eq('entity_id', attraction.id),
+    supabase.from('media').select('id, url, media_type').eq('entity_type', 'attraction').eq('entity_id', attraction.id).eq('status', 'approved'),
+  ])
   const reviewCount = reviews?.length ?? 0
   const avgRating = reviewCount > 0 ? reviews!.reduce((s, r) => s + r.rating, 0) / reviewCount : null
 
@@ -68,7 +71,7 @@ export default async function AttractionDetailPage({ params }: PageProps) {
   return (
     <>
       <JsonLd data={jsonLd} />
-      <AttractionDetailClient attraction={attraction} island={island} />
+      <AttractionDetailClient attraction={attraction} island={island} media={media ?? []} />
     </>
   )
 }

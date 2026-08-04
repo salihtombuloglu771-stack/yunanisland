@@ -63,7 +63,7 @@ export default async function IslandPage({ params }: PageProps) {
     supabase.from('restaurants').select('*').eq('island_id', island.id),
     supabase.from('hotels').select('*').eq('island_id', island.id),
     supabase.from('attractions').select('*').eq('island_id', island.id),
-    supabase.from('media').select('id, url, media_type').eq('entity_type', 'island').eq('entity_id', island.id),
+    supabase.from('media').select('id, url, media_type').eq('entity_type', 'island').eq('entity_id', island.id).eq('status', 'approved'),
     supabase.from('reviews').select('rating').eq('entity_type', 'island').eq('entity_id', island.id),
     supabase
       .from('islands')

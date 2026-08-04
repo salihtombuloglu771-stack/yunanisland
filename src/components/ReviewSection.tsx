@@ -9,6 +9,7 @@ interface Review {
   id: string
   rating: number
   comment: string | null
+  image_url: string | null
   created_at: string
   user_id: string
   users: { full_name: string | null } | null
@@ -19,6 +20,7 @@ export function ReviewSection({ entityType, entityId }: { entityType: EntityType
   const [userId, setUserId] = useState<string | null>(null)
   const [rating, setRating] = useState(5)
   const [comment, setComment] = useState('')
+  const [imageUrl, setImageUrl] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const [loading, setLoading] = useState(true)
 
@@ -29,7 +31,7 @@ export function ReviewSection({ entityType, entityId }: { entityType: EntityType
 
     const { data } = await supabase
       .from('reviews')
-      .select('id, rating, comment, created_at, user_id, users(full_name)')
+      .select('id, rating, comment, image_url, created_at, user_id, users(full_name)')
       .eq('entity_type', entityType)
       .eq('entity_id', entityId)
       .order('created_at', { ascending: false })
@@ -55,10 +57,12 @@ export function ReviewSection({ entityType, entityId }: { entityType: EntityType
       entity_id: entityId,
       rating,
       comment: comment.trim() || null,
+      image_url: imageUrl.trim() || null,
     })
 
     setComment('')
     setRating(5)
+    setImageUrl('')
     setSubmitting(false)
     await load()
   }
@@ -98,6 +102,13 @@ export function ReviewSection({ entityType, entityId }: { entityType: EntityType
             rows={3}
             className="w-full rounded-xl border border-slate-200 dark:border-neutral-800 bg-slate-50 dark:bg-neutral-950 px-4 py-2.5 text-sm outline-none focus:border-sky-500 transition-all"
           />
+          <input
+            type="url"
+            value={imageUrl}
+            onChange={(e) => setImageUrl(e.target.value)}
+            placeholder="Fotoğraf bağlantısı (isteğe bağlı)"
+            className="mt-2 w-full rounded-xl border border-slate-200 dark:border-neutral-800 bg-slate-50 dark:bg-neutral-950 px-4 py-2.5 text-sm outline-none focus:border-sky-500 transition-all"
+          />
           <button
             type="submit"
             disabled={submitting}
@@ -127,6 +138,14 @@ export function ReviewSection({ entityType, entityId }: { entityType: EntityType
             </div>
             {review.comment && (
               <p className="mt-2 text-sm text-neutral-600 dark:text-neutral-400">{review.comment}</p>
+            )}
+            {review.image_url && (
+              // eslint-disable-next-line @next/next/no-img-element -- kullanıcı URL'i herhangi bir dış domain olabilir
+              <img
+                src={review.image_url}
+                alt="Yorum fotoğrafı"
+                className="mt-2 max-h-64 rounded-lg border border-slate-100 dark:border-neutral-800 object-cover"
+              />
             )}
             <p className="mt-2 text-xs text-neutral-400">
               {new Date(review.created_at).toLocaleDateString('tr-TR')}

@@ -7,10 +7,13 @@ import { Header } from '@/components/Header'
 import { addRecentlyViewed } from '@/lib/useRecentlyViewed'
 import { FavoriteButton } from '@/components/FavoriteButton'
 import { ShareButtons } from '@/components/ShareButtons'
+import { LiveViewers } from '@/components/LiveViewers'
 import { ReviewSection } from '@/components/ReviewSection'
 import { TripNoteBox } from '@/components/TripNoteBox'
 import { TryPrice } from '@/components/TryPrice'
 import { Breadcrumbs } from '@/components/Breadcrumbs'
+import { Gallery, type MediaItem } from '@/components/Gallery'
+import { PhotoContribution } from '@/components/PhotoContribution'
 import { useLanguage } from '@/lib/i18n/LanguageProvider'
 
 const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://yunanisland.vercel.app'
@@ -32,9 +35,10 @@ interface BeachDetailClientProps {
     umbrella_price: number | null; accessibility: string | null
   }
   island: { name: string; slug: string } | null
+  media: MediaItem[]
 }
 
-export function BeachDetailClient({ beach, island }: BeachDetailClientProps) {
+export function BeachDetailClient({ beach, island, media }: BeachDetailClientProps) {
   const { locale } = useLanguage()
   const description = locale === 'en' ? (beach.description_en || beach.description)
     : locale === 'el' ? (beach.description_el || beach.description)
@@ -54,6 +58,7 @@ export function BeachDetailClient({ beach, island }: BeachDetailClientProps) {
     sunbed: locale === 'en' ? 'Sunbed' : locale === 'el' ? 'Ξαπλώστρα' : 'Şezlong',
     umbrella: locale === 'en' ? 'Umbrella' : locale === 'el' ? 'Ομπρέλα' : 'Şemsiye',
     freeOrNone: locale === 'en' ? 'Free/None' : locale === 'el' ? 'Δωρεάν/Καμία' : 'Ücretsiz/Yok',
+    gallery: locale === 'en' ? '📸 Photos from Visitors' : locale === 'el' ? '📸 Φωτογραφίες Επισκεπτών' : '📸 Ziyaretçi Fotoğrafları',
   }
 
   useEffect(() => {
@@ -97,6 +102,7 @@ export function BeachDetailClient({ beach, island }: BeachDetailClientProps) {
         <div className="absolute top-20 right-6 flex flex-col items-end gap-2">
           <FavoriteButton entityType="beach" entityId={beach.id} />
           <ShareButtons url={`${SITE_URL}/beaches/${beach.slug}`} title={beach.name} />
+          <LiveViewers />
         </div>
         <div className="absolute bottom-0 left-0 right-0 max-w-4xl mx-auto px-6 pb-8 text-white">
           {island && (
@@ -144,6 +150,12 @@ export function BeachDetailClient({ beach, island }: BeachDetailClientProps) {
         {beach.accessibility && (
           <p className="mt-6 text-sm text-neutral-500">♿ {beach.accessibility}</p>
         )}
+
+        <div className="mt-10">
+          <h3 className="text-lg font-bold text-neutral-900 dark:text-white mb-4">{t.gallery}</h3>
+          <Gallery items={media} />
+          <PhotoContribution entityType="beach" entityId={beach.id} />
+        </div>
 
         <ReviewSection entityType="beach" entityId={beach.id} />
         <TripNoteBox entityType="beach" entityId={beach.id} />
