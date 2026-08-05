@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { useRouter, usePathname } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { useLanguage } from '@/lib/i18n/LanguageProvider'
 import { ThemeToggle } from '@/components/ThemeToggle'
@@ -11,6 +11,7 @@ import { HeaderSearch } from '@/components/HeaderSearch'
 
 export function Header() {
   const router = useRouter()
+  const pathname = usePathname()
   const { t } = useLanguage()
   const [email, setEmail] = useState<string | null>(null)
   const [isAdmin, setIsAdmin] = useState(false)
@@ -67,10 +68,23 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-slate-100 dark:border-neutral-900 bg-white/80 dark:bg-neutral-950/80 backdrop-blur-md">
       <div className="mx-auto flex max-w-7xl h-16 items-center justify-between px-6">
-        <Link href="/" className="flex items-center gap-2 font-bold text-xl text-sky-600 dark:text-sky-400">
-          <span>🏝️</span>
-          <span>Yunanisland</span>
-        </Link>
+        <div className="flex items-center gap-3">
+          {pathname !== '/' && (
+            <button
+              onClick={() => router.back()}
+              aria-label="Geri"
+              className="flex h-8 w-8 items-center justify-center rounded-lg text-neutral-500 dark:text-neutral-400 hover:bg-slate-100 dark:hover:bg-neutral-800 hover:text-sky-600 dark:hover:text-sky-400 transition-colors"
+            >
+              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+          )}
+          <Link href="/" className="flex items-center gap-2 font-bold text-xl text-sky-600 dark:text-sky-400">
+            <span>🏝️</span>
+            <span>Yunanisland</span>
+          </Link>
+        </div>
 
         <nav className="hidden xl:flex items-center gap-7">
           <Link href="/" className="text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
