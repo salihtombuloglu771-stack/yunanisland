@@ -18,6 +18,7 @@ import { LastUpdated } from '@/components/LastUpdated'
 import { Gallery, type MediaItem } from '@/components/Gallery'
 import { PhotoContribution } from '@/components/PhotoContribution'
 import { Breadcrumbs } from '@/components/Breadcrumbs'
+import { SiteFooter } from '@/components/SiteFooter'
 import { FaqAccordion, type Faq } from '@/components/FaqAccordion'
 import { SimilarIslands } from '@/components/SimilarIslands'
 import { CarSelector } from '@/components/CarSelector'
@@ -619,13 +620,7 @@ export function IslandDetailClient({ island, allBeaches, allRestaurants, allHote
         <SimilarIslands islands={similarIslands} />
       </main>
 
-      <footer className="border-t border-slate-100 dark:border-neutral-900 bg-white dark:bg-neutral-950 py-8 mt-24">
-        <div className="mx-auto max-w-7xl px-6 text-center">
-          <p className="text-sm text-neutral-500 dark:text-neutral-400">
-            &copy; 2026 Yunanisland. Tüm hakları saklıdır.
-          </p>
-        </div>
-      </footer>
+      <SiteFooter />
 
     </div>
   )
