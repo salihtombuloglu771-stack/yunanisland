@@ -36,7 +36,7 @@ const BUDGET_LEVEL_LABELS = {
   luxury: { label: 'Lüks', color: 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20' },
 }
 
-export function IslandDetailClient({ island, allBeaches, allRestaurants, allHotels, allAttractions, media, similarIslands }: { island: Island & { faqs?: Faq[] }; allBeaches: Beach[]; allRestaurants: Restaurant[]; allHotels: Hotel[]; allAttractions: Attraction[]; media: MediaItem[]; similarIslands: IslandCardType[] }) {
+export function IslandDetailClient({ island, allBeaches, allRestaurants, allHotels, allAttractions, media, similarIslands }: { island: Island & { faqs?: Faq[]; faqs_en?: Faq[]; faqs_el?: Faq[] }; allBeaches: Beach[]; allRestaurants: Restaurant[]; allHotels: Hotel[]; allAttractions: Attraction[]; media: MediaItem[]; similarIslands: IslandCardType[] }) {
   const { locale } = useLanguage()
   const description = locale === 'en' ? (island.description_en || island.description)
     : locale === 'el' ? (island.description_el || island.description)
@@ -293,7 +293,7 @@ export function IslandDetailClient({ island, allBeaches, allRestaurants, allHote
                     )}
                   </article>
 
-                  <FaqAccordion faqs={island.faqs ?? []} />
+                  <FaqAccordion faqs={island.faqs ?? []} faqsEn={island.faqs_en} faqsEl={island.faqs_el} />
                   <ReviewSection entityType="island" entityId={island.id} />
                   <TripNoteBox entityType="island" entityId={island.id} />
                   <div className="mt-6 flex items-center justify-between gap-4">

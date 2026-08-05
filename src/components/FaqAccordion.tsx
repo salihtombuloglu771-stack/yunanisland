@@ -2,18 +2,26 @@
 
 import { useState } from 'react'
 import { JsonLd } from '@/components/JsonLd'
+import { useLanguage } from '@/lib/i18n/LanguageProvider'
 
 export interface Faq { question: string; answer: string }
 
-export function FaqAccordion({ faqs }: { faqs: Faq[] }) {
+export function FaqAccordion({ faqs, faqsEn, faqsEl }: { faqs: Faq[]; faqsEn?: Faq[]; faqsEl?: Faq[] }) {
+  const { locale } = useLanguage()
   const [openIndex, setOpenIndex] = useState<number | null>(null)
 
-  if (!faqs || faqs.length === 0) return null
+  const activeFaqs = locale === 'en' ? (faqsEn?.length ? faqsEn : faqs)
+    : locale === 'el' ? (faqsEl?.length ? faqsEl : faqs)
+    : faqs
+
+  const title = locale === 'en' ? '❓ Frequently Asked Questions' : locale === 'el' ? '❓ Συχνές Ερωτήσεις' : '❓ Sık Sorulan Sorular'
+
+  if (!activeFaqs || activeFaqs.length === 0) return null
 
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
-    mainEntity: faqs.map((faq) => ({
+    mainEntity: activeFaqs.map((faq) => ({
       '@type': 'Question',
       name: faq.question,
       acceptedAnswer: { '@type': 'Answer', text: faq.answer },
@@ -23,9 +31,9 @@ export function FaqAccordion({ faqs }: { faqs: Faq[] }) {
   return (
     <div className="mt-8">
       <JsonLd data={jsonLd} />
-      <h3 className="text-lg font-bold text-neutral-900 dark:text-white mb-4">❓ Sık Sorulan Sorular</h3>
+      <h3 className="text-lg font-bold text-neutral-900 dark:text-white mb-4">{title}</h3>
       <div className="space-y-2">
-        {faqs.map((faq, i) => (
+        {activeFaqs.map((faq, i) => (
           <div key={i} className="bg-white dark:bg-neutral-900 rounded-xl border border-slate-100 dark:border-neutral-900 overflow-hidden">
             <button
               onClick={() => setOpenIndex(openIndex === i ? null : i)}
