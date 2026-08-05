@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { checkRateLimit } from '@/lib/rateLimit'
 
-const NOTIFY_EMAIL = 'salihtombuloglu771@gmail.com'
+const NOTIFY_EMAILS = ['salihtombuloglu771@gmail.com', 'ardasaracgm@gmail.com']
 
 export async function POST(request: Request) {
   const body = await request.json()
@@ -45,7 +45,7 @@ export async function POST(request: Request) {
         },
         body: JSON.stringify({
           from: 'Yunanisland <info@yunanisland.com>',
-          to: [NOTIFY_EMAIL],
+          to: NOTIFY_EMAILS,
           subject: 'Yeni Bülten Aboneliği',
           text: `Yeni bülten abonesi: ${email.trim()}`,
         }),
