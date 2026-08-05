@@ -118,7 +118,7 @@ export function AboutClient() {
             </div>
           ))}
         </dl>
-        <div className="not-prose relative w-full max-w-sm mx-auto aspect-[9/16] rounded-xl overflow-hidden border border-slate-200 dark:border-neutral-800 shadow-sm mb-8">
+        <div className="not-prose relative w-full max-w-[220px] mx-auto aspect-[9/16] rounded-xl overflow-hidden border border-slate-200 dark:border-neutral-800 shadow-sm mb-8">
           <Image src="/seyahat-acentasi-belgesi.jpg" alt={c.legalImageAlt} fill className="object-cover" />
         </div>
 
