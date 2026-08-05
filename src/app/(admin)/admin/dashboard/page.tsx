@@ -4,7 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 export default async function AdminDashboardPage() {
   const supabase = await createClient()
 
-  const [islands, beaches, restaurants, attractions, users, reviews, adInquiries, contactMessages, pendingMedia] = await Promise.all([
+  const [islands, beaches, restaurants, attractions, users, reviews, adInquiries, contactMessages, pendingMedia, newsletterSubscribers] = await Promise.all([
     supabase.from('islands').select('id', { count: 'exact', head: true }),
     supabase.from('beaches').select('id', { count: 'exact', head: true }),
     supabase.from('restaurants').select('id', { count: 'exact', head: true }),
@@ -14,6 +14,7 @@ export default async function AdminDashboardPage() {
     supabase.from('ad_inquiries').select('id', { count: 'exact', head: true }).eq('status', 'new'),
     supabase.from('contact_messages').select('id', { count: 'exact', head: true }).eq('status', 'new'),
     supabase.from('media').select('id', { count: 'exact', head: true }).eq('status', 'pending'),
+    supabase.from('newsletter_subscribers').select('id', { count: 'exact', head: true }),
   ])
 
   const stats = [
@@ -26,6 +27,7 @@ export default async function AdminDashboardPage() {
     { label: 'Yeni Reklam Talebi', count: adInquiries.count ?? 0, href: '/admin/ad-inquiries', emoji: '📬' },
     { label: 'Yeni İletişim Mesajı', count: contactMessages.count ?? 0, href: '/admin/contact-messages', emoji: '✉️' },
     { label: 'Bekleyen Fotoğraf', count: pendingMedia.count ?? 0, href: '/admin/media-review', emoji: '🖼️' },
+    { label: 'Bülten Abonesi', count: newsletterSubscribers.count ?? 0, href: '/admin/newsletter', emoji: '📧' },
   ]
 
   return (
@@ -87,6 +89,9 @@ export default async function AdminDashboardPage() {
           </Link>
           <Link href="/admin/media-review" className="rounded-xl bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 px-5 py-2.5 text-sm font-semibold text-neutral-700 dark:text-neutral-300 hover:bg-slate-50 dark:hover:bg-neutral-800 transition-colors">
             🖼️ Fotoğraf Katkılarını Onayla
+          </Link>
+          <Link href="/admin/newsletter" className="rounded-xl bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 px-5 py-2.5 text-sm font-semibold text-neutral-700 dark:text-neutral-300 hover:bg-slate-50 dark:hover:bg-neutral-800 transition-colors">
+            📧 Bülten Abonelerini Gör
           </Link>
         </div>
       </div>

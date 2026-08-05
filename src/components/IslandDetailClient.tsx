@@ -590,13 +590,13 @@ export function IslandDetailClient({ island, allBeaches, allRestaurants, allHote
                 Ulaşım Tüyoları
               </h3>
               <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
-                Kos&apos;a Atina limanlarından feribotla gelinebildiği gibi, Türkiye kıyılarına (özellikle Bodrum&apos;a) sadece 20 dakikalık katamaran seferleri de bulunur.
+                {island.name} için güncel feribot rotalarını, süre ve fiyat bilgilerini Feribot Rehberi&apos;nde bulabilirsin.
               </p>
               <Link
                 href={`/ferry-guide?to=${island.name}`}
                 className="mt-4 block text-center rounded-xl border border-sky-600/20 hover:border-sky-600/40 text-sky-600 dark:text-sky-400 py-2.5 text-xs font-semibold transition-colors"
               >
-                Bodrum - Kos Feribot Seferleri
+                {island.name} Feribot Seferleri
               </Link>
               <Link
                 href="/flight-guide"

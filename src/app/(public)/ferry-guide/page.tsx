@@ -7,7 +7,7 @@ import { PageHero } from '@/components/PageHero'
 import { createClient } from '@/lib/supabase/client'
 import { FerryRoute } from '@/lib/mockData'
 
-const PORTS = ['Bodrum', 'Kos', 'Atina (Pire)', 'Santorini', 'Rhodes']
+const PORTS = ['Bodrum', 'Kos', 'Atina (Pire)', 'Santorini', 'Rhodes', 'Patras', 'Igoumenitsa', 'Killini', 'Girit', 'Korfu', 'Kefalonya']
 
 function FerrySearchForm() {
   const searchParams = useSearchParams()
@@ -19,6 +19,9 @@ function FerrySearchForm() {
     if (initialToPort === 'Bodrum') return 'Kos'
     if (initialToPort === 'Kos') return 'Bodrum'
     if (initialToPort === 'Santorini' || initialToPort === 'Rhodes') return 'Kos'
+    if (initialToPort === 'Girit') return 'Atina (Pire)'
+    if (initialToPort === 'Korfu') return 'Igoumenitsa'
+    if (initialToPort === 'Kefalonya') return 'Patras'
     return 'Bodrum'
   })
   const [toPort, setToPort] = useState(initialToPort)
