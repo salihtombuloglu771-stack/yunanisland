@@ -57,7 +57,7 @@ export async function POST(request: Request) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          from: 'Yunanisland <bildirim@yunanisland.com>',
+          from: 'Yunanisland <info@yunanisland.com>',
           to: [NOTIFY_EMAIL],
           subject: `Yeni Reklam Talebi — ${companyName}`,
           text: [
