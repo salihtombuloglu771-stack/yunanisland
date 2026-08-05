@@ -1,6 +1,5 @@
 'use client'
 
-import Image from 'next/image'
 import { Header } from '@/components/Header'
 import { SiteFooter } from '@/components/SiteFooter'
 import { useLanguage } from '@/lib/i18n/LanguageProvider'
@@ -25,7 +24,6 @@ const CONTENT = {
       { label: 'Belge No', value: '13637' },
       { label: 'Merkezi', value: 'Burdur' },
     ],
-    legalImageAlt: 'A Grubu Seyahat Acentası İşletme Belgesi',
     honestyTitle: 'Dürüstlük İlkemiz',
     honesty: 'Sitedeki hiçbir fiyat veya rezervasyon bilgisi uydurma değildir: sitenin kendi üzerinden doğrudan rezervasyon alınmayan yerlerde (ör. uçak bileti), sizi doğrudan gerçek fiyatları gösteren dış kaynaklara (Google Flights gibi) yönlendiriyoruz. İçerik sürekli güncellenmekte ve genişletilmektedir.',
     contactTitle: 'İletişim',
@@ -52,7 +50,6 @@ const CONTENT = {
       { label: 'License No.', value: '13637' },
       { label: 'Headquarters', value: 'Burdur, Turkey' },
     ],
-    legalImageAlt: 'Group A Travel Agency License',
     honestyTitle: 'Our Honesty Principle',
     honesty: 'No price or booking information on this site is made up: where the site doesn\'t take a direct booking itself (e.g. flights), we send you directly to external sources showing real prices (like Google Flights). Content is continuously updated and expanded.',
     contactTitle: 'Contact',
@@ -79,7 +76,6 @@ const CONTENT = {
       { label: 'Αρ. Άδειας', value: '13637' },
       { label: 'Έδρα', value: 'Burdur, Τουρκία' },
     ],
-    legalImageAlt: 'Άδεια Ταξιδιωτικού Γραφείου Ομάδας Α',
     honestyTitle: 'Η Αρχή Ειλικρίνειάς μας',
     honesty: 'Καμία πληροφορία τιμής ή κράτησης σε αυτή την ιστοσελίδα δεν είναι επινοημένη: όπου η ιστοσελίδα δεν δέχεται απευθείας κράτηση η ίδια (π.χ. πτήσεις), σας κατευθύνουμε απευθείας σε εξωτερικές πηγές που δείχνουν πραγματικές τιμές (όπως το Google Flights). Το περιεχόμενο ενημερώνεται και επεκτείνεται συνεχώς.',
     contactTitle: 'Επικοινωνία',
@@ -118,10 +114,6 @@ export function AboutClient() {
             </div>
           ))}
         </dl>
-        <div className="not-prose relative w-full max-w-[220px] mx-auto aspect-[9/16] rounded-xl overflow-hidden border border-slate-200 dark:border-neutral-800 shadow-sm mb-8">
-          <Image src="/seyahat-acentasi-belgesi.jpg" alt={c.legalImageAlt} fill className="object-cover" />
-        </div>
-
         <h2>{c.honestyTitle}</h2>
         <p>{c.honesty}</p>
 
