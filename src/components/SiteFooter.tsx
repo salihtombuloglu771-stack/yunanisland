@@ -13,6 +13,9 @@ export function SiteFooter() {
           &copy; 2026 Yunanisland. {t('footer.rights')}
         </p>
         <div className="flex items-center justify-center gap-4">
+          <Link href="/hakkimizda" className="inline-block text-xs text-neutral-400 hover:text-sky-600 dark:hover:text-sky-400 hover:underline">
+            Hakkımızda
+          </Link>
           <Link href="/gizlilik-politikasi" className="inline-block text-xs text-neutral-400 hover:text-sky-600 dark:hover:text-sky-400 hover:underline">
             Gizlilik Politikası
           </Link>
