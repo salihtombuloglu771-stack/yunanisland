@@ -50,7 +50,7 @@ export async function POST(request: Request) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          from: 'Yunanisland <onboarding@resend.dev>',
+          from: 'Yunanisland <bildirim@yunanisland.com>',
           to: [NOTIFY_EMAIL],
           subject: `Yeni İletişim Mesajı — ${subject || name}`,
           text: [
