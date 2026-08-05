@@ -2,20 +2,33 @@
 
 import { useEffect, useState } from 'react'
 import { getConsent, onConsentChange } from '@/lib/cookieConsent'
+import { useLanguage } from '@/lib/i18n/LanguageProvider'
 
 interface Rates {
   date: string
   rates: Record<string, number>
 }
 
-const TARGETS = [
-  { code: 'EUR', label: '🇪🇺 Euro', flag: '🇪🇺' },
-  { code: 'TRY', label: '🇹🇷 Türk Lirası', flag: '🇹🇷' },
-  { code: 'USD', label: '🇺🇸 Amerikan Doları', flag: '🇺🇸' },
-  { code: 'GBP', label: '🇬🇧 İngiliz Sterlini', flag: '🇬🇧' },
-]
+const TARGET_CODES = ['EUR', 'TRY', 'USD', 'GBP'] as const
 
 export function CurrencyWidget() {
+  const { locale } = useLanguage()
+
+  const TARGET_LABELS: Record<(typeof TARGET_CODES)[number], string> = {
+    EUR: locale === 'en' ? '🇪🇺 Euro' : locale === 'el' ? '🇪🇺 Ευρώ' : '🇪🇺 Euro',
+    TRY: locale === 'en' ? '🇹🇷 Turkish Lira' : locale === 'el' ? '🇹🇷 Τουρκική Λίρα' : '🇹🇷 Türk Lirası',
+    USD: locale === 'en' ? '🇺🇸 US Dollar' : locale === 'el' ? '🇺🇸 Δολάριο ΗΠΑ' : '🇺🇸 Amerikan Doları',
+    GBP: locale === 'en' ? '🇬🇧 British Pound' : locale === 'el' ? '🇬🇧 Βρετανική Λίρα' : '🇬🇧 İngiliz Sterlini',
+  }
+
+  const TARGETS = TARGET_CODES.map((code) => ({ code, label: TARGET_LABELS[code], flag: TARGET_LABELS[code].split(' ')[0] }))
+
+  const t = {
+    rate: locale === 'en' ? 'Exchange Rate' : locale === 'el' ? 'Ισοτιμία' : 'Döviz Kuru',
+    error: locale === 'en' ? 'Could not fetch exchange rate data.' : locale === 'el' ? 'Δεν ήταν δυνατή η ανάκτηση των στοιχείων ισοτιμίας.' : 'Döviz kuru verisi alınamadı.',
+    perEuro: locale === 'en' ? 'per 1 €' : locale === 'el' ? 'ανά 1 €' : '1 € karşılığı',
+  }
+
   const [data, setData] = useState<Rates | null>(null)
   const [error, setError] = useState(false)
   const [open, setOpen] = useState(false)
@@ -48,7 +61,7 @@ export function CurrencyWidget() {
         className="w-full flex items-center justify-between gap-2 px-3 py-2 text-xs font-bold text-neutral-700 dark:text-neutral-300 hover:bg-slate-50 dark:hover:bg-neutral-800 transition-colors"
       >
         <span className="flex items-center gap-1.5">
-          💱 {data && !error ? `1€ = ${data.rates.TRY?.toFixed(2)} ₺` : 'Döviz Kuru'}
+          💱 {data && !error ? `1€ = ${data.rates.TRY?.toFixed(2)} ₺` : t.rate}
         </span>
         <span className="text-[10px] flex-shrink-0">{open ? '▾' : '▴'}</span>
       </button>
@@ -56,7 +69,7 @@ export function CurrencyWidget() {
       {open && (
         <div className="px-3 pb-3 pt-1 border-t border-slate-100 dark:border-neutral-800">
           {error ? (
-            <p className="text-[11px] text-red-500 pt-2">Döviz kuru verisi alınamadı.</p>
+            <p className="text-[11px] text-red-500 pt-2">{t.error}</p>
           ) : !data ? (
             <div className="grid grid-cols-2 gap-1.5 pt-2 animate-pulse">
               {TARGETS.map((t) => (
@@ -76,7 +89,7 @@ export function CurrencyWidget() {
                   </div>
                 ))}
               </div>
-              <p className="text-[9px] text-neutral-400 mt-1.5 text-center">1 € karşılığı{data.date ? ` · ${data.date}` : ''}</p>
+              <p className="text-[9px] text-neutral-400 mt-1.5 text-center">{t.perEuro}{data.date ? ` · ${data.date}` : ''}</p>
             </>
           )}
         </div>

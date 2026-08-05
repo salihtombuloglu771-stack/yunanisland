@@ -3,11 +3,13 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
+import { useLanguage } from '@/lib/i18n/LanguageProvider'
 
 type EntityType = 'island' | 'beach' | 'restaurant' | 'hotel' | 'attraction'
 
 export function FavoriteButton({ entityType, entityId, className }: { entityType: EntityType; entityId: string; className?: string }) {
   const router = useRouter()
+  const { locale } = useLanguage()
   const [userId, setUserId] = useState<string | null>(null)
   const [isFavorite, setIsFavorite] = useState(false)
   const [loading, setLoading] = useState(true)
@@ -61,7 +63,11 @@ export function FavoriteButton({ entityType, entityId, className }: { entityType
     <button
       onClick={toggle}
       disabled={loading}
-      aria-label={isFavorite ? 'Favorilerden çıkar' : 'Favorilere ekle'}
+      aria-label={
+        isFavorite
+          ? locale === 'en' ? 'Remove from favorites' : locale === 'el' ? 'Αφαίρεση από αγαπημένα' : 'Favorilerden çıkar'
+          : locale === 'en' ? 'Add to favorites' : locale === 'el' ? 'Προσθήκη στα αγαπημένα' : 'Favorilere ekle'
+      }
       className={className ?? 'inline-flex items-center justify-center h-9 w-9 rounded-full bg-white/90 dark:bg-neutral-900/90 backdrop-blur-md shadow-md text-lg transition-transform hover:scale-110'}
     >
       {isFavorite ? '❤️' : '🤍'}

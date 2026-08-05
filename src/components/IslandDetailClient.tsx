@@ -190,7 +190,7 @@ export function IslandDetailClient({ island, allBeaches, allRestaurants, allHote
         <Breadcrumbs
           baseUrl={SITE_URL}
           items={[
-            { label: 'Ana Sayfa', href: '/' },
+            { label: locale === 'en' ? 'Home' : locale === 'el' ? 'Αρχική' : 'Ana Sayfa', href: '/' },
             { label: island.name },
           ]}
         />

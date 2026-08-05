@@ -4,13 +4,58 @@ import { useState, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { Header } from '@/components/Header'
 import { PageHero } from '@/components/PageHero'
+import { SiteFooter } from '@/components/SiteFooter'
 import { createClient } from '@/lib/supabase/client'
 import { FerryRoute } from '@/lib/mockData'
+import { useLanguage } from '@/lib/i18n/LanguageProvider'
 
 const PORTS = ['Bodrum', 'Kos', 'Atina (Pire)', 'Santorini', 'Rhodes', 'Patras', 'Igoumenitsa', 'Killini', 'Girit', 'Korfu', 'Kefalonya']
 
 function FerrySearchForm() {
   const searchParams = useSearchParams()
+  const { locale } = useLanguage()
+
+  const t = {
+    routeSelection: locale === 'en' ? '🚢 Route Selection' : locale === 'el' ? '🚢 Επιλογή Διαδρομής' : '🚢 Rota Seçimi',
+    from: locale === 'en' ? 'From (Departure)' : locale === 'el' ? 'Από (Αναχώρηση)' : 'Nereden (Kalkış)',
+    to: locale === 'en' ? 'To (Arrival)' : locale === 'el' ? 'Προς (Άφιξη)' : 'Nereye (Varış)',
+    searching: locale === 'en' ? 'Searching...' : locale === 'el' ? 'Αναζήτηση...' : 'Aranıyor...',
+    search: locale === 'en' ? 'Search Ferries 🔍' : locale === 'el' ? 'Αναζήτηση Δρομολογίων 🔍' : 'Seferleri Ara 🔍',
+    reservationSuccess: locale === 'en' ? '🎉 Reservation Successful! (Simulation)' : locale === 'el' ? '🎉 Επιτυχής Κράτηση! (Προσομοίωση)' : '🎉 Rezervasyon Başarılı! (Simülasyon)',
+    reservationDesc: (from: string, to: string) =>
+      locale === 'en'
+        ? <>Your ticket purchase for the <strong>{from} → {to}</strong> ferry has been successfully simulated.<br />In the live system, this area would redirect visitors to ticket-selling partner agencies (FerriesinGreece, Ferryhopper, etc.).</>
+        : locale === 'el'
+        ? <>Η αγορά εισιτηρίου για το φέρι <strong>{from} → {to}</strong> προσομοιώθηκε με επιτυχία.<br />Στο ζωντανό σύστημα, αυτή η περιοχή θα κατεύθυνε τους επισκέπτες σε συνεργαζόμενα πρακτορεία πώλησης εισιτηρίων (FerriesinGreece, Ferryhopper κ.λπ.).</>
+        : <><strong>{from} → {to}</strong> feribotu için bilet alım işlemi başarıyla simüle edilmiştir.<br />Canlı sistemde bu alan ziyaretçileri bilet satış ortağı acentelere (FerriesinGreece, Ferryhopper vb.) yönlendirecektir.</>,
+    searchResults: (from: string, to: string) =>
+      locale === 'en' ? `Search Results (${from} ➔ ${to})` : locale === 'el' ? `Αποτελέσματα Αναζήτησης (${from} ➔ ${to})` : `Arama Sonuçları (${from} ➔ ${to})`,
+    tripDuration: locale === 'en' ? 'Trip Duration:' : locale === 'el' ? 'Διάρκεια Ταξιδιού:' : 'Yolculuk Süresi:',
+    ticket: locale === 'en' ? 'Ticket:' : locale === 'el' ? 'Εισιτήριο:' : 'Bilet:',
+    operatingCompanies: locale === 'en' ? 'Operating Companies' : locale === 'el' ? 'Εταιρείες Λειτουργίας' : 'İşleten Firmalar',
+    startingFrom: locale === 'en' ? 'Starting Per Person' : locale === 'el' ? 'Τιμή Ανά Άτομο Από' : 'Kişi Başı Başlayan',
+    buyTicket: locale === 'en' ? 'Buy Ticket 🎫' : locale === 'el' ? 'Αγορά Εισιτηρίου 🎫' : 'Bilet Al 🎫',
+    noDirectTitle: locale === 'en' ? 'No Direct Route Found' : locale === 'el' ? 'Δεν Βρέθηκε Απευθείας Δρομολόγιο' : 'Direkt Sefer Bulunmamadı',
+    noDirectDesc: locale === 'en'
+      ? 'There is no direct route between the ports you selected. You can try researching connecting routes or change the departure port.'
+      : locale === 'el'
+      ? 'Δεν υπάρχει απευθείας δρομολόγιο μεταξύ των λιμανιών που επιλέξατε. Μπορείτε να αναζητήσετε δρομολόγια με ανταπόκριση ή να αλλάξετε το λιμάνι αναχώρησης.'
+      : 'Seçtiğiniz limanlar arasında direkt sefer bulunmamaktadır. Aktarmalı seferleri araştırmayı deneyebilir veya kalkış limanını değiştirebilirsiniz.',
+    readyTitle: locale === 'en' ? 'Ready to Search Ferries' : locale === 'el' ? 'Έτοιμο για Αναζήτηση Δρομολογίων' : 'Sefer Arama Hazır',
+    readyDesc: locale === 'en'
+      ? 'Select where you want to depart from and go to in the panel on the left to instantly check ferry times and prices.'
+      : locale === 'el'
+      ? 'Επιλέξτε από πού θέλετε να αναχωρήσετε και πού θέλετε να πάτε στο αριστερό πάνελ για να δείτε άμεσα τις ώρες και τις τιμές των δρομολογίων.'
+      : 'Nereden kalkıp nereye gitmek istediğinizi soldaki panelden seçerek sefer saatlerini ve fiyatlarını anında sorgulayabilirsiniz.',
+    duration: (minutes: number) => {
+      if (minutes >= 60) {
+        const h = Math.floor(minutes / 60)
+        const m = minutes % 60
+        return locale === 'en' ? `${h}h ${m}m` : locale === 'el' ? `${h}ω ${m}λ` : `${h} sa ${m} dk`
+      }
+      return locale === 'en' ? `${minutes}m` : locale === 'el' ? `${minutes}λ` : `${minutes} dk`
+    },
+  }
   const toParam = searchParams.get('to')
   const initialToPort = toParam && PORTS.includes(toParam) ? toParam : 'Kos'
 
@@ -51,12 +96,12 @@ function FerrySearchForm() {
       {/* Sol Panel: Arama Formu */}
       <div className="lg:col-span-1 bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-slate-100 dark:border-neutral-900 shadow-sm h-fit">
         <h2 className="text-lg font-bold text-neutral-900 dark:text-white mb-4 flex items-center gap-2">
-          🚢 Rota Seçimi
+          {t.routeSelection}
         </h2>
         <form onSubmit={handleSearch} className="space-y-4">
           <div>
             <label className="block text-xs font-bold text-neutral-400 dark:text-neutral-500 uppercase tracking-wider mb-2">
-              Nereden (Kalkış)
+              {t.from}
             </label>
             <select
               value={fromPort}
@@ -71,7 +116,7 @@ function FerrySearchForm() {
 
           <div>
             <label className="block text-xs font-bold text-neutral-400 dark:text-neutral-500 uppercase tracking-wider mb-2">
-              Nereye (Varış)
+              {t.to}
             </label>
             <select
               value={toPort}
@@ -89,7 +134,7 @@ function FerrySearchForm() {
             disabled={searching}
             className="w-full mt-2 rounded-xl bg-sky-600 hover:bg-sky-500 py-3 text-sm font-semibold text-white shadow-md transition-colors disabled:opacity-50"
           >
-            {searching ? 'Aranıyor...' : 'Seferleri Ara 🔍'}
+            {searching ? t.searching : t.search}
           </button>
         </form>
       </div>
@@ -107,12 +152,10 @@ function FerrySearchForm() {
               ✕
             </button>
             <h3 className="font-bold text-base flex items-center gap-2">
-              🎉 Rezervasyon Başarılı! (Simülasyon)
+              {t.reservationSuccess}
             </h3>
             <p className="mt-2 text-xs leading-relaxed">
-              <strong>{selectedRouteForTicket.from_port} → {selectedRouteForTicket.to_port}</strong> feribotu için bilet alım işlemi başarıyla simüle edilmiştir. 
-              <br />
-              Canlı sistemde bu alan ziyaretçileri bilet satış ortağı acentelere (FerriesinGreece, Ferryhopper vb.) yönlendirecektir.
+              {t.reservationDesc(selectedRouteForTicket.from_port, selectedRouteForTicket.to_port)}
             </p>
           </div>
         )}
@@ -120,7 +163,7 @@ function FerrySearchForm() {
         {hasSearched ? (
           <div>
             <h3 className="text-xl font-bold text-neutral-900 dark:text-white mb-4">
-              Arama Sonuçları ({fromPort} ➔ {toPort})
+              {t.searchResults(fromPort, toPort)}
             </h3>
 
             {routes.length > 0 ? (
@@ -135,13 +178,13 @@ function FerrySearchForm() {
                       </div>
                       
                       <div className="mt-2 flex flex-wrap gap-2 text-xs text-neutral-500 dark:text-neutral-400 font-medium">
-                        <span>🕒 Yolculuk Süresi: <strong>{route.duration_minutes >= 60 ? `${Math.floor(route.duration_minutes / 60)} sa ${route.duration_minutes % 60} dk` : `${route.duration_minutes} dk`}</strong></span>
+                        <span>🕒 {t.tripDuration} <strong>{t.duration(route.duration_minutes)}</strong></span>
                         <span>•</span>
-                        <span>💵 Bilet: <strong>{route.price_min} - {route.price_max} €</strong></span>
+                        <span>💵 {t.ticket} <strong>{route.price_min} - {route.price_max} €</strong></span>
                       </div>
 
                       <div className="mt-4">
-                        <p className="text-[10px] font-bold text-neutral-400 dark:text-neutral-500 uppercase tracking-wider">İşleten Firmalar</p>
+                        <p className="text-[10px] font-bold text-neutral-400 dark:text-neutral-500 uppercase tracking-wider">{t.operatingCompanies}</p>
                         <div className="flex flex-wrap gap-1.5 mt-1.5">
                           {route.companies.map(company => (
                             <span key={company} className="bg-sky-500/10 text-sky-600 dark:text-sky-400 rounded-lg px-2.5 py-0.5 text-xs font-semibold">
@@ -154,14 +197,14 @@ function FerrySearchForm() {
 
                     <div className="flex flex-row md:flex-col items-center md:items-end justify-between md:justify-center border-t md:border-t-0 border-slate-100 dark:border-neutral-800 pt-4 md:pt-0 gap-2">
                       <div className="text-left md:text-right">
-                        <p className="text-xs text-neutral-400 dark:text-neutral-500">Kişi Başı Başlayan</p>
+                        <p className="text-xs text-neutral-400 dark:text-neutral-500">{t.startingFrom}</p>
                         <p className="text-2xl font-extrabold text-sky-600 dark:text-sky-400">{route.price_min} €</p>
                       </div>
                       <button
                         onClick={() => setSelectedRouteForTicket(route)}
                         className="rounded-xl bg-sky-600 hover:bg-sky-500 px-5 py-2.5 text-xs font-semibold text-white shadow-md transition-colors"
                       >
-                        Bilet Al 🎫
+                        {t.buyTicket}
                       </button>
                     </div>
                   </div>
@@ -170,9 +213,9 @@ function FerrySearchForm() {
             ) : (
               <div className="py-16 text-center bg-white dark:bg-neutral-900 border border-slate-100 dark:border-neutral-900 rounded-2xl">
                 <span className="text-4xl">⚓❌</span>
-                <h4 className="text-lg font-bold text-neutral-900 dark:text-white mt-4">Direkt Sefer Bulunmamadı</h4>
+                <h4 className="text-lg font-bold text-neutral-900 dark:text-white mt-4">{t.noDirectTitle}</h4>
                 <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-2 max-w-sm mx-auto leading-relaxed">
-                  Seçtiğiniz limanlar arasında direkt sefer bulunmamaktadır. Aktarmalı seferleri araştırmayı deneyebilir veya kalkış limanını değiştirebilirsiniz.
+                  {t.noDirectDesc}
                 </p>
               </div>
             )}
@@ -180,9 +223,9 @@ function FerrySearchForm() {
         ) : (
           <div className="py-16 text-center bg-white dark:bg-neutral-900 border border-slate-100 dark:border-neutral-900 rounded-2xl">
             <span className="text-5xl">⚓</span>
-            <h4 className="text-lg font-bold text-neutral-900 dark:text-white mt-4">Sefer Arama Hazır</h4>
+            <h4 className="text-lg font-bold text-neutral-900 dark:text-white mt-4">{t.readyTitle}</h4>
             <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-2 max-w-xs mx-auto">
-              Nereden kalkıp nereye gitmek istediğinizi soldaki panelden seçerek sefer saatlerini ve fiyatlarını anında sorgulayabilirsiniz.
+              {t.readyDesc}
             </p>
           </div>
         )}
@@ -194,33 +237,38 @@ function FerrySearchForm() {
 }
 
 export default function FerryGuidePage() {
+  const { locale } = useLanguage()
+
+  const hero = {
+    badge: locale === 'en' ? 'Island Transport Portal' : locale === 'el' ? 'Πύλη Μεταφορών Νησιών' : 'Ada Ulaşım Portalı',
+    title: locale === 'en' ? 'Ferry Route Search Guide' : locale === 'el' ? 'Οδηγός Αναζήτησης Δρομολογίων Φέριμποτ' : 'Feribot Seferleri Arama Rehberi',
+    subtitle: locale === 'en'
+      ? 'All ferry lines between Turkey and the Greek islands, and within the Cyclades/Dodecanese, along with ticket prices and durations.'
+      : locale === 'el'
+      ? 'Όλες οι γραμμές φέριμποτ μεταξύ Τουρκίας και ελληνικών νησιών, καθώς και εντός Κυκλάδων/Δωδεκανήσων, με τιμές εισιτηρίων και διάρκειες.'
+      : 'Türkiye - Yunanistan adaları arası ve Kiklad/Oniki adalar içi tüm feribot hatları, bilet fiyatları ve süreleri.',
+    loading: locale === 'en' ? 'Loading search engine...' : locale === 'el' ? 'Φόρτωση μηχανής αναζήτησης...' : 'Arama motoru yükleniyor...',
+  }
+
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-neutral-950 transition-colors duration-300">
       <Header />
 
       <PageHero
         image="/kos.jpg"
-        badge="Ada Ulaşım Portalı"
-        title="Feribot Seferleri Arama Rehberi"
-        subtitle="Türkiye - Yunanistan adaları arası ve Kiklad/Oniki adalar içi tüm feribot hatları, bilet fiyatları ve süreleri."
+        badge={hero.badge}
+        title={hero.title}
+        subtitle={hero.subtitle}
       />
 
       {/* Main Container */}
       <main className="mx-auto max-w-7xl px-6 py-12">
-        <Suspense fallback={<div className="text-center py-12 text-sm text-neutral-500">Arama motoru yükleniyor...</div>}>
+        <Suspense fallback={<div className="text-center py-12 text-sm text-neutral-500">{hero.loading}</div>}>
           <FerrySearchForm />
         </Suspense>
       </main>
 
-      {/* Footer */}
-      <footer className="border-t border-slate-100 dark:border-neutral-900 bg-white dark:bg-neutral-950 py-8 mt-24">
-        <div className="mx-auto max-w-7xl px-6 text-center">
-          <p className="text-sm text-neutral-500 dark:text-neutral-400">
-            &copy; 2026 Yunanisland. Tüm hakları saklıdır.
-          </p>
-        </div>
-      </footer>
-
+      <SiteFooter />
     </div>
   )
 }

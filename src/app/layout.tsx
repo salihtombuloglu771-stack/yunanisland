@@ -80,8 +80,10 @@ export default function RootLayout({
         />
         <PageViewTracker />
         <AnalyticsScripts />
-        <LanguageProvider>{children}</LanguageProvider>
-        <CookieConsent />
+        <LanguageProvider>
+          {children}
+          <CookieConsent />
+        </LanguageProvider>
       </body>
     </html>
   );

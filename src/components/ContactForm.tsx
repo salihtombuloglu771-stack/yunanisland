@@ -1,8 +1,10 @@
 'use client'
 
 import { useState } from 'react'
+import { useLanguage } from '@/lib/i18n/LanguageProvider'
 
 export function ContactForm() {
+  const { locale } = useLanguage()
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [subject, setSubject] = useState('')
@@ -12,10 +14,23 @@ export function ContactForm() {
   const [submitted, setSubmitted] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
+  const t = {
+    validation: locale === 'en' ? 'Please enter your name, a valid email, and your message.' : locale === 'el' ? 'Παρακαλώ εισάγετε το όνομά σας, ένα έγκυρο email και το μήνυμά σας.' : 'Lütfen adınızı, geçerli bir e-posta ve mesajınızı girin.',
+    sendFailed: locale === 'en' ? 'Your message could not be sent, please try again.' : locale === 'el' ? 'Το μήνυμά σας δεν ήταν δυνατό να σταλεί, δοκιμάστε ξανά.' : 'Mesajınız gönderilemedi, lütfen tekrar deneyin.',
+    received: locale === 'en' ? 'Your Message Was Received' : locale === 'el' ? 'Το Μήνυμά σας Ελήφθη' : 'Mesajınız Alındı',
+    receivedSubtitle: locale === 'en' ? 'We will get back to you via your email address as soon as possible.' : locale === 'el' ? 'Θα επικοινωνήσουμε μαζί σας μέσω του email σας το συντομότερο δυνατό.' : 'En kısa sürede e-posta adresinizden size dönüş yapacağız.',
+    nameLabel: locale === 'en' ? 'Full Name' : locale === 'el' ? 'Ονοματεπώνυμο' : 'Ad Soyad',
+    emailLabel: locale === 'en' ? 'Email' : locale === 'el' ? 'Email' : 'E-posta',
+    subjectLabel: locale === 'en' ? 'Subject (optional)' : locale === 'el' ? 'Θέμα (προαιρετικό)' : 'Konu (opsiyonel)',
+    messageLabel: locale === 'en' ? 'Your Message' : locale === 'el' ? 'Το Μήνυμά σας' : 'Mesajınız',
+    sending: locale === 'en' ? 'Sending...' : locale === 'el' ? 'Αποστολή...' : 'Gönderiliyor...',
+    send: locale === 'en' ? 'Send Message' : locale === 'el' ? 'Αποστολή Μηνύματος' : 'Mesajı Gönder',
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (name.trim().length < 2 || !email.includes('@') || message.trim().length < 5) {
-      setError('Lütfen adınızı, geçerli bir e-posta ve mesajınızı girin.')
+      setError(t.validation)
       return
     }
 
@@ -37,7 +52,7 @@ export function ContactForm() {
     setSubmitting(false)
 
     if (!res.ok) {
-      setError('Mesajınız gönderilemedi, lütfen tekrar deneyin.')
+      setError(t.sendFailed)
       return
     }
 
@@ -48,8 +63,8 @@ export function ContactForm() {
     return (
       <div className="mt-8 text-center py-12 rounded-2xl bg-white dark:bg-neutral-900 border border-slate-100 dark:border-neutral-900 shadow-sm">
         <span className="text-4xl">✅</span>
-        <h3 className="mt-3 font-bold text-neutral-900 dark:text-white">Mesajınız Alındı</h3>
-        <p className="mt-1 text-sm text-neutral-500">En kısa sürede e-posta adresinizden size dönüş yapacağız.</p>
+        <h3 className="mt-3 font-bold text-neutral-900 dark:text-white">{t.received}</h3>
+        <p className="mt-1 text-sm text-neutral-500">{t.receivedSubtitle}</p>
       </div>
     )
   }
@@ -69,7 +84,7 @@ export function ContactForm() {
 
       <div className="grid sm:grid-cols-2 gap-4">
         <div>
-          <label className="text-xs font-semibold text-neutral-500 dark:text-neutral-400">Ad Soyad</label>
+          <label className="text-xs font-semibold text-neutral-500 dark:text-neutral-400">{t.nameLabel}</label>
           <input
             value={name}
             onChange={(e) => setName(e.target.value)}
@@ -77,7 +92,7 @@ export function ContactForm() {
           />
         </div>
         <div>
-          <label className="text-xs font-semibold text-neutral-500 dark:text-neutral-400">E-posta</label>
+          <label className="text-xs font-semibold text-neutral-500 dark:text-neutral-400">{t.emailLabel}</label>
           <input
             type="email"
             value={email}
@@ -88,7 +103,7 @@ export function ContactForm() {
       </div>
 
       <div>
-        <label className="text-xs font-semibold text-neutral-500 dark:text-neutral-400">Konu (opsiyonel)</label>
+        <label className="text-xs font-semibold text-neutral-500 dark:text-neutral-400">{t.subjectLabel}</label>
         <input
           value={subject}
           onChange={(e) => setSubject(e.target.value)}
@@ -97,7 +112,7 @@ export function ContactForm() {
       </div>
 
       <div>
-        <label className="text-xs font-semibold text-neutral-500 dark:text-neutral-400">Mesajınız</label>
+        <label className="text-xs font-semibold text-neutral-500 dark:text-neutral-400">{t.messageLabel}</label>
         <textarea
           value={message}
           onChange={(e) => setMessage(e.target.value)}
@@ -113,7 +128,7 @@ export function ContactForm() {
         disabled={submitting}
         className="w-full rounded-xl bg-sky-600 px-4 py-2.5 text-sm font-semibold text-white shadow-md hover:bg-sky-500 transition-colors disabled:opacity-50"
       >
-        {submitting ? 'Gönderiliyor...' : 'Mesajı Gönder'}
+        {submitting ? t.sending : t.send}
       </button>
     </form>
   )

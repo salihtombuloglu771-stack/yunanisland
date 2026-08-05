@@ -2,15 +2,30 @@ import { haversineKm } from '@/lib/geo'
 
 export interface CarType {
   id: 'compact' | 'sedan' | 'suv'
-  label: string
+  label: { tr: string; en: string; el: string }
   icon: string
   consumption: number // L / 100km, ortalama
 }
 
 export const CAR_TYPES: CarType[] = [
-  { id: 'compact', label: 'Kompakt (örn. Fiat Panda)', icon: '🚗', consumption: 5.5 },
-  { id: 'sedan', label: 'Orta Sınıf (örn. Toyota Corolla)', icon: '🚙', consumption: 6.5 },
-  { id: 'suv', label: 'SUV / Cip (örn. Jeep Renegade)', icon: '🚐', consumption: 8.5 },
+  {
+    id: 'compact',
+    label: { tr: 'Kompakt (örn. Fiat Panda)', en: 'Compact (e.g. Fiat Panda)', el: 'Μικρό (π.χ. Fiat Panda)' },
+    icon: '🚗',
+    consumption: 5.5,
+  },
+  {
+    id: 'sedan',
+    label: { tr: 'Orta Sınıf (örn. Toyota Corolla)', en: 'Mid-Size (e.g. Toyota Corolla)', el: 'Μεσαία Κατηγορία (π.χ. Toyota Corolla)' },
+    icon: '🚙',
+    consumption: 6.5,
+  },
+  {
+    id: 'suv',
+    label: { tr: 'SUV / Cip (örn. Jeep Renegade)', en: 'SUV / Jeep (e.g. Jeep Renegade)', el: 'SUV / Τζιπ (π.χ. Jeep Renegade)' },
+    icon: '🚐',
+    consumption: 8.5,
+  },
 ]
 
 export const DEFAULT_CAR_ID: CarType['id'] = 'compact'

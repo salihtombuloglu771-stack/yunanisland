@@ -2,10 +2,12 @@
 
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
+import { useLanguage } from '@/lib/i18n/LanguageProvider'
 
 type EntityType = 'island' | 'beach' | 'restaurant' | 'hotel' | 'attraction'
 
 export function TripNoteBox({ entityType, entityId }: { entityType: EntityType; entityId: string }) {
+  const { locale } = useLanguage()
   const [userId, setUserId] = useState<string | null>(null)
   const [noteId, setNoteId] = useState<string | null>(null)
   const [note, setNote] = useState('')
@@ -84,12 +86,29 @@ export function TripNoteBox({ entityType, entityId }: { entityType: EntityType; 
 
   if (loading) return null
 
+  const t = {
+    title: locale === 'en' ? '📝 Personal Trip Note' : locale === 'el' ? '📝 Προσωπική Σημείωση Ταξιδιού' : '📝 Kişisel Seyahat Notu',
+    titlePrivate: locale === 'en' ? '📝 Personal Trip Note (visible only to you)' : locale === 'el' ? '📝 Προσωπική Σημείωση Ταξιδιού (ορατή μόνο σε εσάς)' : '📝 Kişisel Seyahat Notu (sadece sen görürsün)',
+    notePlaceholder: locale === 'en' ? 'Take a note: where I parked, the best time to go, things to watch out for...' : locale === 'el' ? 'Κρατήστε σημείωση: πού παρκάρισα, η καλύτερη ώρα, τι να προσέξω...' : 'Kendine not al: nereye park ettim, en iyi saat, dikkat edilecek şeyler...',
+    visitDate: locale === 'en' ? 'Visit date:' : locale === 'el' ? 'Ημερομηνία επίσκεψης:' : 'Ziyaret tarihi:',
+    saving: locale === 'en' ? 'Saving...' : locale === 'el' ? 'Αποθήκευση...' : 'Kaydediliyor...',
+    saveNote: locale === 'en' ? 'Save Note' : locale === 'el' ? 'Αποθήκευση Σημείωσης' : 'Notu Kaydet',
+    deleteNote: locale === 'en' ? 'Delete Note' : locale === 'el' ? 'Διαγραφή Σημείωσης' : 'Notu Sil',
+    saved: locale === 'en' ? '✓ Saved' : locale === 'el' ? '✓ Αποθηκεύτηκε' : '✓ Kaydedildi',
+  }
+
   if (!userId) {
     return (
       <div className="mt-8 bg-white dark:bg-neutral-900 p-5 rounded-2xl border border-slate-100 dark:border-neutral-900 shadow-sm">
-        <h3 className="text-sm font-bold text-neutral-900 dark:text-white mb-1">📝 Kişisel Seyahat Notu</h3>
+        <h3 className="text-sm font-bold text-neutral-900 dark:text-white mb-1">{t.title}</h3>
         <p className="text-xs text-neutral-500">
-          Not eklemek ve ziyaret tarihini kaydetmek için <a href="/login" className="text-sky-600 font-medium hover:underline">giriş yap</a>. Bu notlar sadece sana görünür.
+          {locale === 'en' ? (
+            <>To add a note and save your visit date, <a href="/login" className="text-sky-600 font-medium hover:underline">log in</a>. These notes are visible only to you.</>
+          ) : locale === 'el' ? (
+            <>Για να προσθέσετε σημείωση και να αποθηκεύσετε την ημερομηνία επίσκεψης, <a href="/login" className="text-sky-600 font-medium hover:underline">συνδεθείτε</a>. Αυτές οι σημειώσεις είναι ορατές μόνο σε εσάς.</>
+          ) : (
+            <>Not eklemek ve ziyaret tarihini kaydetmek için <a href="/login" className="text-sky-600 font-medium hover:underline">giriş yap</a>. Bu notlar sadece sana görünür.</>
+          )}
         </p>
       </div>
     )
@@ -97,17 +116,17 @@ export function TripNoteBox({ entityType, entityId }: { entityType: EntityType; 
 
   return (
     <form onSubmit={handleSave} className="mt-8 bg-white dark:bg-neutral-900 p-5 rounded-2xl border border-slate-100 dark:border-neutral-900 shadow-sm">
-      <h3 className="text-sm font-bold text-neutral-900 dark:text-white mb-3">📝 Kişisel Seyahat Notu (sadece sen görürsün)</h3>
+      <h3 className="text-sm font-bold text-neutral-900 dark:text-white mb-3">{t.titlePrivate}</h3>
       <textarea
         value={note}
         onChange={(e) => { setNote(e.target.value); setSaved(false) }}
-        placeholder="Kendine not al: nereye park ettim, en iyi saat, dikkat edilecek şeyler..."
+        placeholder={t.notePlaceholder}
         rows={3}
         className="w-full rounded-xl border border-slate-200 dark:border-neutral-800 bg-slate-50 dark:bg-neutral-950 px-4 py-2.5 text-sm outline-none focus:border-sky-500 transition-all"
       />
       <div className="mt-3 flex flex-wrap items-center gap-3">
         <label className="text-xs text-neutral-500 dark:text-neutral-400 flex items-center gap-2">
-          Ziyaret tarihi:
+          {t.visitDate}
           <input
             type="date"
             value={visitedAt}
@@ -120,7 +139,7 @@ export function TripNoteBox({ entityType, entityId }: { entityType: EntityType; 
           disabled={saving}
           className="rounded-xl bg-sky-600 px-4 py-2 text-xs font-semibold text-white hover:bg-sky-500 transition-colors disabled:opacity-50"
         >
-          {saving ? 'Kaydediliyor...' : 'Notu Kaydet'}
+          {saving ? t.saving : t.saveNote}
         </button>
         {noteId && (
           <button
@@ -128,10 +147,10 @@ export function TripNoteBox({ entityType, entityId }: { entityType: EntityType; 
             onClick={handleDelete}
             className="text-xs font-semibold text-red-500 hover:underline"
           >
-            Notu Sil
+            {t.deleteNote}
           </button>
         )}
-        {saved && <span className="text-xs text-emerald-600 dark:text-emerald-400 font-medium">✓ Kaydedildi</span>}
+        {saved && <span className="text-xs text-emerald-600 dark:text-emerald-400 font-medium">{t.saved}</span>}
       </div>
     </form>
   )

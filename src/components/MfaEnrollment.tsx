@@ -2,10 +2,12 @@
 
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
+import { useLanguage } from '@/lib/i18n/LanguageProvider'
 
 type Factor = { id: string; factor_type: string; status: string }
 
 export function MfaEnrollment() {
+  const { locale } = useLanguage()
   const [factors, setFactors] = useState<Factor[]>([])
   const [loading, setLoading] = useState(true)
   const [enrolling, setEnrolling] = useState(false)
@@ -14,6 +16,21 @@ export function MfaEnrollment() {
   const [code, setCode] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState<string | null>(null)
+
+  const t = {
+    enterSixDigit: locale === 'en' ? 'Please enter the 6-digit code from your app.' : locale === 'el' ? 'Παρακαλώ εισάγετε τον 6ψήφιο κωδικό από την εφαρμογή σας.' : 'Lütfen uygulamandaki 6 haneli kodu gir.',
+    codeExpired: locale === 'en' ? 'Incorrect or expired code, try again.' : locale === 'el' ? 'Λανθασμένος ή ληγμένος κωδικός, δοκιμάστε ξανά.' : 'Kod yanlış veya süresi dolmuş, tekrar dene.',
+    enabled: locale === 'en' ? 'Two-factor authentication enabled.' : locale === 'el' ? 'Ο έλεγχος ταυτότητας δύο παραγόντων ενεργοποιήθηκε.' : 'İki adımlı doğrulama etkinleştirildi.',
+    confirmDisable: locale === 'en' ? 'Are you sure you want to turn off two-factor authentication?' : locale === 'el' ? 'Είστε σίγουροι ότι θέλετε να απενεργοποιήσετε τον έλεγχο ταυτότητας δύο παραγόντων;' : 'İki adımlı doğrulamayı kapatmak istediğine emin misin?',
+    title: locale === 'en' ? '🔐 Two-Factor Authentication (2FA)' : locale === 'el' ? '🔐 Έλεγχος Ταυτότητας Δύο Παραγόντων (2FA)' : '🔐 İki Adımlı Doğrulama (2FA)',
+    description: locale === 'en' ? 'Protects your account even if your password is compromised — requires an app like Google Authenticator or Microsoft Authenticator.' : locale === 'el' ? 'Προστατεύει τον λογαριασμό σας ακόμα κι αν ο κωδικός σας παραβιαστεί — απαιτεί μια εφαρμογή όπως το Google Authenticator ή το Microsoft Authenticator.' : 'Şifren ele geçirilse bile hesabına girilmesini engeller — Google Authenticator, Microsoft Authenticator gibi bir uygulama gerekir.',
+    active: locale === 'en' ? '✅ Active' : locale === 'el' ? '✅ Ενεργό' : '✅ Aktif',
+    turnOff: locale === 'en' ? 'Turn off' : locale === 'el' ? 'Απενεργοποίηση' : 'Kapat',
+    scanQr: locale === 'en' ? 'Scan the code below with your authenticator app, then enter the 6-digit code it gives you.' : locale === 'el' ? 'Σαρώστε τον παρακάτω κωδικό με την εφαρμογή ελέγχου ταυτότητας, στη συνέχεια εισάγετε τον 6ψήφιο κωδικό που σας δίνει.' : 'Authenticator uygulamanla aşağıdaki kodu tara, sonra uygulamanın verdiği 6 haneli kodu gir.',
+    qrAlt: locale === 'en' ? 'MFA QR code' : locale === 'el' ? 'Κωδικός QR MFA' : 'MFA QR kodu',
+    verifyAndEnable: locale === 'en' ? 'Verify & Enable' : locale === 'el' ? 'Επαλήθευση & Ενεργοποίηση' : 'Doğrula ve Etkinleştir',
+    enable2fa: locale === 'en' ? 'Enable 2FA' : locale === 'el' ? 'Ενεργοποίηση 2FA' : "2FA'yı Etkinleştir",
+  }
 
   const refreshFactors = async () => {
     const supabase = createClient()
@@ -44,7 +61,7 @@ export function MfaEnrollment() {
 
   const confirmEnroll = async () => {
     if (!factorId || code.trim().length < 6) {
-      setError('Lütfen uygulamandaki 6 haneli kodu gir.')
+      setError(t.enterSixDigit)
       return
     }
     setError(null)
@@ -63,11 +80,11 @@ export function MfaEnrollment() {
     })
 
     if (verifyError) {
-      setError('Kod yanlış veya süresi dolmuş, tekrar dene.')
+      setError(t.codeExpired)
       return
     }
 
-    setSuccess('İki adımlı doğrulama etkinleştirildi.')
+    setSuccess(t.enabled)
     setQrCode(null)
     setFactorId(null)
     setCode('')
@@ -76,7 +93,7 @@ export function MfaEnrollment() {
   }
 
   const unenroll = async (id: string) => {
-    if (!confirm('İki adımlı doğrulamayı kapatmak istediğine emin misin?')) return
+    if (!confirm(t.confirmDisable)) return
     const supabase = createClient()
     await supabase.auth.mfa.unenroll({ factorId: id })
     await refreshFactors()
@@ -89,32 +106,32 @@ export function MfaEnrollment() {
   return (
     <div className="bg-white dark:bg-neutral-900 rounded-2xl border border-slate-100 dark:border-neutral-900 shadow-sm p-5">
       <h3 className="text-sm font-bold text-neutral-900 dark:text-white flex items-center gap-2">
-        🔐 İki Adımlı Doğrulama (2FA)
+        {t.title}
       </h3>
       <p className="mt-1 text-xs text-neutral-500">
-        Şifren ele geçirilse bile hesabına girilmesini engeller — Google Authenticator, Microsoft Authenticator gibi bir uygulama gerekir.
+        {t.description}
       </p>
 
       {activeFactor ? (
         <div className="mt-4 flex items-center justify-between gap-3">
           <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
-            ✅ Aktif
+            {t.active}
           </span>
           <button
             type="button"
             onClick={() => unenroll(activeFactor.id)}
             className="text-xs font-semibold text-red-600 hover:underline"
           >
-            Kapat
+            {t.turnOff}
           </button>
         </div>
       ) : qrCode ? (
         <div className="mt-4 space-y-3">
           <p className="text-xs text-neutral-600 dark:text-neutral-400">
-            Authenticator uygulamanla aşağıdaki kodu tara, sonra uygulamanın verdiği 6 haneli kodu gir.
+            {t.scanQr}
           </p>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={qrCode} alt="MFA QR kodu" className="w-40 h-40 mx-auto border border-slate-200 dark:border-neutral-800 rounded-lg" />
+          <img src={qrCode} alt={t.qrAlt} className="w-40 h-40 mx-auto border border-slate-200 dark:border-neutral-800 rounded-lg" />
           <input
             value={code}
             onChange={(e) => setCode(e.target.value)}
@@ -128,7 +145,7 @@ export function MfaEnrollment() {
             onClick={confirmEnroll}
             className="w-full rounded-xl bg-sky-600 px-4 py-2.5 text-xs font-semibold text-white shadow-md hover:bg-sky-500 transition-colors"
           >
-            Doğrula ve Etkinleştir
+            {t.verifyAndEnable}
           </button>
         </div>
       ) : (
@@ -141,7 +158,7 @@ export function MfaEnrollment() {
             disabled={enrolling}
             className="rounded-xl bg-sky-600 px-4 py-2 text-xs font-semibold text-white shadow-md hover:bg-sky-500 transition-colors disabled:opacity-50"
           >
-            2FA&apos;yı Etkinleştir
+            {t.enable2fa}
           </button>
         </div>
       )}

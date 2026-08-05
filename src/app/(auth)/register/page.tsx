@@ -4,15 +4,32 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
+import { useLanguage } from '@/lib/i18n/LanguageProvider'
 
 export default function RegisterPage() {
   const router = useRouter()
+  const { locale } = useLanguage()
   const [fullName, setFullName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [awaitingConfirmation, setAwaitingConfirmation] = useState(false)
+
+  const t = {
+    checkEmailTitle: locale === 'en' ? 'Check Your Email' : locale === 'el' ? 'Ελέγξτε το Email σας' : 'E-postanı Kontrol Et',
+    checkEmailDesc: locale === 'en' ? 'We sent a confirmation link to' : locale === 'el' ? 'Στείλαμε έναν σύνδεσμο επιβεβαίωσης στο' : 'adresine bir onay linki gönderdik.',
+    checkEmailDescSuffix: locale === 'en' ? '. Click that link to activate your account.' : locale === 'el' ? '. Κάντε κλικ σε αυτόν τον σύνδεσμο για να ενεργοποιήσετε τον λογαριασμό σας.' : ' Hesabını aktifleştirmek için o linke tıkla.',
+    createAccountTitle: locale === 'en' ? 'Create Account' : locale === 'el' ? 'Δημιουργία Λογαριασμού' : 'Hesap Oluştur',
+    createAccountDesc: locale === 'en' ? 'Save your favorite islands and beaches, leave reviews.' : locale === 'el' ? 'Αποθηκεύστε τα αγαπημένα σας νησιά και παραλίες, αφήστε κριτικές.' : 'Favori adalarını, plajlarını kaydet, yorum yap.',
+    fullName: locale === 'en' ? 'Full Name' : locale === 'el' ? 'Ονοματεπώνυμο' : 'Ad Soyad',
+    email: locale === 'en' ? 'Email' : locale === 'el' ? 'Email' : 'E-posta',
+    password: locale === 'en' ? 'Password' : locale === 'el' ? 'Κωδικός Πρόσβασης' : 'Şifre',
+    creating: locale === 'en' ? 'Creating...' : locale === 'el' ? 'Δημιουργία...' : 'Oluşturuluyor...',
+    createAccount: locale === 'en' ? 'Create Account' : locale === 'el' ? 'Δημιουργία Λογαριασμού' : 'Hesap Oluştur',
+    alreadyHaveAccount: locale === 'en' ? 'Already have an account?' : locale === 'el' ? 'Έχετε ήδη λογαριασμό;' : 'Zaten hesabın var mı?',
+    logIn: locale === 'en' ? 'Log in' : locale === 'el' ? 'Σύνδεση' : 'Giriş yap',
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -49,9 +66,9 @@ export default function RegisterPage() {
       <main className="min-h-[70vh] flex items-center justify-center px-6 py-16">
         <div className="w-full max-w-sm text-center">
           <span className="text-4xl">📬</span>
-          <h1 className="mt-3 text-2xl font-bold text-neutral-900 dark:text-white">E-postanı Kontrol Et</h1>
+          <h1 className="mt-3 text-2xl font-bold text-neutral-900 dark:text-white">{t.checkEmailTitle}</h1>
           <p className="mt-2 text-sm text-neutral-500">
-            <strong>{email}</strong> adresine bir onay linki gönderdik. Hesabını aktifleştirmek için o linke tıkla.
+            {t.checkEmailDesc} <strong>{email}</strong>{t.checkEmailDescSuffix}
           </p>
         </div>
       </main>
@@ -61,12 +78,12 @@ export default function RegisterPage() {
   return (
     <main className="min-h-[70vh] flex items-center justify-center px-6 py-16">
       <div className="w-full max-w-sm">
-        <h1 className="text-2xl font-bold text-neutral-900 dark:text-white">Hesap Oluştur</h1>
-        <p className="mt-2 text-sm text-neutral-500">Favori adalarını, plajlarını kaydet, yorum yap.</p>
+        <h1 className="text-2xl font-bold text-neutral-900 dark:text-white">{t.createAccountTitle}</h1>
+        <p className="mt-2 text-sm text-neutral-500">{t.createAccountDesc}</p>
 
         <form onSubmit={handleSubmit} className="mt-8 space-y-4">
           <div>
-            <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">Ad Soyad</label>
+            <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">{t.fullName}</label>
             <input
               type="text"
               required
@@ -76,7 +93,7 @@ export default function RegisterPage() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">E-posta</label>
+            <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">{t.email}</label>
             <input
               type="email"
               required
@@ -86,7 +103,7 @@ export default function RegisterPage() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">Şifre</label>
+            <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">{t.password}</label>
             <input
               type="password"
               required
@@ -104,14 +121,14 @@ export default function RegisterPage() {
             disabled={loading}
             className="w-full rounded-xl bg-sky-600 px-4 py-2.5 text-sm font-semibold text-white shadow-md hover:bg-sky-500 transition-colors disabled:opacity-50"
           >
-            {loading ? 'Oluşturuluyor...' : 'Hesap Oluştur'}
+            {loading ? t.creating : t.createAccount}
           </button>
         </form>
 
         <p className="mt-6 text-sm text-neutral-500 text-center">
-          Zaten hesabın var mı?{' '}
+          {t.alreadyHaveAccount}{' '}
           <Link href="/login" className="text-sky-600 font-medium hover:underline">
-            Giriş yap
+            {t.logIn}
           </Link>
         </p>
       </div>

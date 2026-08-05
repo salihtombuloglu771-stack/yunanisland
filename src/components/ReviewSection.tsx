@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
+import { useLanguage } from '@/lib/i18n/LanguageProvider'
 
 type EntityType = 'island' | 'beach' | 'restaurant' | 'hotel' | 'attraction'
 
@@ -16,6 +17,7 @@ interface Review {
 }
 
 export function ReviewSection({ entityType, entityId }: { entityType: EntityType; entityId: string }) {
+  const { locale } = useLanguage()
   const [reviews, setReviews] = useState<Review[]>([])
   const [userId, setUserId] = useState<string | null>(null)
   const [rating, setRating] = useState(5)
@@ -71,10 +73,21 @@ export function ReviewSection({ entityType, entityId }: { entityType: EntityType
     ? (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1)
     : null
 
+  const t = {
+    title: locale === 'en' ? 'Reviews & Ratings' : locale === 'el' ? 'Κριτικές & Βαθμολογίες' : 'Yorumlar & Değerlendirmeler',
+    star: locale === 'en' ? 'star' : locale === 'el' ? 'αστέρι' : 'yıldız',
+    sharePlaceholder: locale === 'en' ? 'Share your experience...' : locale === 'el' ? 'Μοιραστείτε την εμπειρία σας...' : 'Deneyimini paylaş...',
+    photoLinkPlaceholder: locale === 'en' ? 'Photo link (optional)' : locale === 'el' ? 'Σύνδεσμος φωτογραφίας (προαιρετικό)' : 'Fotoğraf bağlantısı (isteğe bağlı)',
+    sending: locale === 'en' ? 'Sending...' : locale === 'el' ? 'Αποστολή...' : 'Gönderiliyor...',
+    submit: locale === 'en' ? 'Post Review' : locale === 'el' ? 'Δημοσίευση Κριτικής' : 'Yorum Yap',
+    empty: locale === 'en' ? 'No reviews yet. Be the first to write one!' : locale === 'el' ? 'Δεν υπάρχουν ακόμη κριτικές. Γράψτε την πρώτη!' : 'Henüz yorum yapılmamış. İlk yorumu sen yaz!',
+    photoAlt: locale === 'en' ? 'Review photo' : locale === 'el' ? 'Φωτογραφία κριτικής' : 'Yorum fotoğrafı',
+  }
+
   return (
     <div className="mt-8">
       <div className="flex items-center gap-3 mb-4">
-        <h3 className="text-lg font-bold text-neutral-900 dark:text-white">Yorumlar & Değerlendirmeler</h3>
+        <h3 className="text-lg font-bold text-neutral-900 dark:text-white">{t.title}</h3>
         {average && (
           <span className="text-sm font-semibold text-amber-500">⭐ {average} ({reviews.length})</span>
         )}
@@ -89,7 +102,7 @@ export function ReviewSection({ entityType, entityId }: { entityType: EntityType
                 key={n}
                 onClick={() => setRating(n)}
                 className={`text-2xl ${n <= rating ? 'opacity-100' : 'opacity-30'}`}
-                aria-label={`${n} yıldız`}
+                aria-label={`${n} ${t.star}`}
               >
                 ⭐
               </button>
@@ -98,7 +111,7 @@ export function ReviewSection({ entityType, entityId }: { entityType: EntityType
           <textarea
             value={comment}
             onChange={(e) => setComment(e.target.value)}
-            placeholder="Deneyimini paylaş..."
+            placeholder={t.sharePlaceholder}
             rows={3}
             className="w-full rounded-xl border border-slate-200 dark:border-neutral-800 bg-slate-50 dark:bg-neutral-950 px-4 py-2.5 text-sm outline-none focus:border-sky-500 transition-all"
           />
@@ -106,7 +119,7 @@ export function ReviewSection({ entityType, entityId }: { entityType: EntityType
             type="url"
             value={imageUrl}
             onChange={(e) => setImageUrl(e.target.value)}
-            placeholder="Fotoğraf bağlantısı (isteğe bağlı)"
+            placeholder={t.photoLinkPlaceholder}
             className="mt-2 w-full rounded-xl border border-slate-200 dark:border-neutral-800 bg-slate-50 dark:bg-neutral-950 px-4 py-2.5 text-sm outline-none focus:border-sky-500 transition-all"
           />
           <button
@@ -114,17 +127,23 @@ export function ReviewSection({ entityType, entityId }: { entityType: EntityType
             disabled={submitting}
             className="mt-3 rounded-xl bg-sky-600 px-4 py-2 text-sm font-semibold text-white hover:bg-sky-500 transition-colors disabled:opacity-50"
           >
-            {submitting ? 'Gönderiliyor...' : 'Yorum Yap'}
+            {submitting ? t.sending : t.submit}
           </button>
         </form>
       ) : (
         <p className="text-sm text-neutral-500 mb-6">
-          Yorum yapmak için <a href="/login" className="text-sky-600 font-medium hover:underline">giriş yap</a>.
+          {locale === 'en' ? (
+            <>To post a review, <a href="/login" className="text-sky-600 font-medium hover:underline">log in</a>.</>
+          ) : locale === 'el' ? (
+            <>Για να αφήσετε κριτική, <a href="/login" className="text-sky-600 font-medium hover:underline">συνδεθείτε</a>.</>
+          ) : (
+            <>Yorum yapmak için <a href="/login" className="text-sky-600 font-medium hover:underline">giriş yap</a>.</>
+          )}
         </p>
       )}
 
       {!loading && reviews.length === 0 && (
-        <p className="text-sm text-neutral-500">Henüz yorum yapılmamış. İlk yorumu sen yaz!</p>
+        <p className="text-sm text-neutral-500">{t.empty}</p>
       )}
 
       <div className="space-y-4">
@@ -143,7 +162,7 @@ export function ReviewSection({ entityType, entityId }: { entityType: EntityType
               // eslint-disable-next-line @next/next/no-img-element -- kullanıcı URL'i herhangi bir dış domain olabilir
               <img
                 src={review.image_url}
-                alt="Yorum fotoğrafı"
+                alt={t.photoAlt}
                 className="mt-2 max-h-64 rounded-lg border border-slate-100 dark:border-neutral-800 object-cover"
               />
             )}

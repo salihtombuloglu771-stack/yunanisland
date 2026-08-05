@@ -1,6 +1,7 @@
 import { Header } from '@/components/Header'
 import { SiteFooter } from '@/components/SiteFooter'
 import { ContactForm } from '@/components/ContactForm'
+import { ContactIntro } from '@/components/ContactIntro'
 
 export const metadata = {
   title: 'İletişim — Yunanisland',
@@ -13,11 +14,7 @@ export default function ContactPage() {
       <Header />
 
       <main className="mx-auto max-w-2xl px-6 py-16">
-        <h1 className="text-2xl font-bold text-neutral-900 dark:text-white">✉️ İletişim</h1>
-        <p className="mt-3 text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
-          Sorularınız, önerileriniz veya iş birliği talepleriniz için aşağıdaki formu doldurabilirsiniz.
-          En kısa sürede e-posta adresinizden size dönüş yapacağız.
-        </p>
+        <ContactIntro />
 
         <ContactForm />
       </main>

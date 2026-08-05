@@ -5,6 +5,7 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import Link from 'next/link'
+import { useLanguage } from '@/lib/i18n/LanguageProvider'
 
 export interface MapPoint {
   id: string
@@ -47,6 +48,11 @@ function poiDivIcon(type: MapPoint['type']) {
 }
 
 export function IslandMap({ points, activePoiTypes = [], activeBaseTypes }: { points: MapPoint[]; activePoiTypes?: MapPoint['type'][]; activeBaseTypes?: MapPoint['type'][] }) {
+  const { locale } = useLanguage()
+  const t = {
+    attribution: locale === 'en' ? 'contributors' : locale === 'el' ? 'συνεισφέροντες' : 'katkıda bulunanlar',
+    viewDetails: locale === 'en' ? 'View details →' : locale === 'el' ? 'Δείτε λεπτομέρειες →' : 'Detayları gör →',
+  }
   const allIcons = useMemo(() => Object.fromEntries(
     (Object.keys(TYPE_EMOJI) as MapPoint['type'][]).map((t) => [t, poiDivIcon(t)])
   ), [])
@@ -66,7 +72,7 @@ export function IslandMap({ points, activePoiTypes = [], activeBaseTypes }: { po
   return (
     <MapContainer center={center} zoom={7} scrollWheelZoom style={{ height: '600px', width: '100%', borderRadius: '1rem' }}>
       <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> katkıda bulunanlar'
+        attribution={`&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> ${t.attribution}`}
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
       {visiblePoints.map((p) => {
@@ -82,7 +88,7 @@ export function IslandMap({ points, activePoiTypes = [], activeBaseTypes }: { po
                 <p className="font-semibold">{TYPE_EMOJI[p.type]} {p.name}</p>
                 {hrefBuilder && (
                   <Link href={hrefBuilder(p)} className="text-sky-600 hover:underline text-xs">
-                    Detayları gör →
+                    {t.viewDetails}
                   </Link>
                 )}
               </div>

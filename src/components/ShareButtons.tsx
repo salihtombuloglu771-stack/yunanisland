@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useLanguage } from '@/lib/i18n/LanguageProvider'
 
 interface ShareButtonsProps {
   url: string
@@ -8,6 +9,7 @@ interface ShareButtonsProps {
 }
 
 export function ShareButtons({ url, title }: ShareButtonsProps) {
+  const { locale } = useLanguage()
   const [copied, setCopied] = useState(false)
 
   const encodedUrl = encodeURIComponent(url)
@@ -37,6 +39,9 @@ export function ShareButtons({ url, title }: ShareButtonsProps) {
     setTimeout(() => setCopied(false), 2000)
   }
 
+  const shareOn = (label: string) => locale === 'en' ? `Share on ${label}` : locale === 'el' ? `Κοινοποίηση στο ${label}` : `${label}'da paylaş`
+  const copyLink = locale === 'en' ? 'Copy link' : locale === 'el' ? 'Αντιγραφή συνδέσμου' : 'Linki kopyala'
+
   return (
     <div className="flex items-center gap-2">
       {links.map((link) => (
@@ -45,7 +50,7 @@ export function ShareButtons({ url, title }: ShareButtonsProps) {
           href={link.href}
           target="_blank"
           rel="noopener noreferrer"
-          title={`${link.label}'da paylaş`}
+          title={shareOn(link.label)}
           className="flex h-9 w-9 items-center justify-center rounded-full bg-white/90 dark:bg-neutral-900/90 backdrop-blur border border-slate-200 dark:border-neutral-800 text-base shadow-sm hover:scale-110 transition-transform"
         >
           {link.emoji}
@@ -54,7 +59,7 @@ export function ShareButtons({ url, title }: ShareButtonsProps) {
       <button
         type="button"
         onClick={handleCopy}
-        title="Linki kopyala"
+        title={copyLink}
         className="flex h-9 w-9 items-center justify-center rounded-full bg-white/90 dark:bg-neutral-900/90 backdrop-blur border border-slate-200 dark:border-neutral-800 text-base shadow-sm hover:scale-110 transition-transform"
       >
         {copied ? '✅' : '🔗'}

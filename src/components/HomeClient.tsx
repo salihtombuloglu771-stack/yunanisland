@@ -4,16 +4,33 @@ import { useState } from 'react'
 import { IslandCard, type Island } from '@/components/IslandCard'
 import { useLanguage } from '@/lib/i18n/LanguageProvider'
 
-const MOODS = [
-  { id: 'honeymoon', label: '❤️ Balayı' },
-  { id: 'family', label: '👨‍👩‍👧 Aile' },
-  { id: 'nightlife', label: '🎉 Gece Hayatı' },
-  { id: 'nature', label: '🌿 Doğa' },
-  { id: 'history', label: '🏛️ Tarih' },
-]
-
 export function HomeClient({ islands }: { islands: Island[] }) {
-  const { t } = useLanguage()
+  const { locale, t } = useLanguage()
+
+  const MOODS = [
+    { id: 'honeymoon', label: locale === 'en' ? '❤️ Honeymoon' : locale === 'el' ? '❤️ Μήνας του Μέλιτος' : '❤️ Balayı' },
+    { id: 'family', label: locale === 'en' ? '👨‍👩‍👧 Family' : locale === 'el' ? '👨‍👩‍👧 Οικογένεια' : '👨‍👩‍👧 Aile' },
+    { id: 'nightlife', label: locale === 'en' ? '🎉 Nightlife' : locale === 'el' ? '🎉 Νυχτερινή Ζωή' : '🎉 Gece Hayatı' },
+    { id: 'nature', label: locale === 'en' ? '🌿 Nature' : locale === 'el' ? '🌿 Φύση' : '🌿 Doğa' },
+    { id: 'history', label: locale === 'en' ? '🏛️ History' : locale === 'el' ? '🏛️ Ιστορία' : '🏛️ Tarih' },
+  ]
+
+  const budgetTabs = [
+    { id: 'all', label: locale === 'en' ? '🏝️ All Islands' : locale === 'el' ? '🏝️ Όλα τα Νησιά' : '🏝️ Tüm Adalar' },
+    { id: 'budget', label: locale === 'en' ? '💰 Budget Friendly' : locale === 'el' ? '💰 Οικονομικά' : '💰 Bütçe Dostu' },
+    { id: 'mid', label: locale === 'en' ? '💳 Mid-Range' : locale === 'el' ? '💳 Μεσαία Κατηγορία' : '💳 Orta Segment' },
+    { id: 'luxury', label: locale === 'en' ? '💎 Luxury' : locale === 'el' ? '💎 Πολυτέλεια' : '💎 Lüks' },
+  ]
+
+  const tt = {
+    searchPlaceholder: locale === 'en' ? 'Search islands or features (e.g. sunset, shipwreck)...' : locale === 'el' ? 'Αναζήτηση νησιών ή χαρακτηριστικών (π.χ. ηλιοβασίλεμα, ναυάγιο)...' : 'Ada veya özellik ara (örn. gün batımı, batık)...',
+    byMood: locale === 'en' ? 'By Mood:' : locale === 'el' ? 'Κατά Διάθεση:' : 'Ruh Haline Göre:',
+    listedCount: (n: number) => locale === 'en' ? `${n} islands listed` : locale === 'el' ? `${n} νησιά καταχωρημένα` : `${n} ada listeleniyor`,
+    notFoundTitle: locale === 'en' ? 'No Island Found' : locale === 'el' ? 'Δεν Βρέθηκε Νησί' : 'Ada Bulunamadı',
+    notFoundDesc: locale === 'en' ? 'No island matches your search criteria. Please try different keywords or clear the filters.' : locale === 'el' ? 'Κανένα νησί δεν ταιριάζει με τα κριτήρια αναζήτησής σας. Δοκιμάστε διαφορετικές λέξεις-κλειδιά ή καθαρίστε τα φίλτρα.' : 'Arama kriterlerinize uygun ada bulunamadı. Lütfen farklı kelimelerle deneyin veya filtreyi sıfırlayın.',
+    clearFilters: locale === 'en' ? 'Clear Filters' : locale === 'el' ? 'Καθαρισμός Φίλτρων' : 'Filtreleri Temizle',
+  }
+
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedBudget, setSelectedBudget] = useState<string>('all')
   const [selectedMood, setSelectedMood] = useState<string | null>(null)
@@ -41,7 +58,7 @@ export function HomeClient({ islands }: { islands: Island[] }) {
           </span>
           <input
             type="text"
-            placeholder="Ada veya özellik ara (örn. gün batımı, batık)..."
+            placeholder={tt.searchPlaceholder}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full rounded-xl border border-slate-200 dark:border-neutral-800 bg-slate-50 dark:bg-neutral-950 py-2.5 pl-10 pr-4 text-sm outline-none focus:border-sky-500 focus:bg-white dark:focus:bg-neutral-900 transition-all text-neutral-800 dark:text-white"
@@ -49,12 +66,7 @@ export function HomeClient({ islands }: { islands: Island[] }) {
         </div>
 
         <div className="flex gap-2 w-full md:w-auto overflow-x-auto pb-1 md:pb-0 scrollbar-none">
-          {[
-            { id: 'all', label: '🏝️ Tüm Adalar' },
-            { id: 'budget', label: '💰 Bütçe Dostu' },
-            { id: 'mid', label: '💳 Orta Segment' },
-            { id: 'luxury', label: '💎 Lüks' },
-          ].map((tab) => (
+          {budgetTabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setSelectedBudget(tab.id)}
@@ -74,7 +86,7 @@ export function HomeClient({ islands }: { islands: Island[] }) {
       {/* Ruh Haline Göre Hızlı Filtre */}
       <div className="flex flex-wrap items-center gap-2 mb-10">
         <span className="text-xs font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider mr-1">
-          Ruh Haline Göre:
+          {tt.byMood}
         </span>
         {MOODS.map((mood) => (
           <button
@@ -98,7 +110,7 @@ export function HomeClient({ islands }: { islands: Island[] }) {
             {t('home.destinations')}
           </h2>
           <p className="text-sm text-neutral-500 dark:text-neutral-400">
-            {filteredIslands.length} ada listeleniyor
+            {tt.listedCount(filteredIslands.length)}
           </p>
         </div>
 
@@ -111,15 +123,15 @@ export function HomeClient({ islands }: { islands: Island[] }) {
         ) : (
           <div className="flex flex-col items-center justify-center py-16 text-center bg-white dark:bg-neutral-900 border border-dashed border-slate-200 dark:border-neutral-800 rounded-2xl">
             <span className="text-4xl mb-4">🔍</span>
-            <h3 className="text-lg font-semibold text-neutral-900 dark:text-white">Ada Bulunamadı</h3>
+            <h3 className="text-lg font-semibold text-neutral-900 dark:text-white">{tt.notFoundTitle}</h3>
             <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-1 max-w-xs">
-              Arama kriterlerinize uygun ada bulunamadı. Lütfen farklı kelimelerle deneyin veya filtreyi sıfırlayın.
+              {tt.notFoundDesc}
             </p>
             <button
               onClick={() => { setSearchQuery(''); setSelectedBudget('all'); setSelectedMood(null); }}
               className="mt-4 rounded-xl bg-slate-100 dark:bg-neutral-800 px-4 py-2 text-xs font-semibold text-neutral-700 dark:text-neutral-300 hover:bg-slate-200 dark:hover:bg-neutral-700 transition-colors"
             >
-              Filtreleri Temizle
+              {tt.clearFilters}
             </button>
           </div>
         )}

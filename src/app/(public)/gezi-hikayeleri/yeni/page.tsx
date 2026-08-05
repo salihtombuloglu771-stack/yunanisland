@@ -1,6 +1,7 @@
 import { Header } from '@/components/Header'
 import { createClient } from '@/lib/supabase/server'
 import { StoryForm } from '@/components/StoryForm'
+import { NewStoryIntro } from '@/components/NewStoryIntro'
 
 export default async function NewTravelStoryPage() {
   const supabase = await createClient()
@@ -15,10 +16,7 @@ export default async function NewTravelStoryPage() {
       <Header />
 
       <main className="mx-auto max-w-2xl px-6 py-16">
-        <h1 className="text-2xl font-bold text-neutral-900 dark:text-white">✍️ Gezi Hikayeni Paylaş</h1>
-        <p className="mt-2 text-sm text-neutral-500">
-          Deneyimini diğer gezginlerle paylaş — yayınlandığında herkese açık &quot;Gezi Hikayeleri&quot; sayfasında görünür.
-        </p>
+        <NewStoryIntro />
 
         <StoryForm islands={islands ?? []} />
       </main>

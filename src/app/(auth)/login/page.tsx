@@ -4,14 +4,34 @@ import { Suspense, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
+import { useLanguage } from '@/lib/i18n/LanguageProvider'
 
 function LoginForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
+  const { locale } = useLanguage()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
+
+  const t = {
+    invalidCredentials: locale === 'en' ? 'Incorrect email or password.' : locale === 'el' ? 'Λανθασμένο email ή κωδικός πρόσβασης.' : 'E-posta veya şifre hatalı.',
+    enterSixDigit: locale === 'en' ? 'Please enter the 6-digit code from your app.' : locale === 'el' ? 'Παρακαλώ εισάγετε τον 6ψήφιο κωδικό από την εφαρμογή σας.' : 'Lütfen uygulamandaki 6 haneli kodu gir.',
+    codeExpired: locale === 'en' ? 'Incorrect or expired code, try again.' : locale === 'el' ? 'Λανθασμένος ή ληγμένος κωδικός, δοκιμάστε ξανά.' : 'Kod yanlış veya süresi dolmuş, tekrar dene.',
+    mfaTitle: locale === 'en' ? 'Two-Factor Authentication' : locale === 'el' ? 'Έλεγχος Ταυτότητας Δύο Παραγόντων' : 'İki Adımlı Doğrulama',
+    mfaDesc: locale === 'en' ? 'Enter the 6-digit code from your authenticator app.' : locale === 'el' ? 'Εισάγετε τον 6ψήφιο κωδικό από την εφαρμογή ελέγχου ταυτότητας.' : 'Authenticator uygulamandaki 6 haneli kodu gir.',
+    verifying: locale === 'en' ? 'Verifying...' : locale === 'el' ? 'Επαλήθευση...' : 'Doğrulanıyor...',
+    verifyAndLogin: locale === 'en' ? 'Verify & Log In' : locale === 'el' ? 'Επαλήθευση & Σύνδεση' : 'Doğrula ve Giriş Yap',
+    loginTitle: locale === 'en' ? 'Log In' : locale === 'el' ? 'Σύνδεση' : 'Giriş Yap',
+    loginDesc: locale === 'en' ? 'Log in to access your favorites and reviews.' : locale === 'el' ? 'Συνδεθείτε για πρόσβαση στα αγαπημένα και τις κριτικές σας.' : 'Hesabına giriş yaparak favorilerine ve yorumlarına eriş.',
+    email: locale === 'en' ? 'Email' : locale === 'el' ? 'Email' : 'E-posta',
+    password: locale === 'en' ? 'Password' : locale === 'el' ? 'Κωδικός Πρόσβασης' : 'Şifre',
+    loggingIn: locale === 'en' ? 'Logging in...' : locale === 'el' ? 'Σύνδεση σε εξέλιξη...' : 'Giriş yapılıyor...',
+    logIn: locale === 'en' ? 'Log In' : locale === 'el' ? 'Σύνδεση' : 'Giriş Yap',
+    noAccount: locale === 'en' ? "Don't have an account?" : locale === 'el' ? 'Δεν έχετε λογαριασμό;' : 'Hesabın yok mu?',
+    createAccount: locale === 'en' ? 'Create account' : locale === 'el' ? 'Δημιουργία λογαριασμού' : 'Hesap oluştur',
+  }
 
   // 2FA açık bir hesapla giriş yapılırsa şifre doğru olsa bile oturum "aal2"ye
   // yükselene kadar tamamlanmış sayılmıyor — bu ikinci adım o yükseltmeyi yapıyor.
@@ -34,7 +54,7 @@ function LoginForm() {
     const { error: signInError } = await supabase.auth.signInWithPassword({ email, password })
 
     if (signInError) {
-      setError('E-posta veya şifre hatalı.')
+      setError(t.invalidCredentials)
       setLoading(false)
       return
     }
@@ -58,7 +78,7 @@ function LoginForm() {
   const handleMfaSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!mfaFactorId || mfaCode.trim().length < 6) {
-      setError('Lütfen uygulamandaki 6 haneli kodu gir.')
+      setError(t.enterSixDigit)
       return
     }
 
@@ -83,7 +103,7 @@ function LoginForm() {
     setLoading(false)
 
     if (verifyError) {
-      setError('Kod yanlış veya süresi dolmuş, tekrar dene.')
+      setError(t.codeExpired)
       return
     }
 
@@ -93,8 +113,8 @@ function LoginForm() {
   if (needsMfa) {
     return (
       <div className="w-full max-w-sm">
-        <h1 className="text-2xl font-bold text-neutral-900 dark:text-white">İki Adımlı Doğrulama</h1>
-        <p className="mt-2 text-sm text-neutral-500">Authenticator uygulamandaki 6 haneli kodu gir.</p>
+        <h1 className="text-2xl font-bold text-neutral-900 dark:text-white">{t.mfaTitle}</h1>
+        <p className="mt-2 text-sm text-neutral-500">{t.mfaDesc}</p>
 
         <form onSubmit={handleMfaSubmit} className="mt-8 space-y-4">
           <input
@@ -113,7 +133,7 @@ function LoginForm() {
             disabled={loading}
             className="w-full rounded-xl bg-sky-600 px-4 py-2.5 text-sm font-semibold text-white shadow-md hover:bg-sky-500 transition-colors disabled:opacity-50"
           >
-            {loading ? 'Doğrulanıyor...' : 'Doğrula ve Giriş Yap'}
+            {loading ? t.verifying : t.verifyAndLogin}
           </button>
         </form>
       </div>
@@ -122,12 +142,12 @@ function LoginForm() {
 
   return (
     <div className="w-full max-w-sm">
-      <h1 className="text-2xl font-bold text-neutral-900 dark:text-white">Giriş Yap</h1>
-      <p className="mt-2 text-sm text-neutral-500">Hesabına giriş yaparak favorilerine ve yorumlarına eriş.</p>
+      <h1 className="text-2xl font-bold text-neutral-900 dark:text-white">{t.loginTitle}</h1>
+      <p className="mt-2 text-sm text-neutral-500">{t.loginDesc}</p>
 
       <form onSubmit={handleSubmit} className="mt-8 space-y-4">
         <div>
-          <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">E-posta</label>
+          <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">{t.email}</label>
           <input
             type="email"
             required
@@ -137,7 +157,7 @@ function LoginForm() {
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">Şifre</label>
+          <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">{t.password}</label>
           <input
             type="password"
             required
@@ -154,14 +174,14 @@ function LoginForm() {
           disabled={loading}
           className="w-full rounded-xl bg-sky-600 px-4 py-2.5 text-sm font-semibold text-white shadow-md hover:bg-sky-500 transition-colors disabled:opacity-50"
         >
-          {loading ? 'Giriş yapılıyor...' : 'Giriş Yap'}
+          {loading ? t.loggingIn : t.logIn}
         </button>
       </form>
 
       <p className="mt-6 text-sm text-neutral-500 text-center">
-        Hesabın yok mu?{' '}
+        {t.noAccount}{' '}
         <Link href="/register" className="text-sky-600 font-medium hover:underline">
-          Hesap oluştur
+          {t.createAccount}
         </Link>
       </p>
     </div>

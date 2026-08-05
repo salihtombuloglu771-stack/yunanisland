@@ -3,8 +3,10 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { getRecentlyViewed, recentItemHref, RECENT_TYPE_EMOJI, type RecentItem } from '@/lib/useRecentlyViewed'
+import { useLanguage } from '@/lib/i18n/LanguageProvider'
 
 export function RecentlyViewedBar() {
+  const { locale } = useLanguage()
   const [items, setItems] = useState<RecentItem[]>([])
 
   useEffect(() => {
@@ -16,7 +18,7 @@ export function RecentlyViewedBar() {
   return (
     <div className="mb-8">
       <h3 className="text-sm font-bold text-neutral-700 dark:text-neutral-300 mb-3 flex items-center gap-2">
-        🕘 Son Baktıkların
+        {locale === 'en' ? '🕘 Recently Viewed' : locale === 'el' ? '🕘 Πρόσφατη Προβολή' : '🕘 Son Baktıkların'}
       </h3>
       <div className="flex gap-3 overflow-x-auto pb-1">
         {items.map((item) => (

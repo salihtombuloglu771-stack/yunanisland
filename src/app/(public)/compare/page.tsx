@@ -1,5 +1,5 @@
 import { Header } from '@/components/Header'
-import { PageHero } from '@/components/PageHero'
+import { PageHeroI18n } from '@/components/PageHeroI18n'
 import { CompareClient } from '@/components/CompareClient'
 import { createClient } from '@/lib/supabase/server'
 
@@ -11,11 +11,23 @@ export default async function ComparePage() {
     <div className="min-h-screen bg-slate-50 dark:bg-neutral-950 transition-colors duration-300">
       <Header />
 
-      <PageHero
+      <PageHeroI18n
         image="/zakynthos.jpg"
-        badge="Ada Karşılaştırma"
-        title="Hangi Ada Size Göre?"
-        subtitle="İki adayı yan yana karşılaştır: bütçe seviyesi, plaj/restoran/otel sayısı ve gezgin puanları."
+        tr={{
+          badge: 'Ada Karşılaştırma',
+          title: 'Hangi Ada Size Göre?',
+          subtitle: 'İki adayı yan yana karşılaştır: bütçe seviyesi, plaj/restoran/otel sayısı ve gezgin puanları.',
+        }}
+        en={{
+          badge: 'Island Comparison',
+          title: 'Which Island Suits You?',
+          subtitle: 'Compare two islands side by side: budget level, beach/restaurant/hotel count and traveler ratings.',
+        }}
+        el={{
+          badge: 'Σύγκριση Νησιών',
+          title: 'Ποιο Νησί Σας Ταιριάζει;',
+          subtitle: 'Συγκρίνετε δύο νησιά δίπλα-δίπλα: επίπεδο προϋπολογισμού, αριθμό παραλιών/εστιατορίων/ξενοδοχείων και βαθμολογίες ταξιδιωτών.',
+        }}
       />
 
       <main className="mx-auto max-w-5xl px-6 py-12">

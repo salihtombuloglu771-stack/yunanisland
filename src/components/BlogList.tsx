@@ -3,6 +3,7 @@
 import { useMemo, useState } from 'react'
 import Link from 'next/link'
 import { stripMarkdown } from '@/lib/markdown'
+import { useLanguage } from '@/lib/i18n/LanguageProvider'
 
 interface Article {
   id: string
@@ -14,7 +15,14 @@ interface Article {
 }
 
 export function BlogList({ articles }: { articles: Article[] }) {
+  const { locale } = useLanguage()
   const [activeCategory, setActiveCategory] = useState<string>('all')
+
+  const t = {
+    all: locale === 'en' ? 'All' : locale === 'el' ? 'Όλα' : 'Tümü',
+    noPosts: locale === 'en' ? 'No posts published yet.' : locale === 'el' ? 'Δεν έχει δημοσιευτεί ακόμη κανένα άρθρο.' : 'Henüz yayınlanmış bir yazı yok.',
+    noPostsInCategory: locale === 'en' ? 'No posts in this category yet.' : locale === 'el' ? 'Δεν υπάρχουν ακόμη άρθρα σε αυτή την κατηγορία.' : 'Bu kategoride henüz yazı yok.',
+  }
 
   const categories = useMemo(() => {
     const seen = new Map<string, string>()
@@ -30,7 +38,7 @@ export function BlogList({ articles }: { articles: Article[] }) {
     return (
       <div className="py-16 text-center bg-white dark:bg-neutral-900 border border-dashed border-slate-200 dark:border-neutral-800 rounded-2xl">
         <span className="text-4xl">📝</span>
-        <p className="mt-4 text-sm text-neutral-500">Henüz yayınlanmış bir yazı yok.</p>
+        <p className="mt-4 text-sm text-neutral-500">{t.noPosts}</p>
       </div>
     )
   }
@@ -47,7 +55,7 @@ export function BlogList({ articles }: { articles: Article[] }) {
                 : 'bg-white dark:bg-neutral-900 text-neutral-600 dark:text-neutral-400 border border-slate-200 dark:border-neutral-800 hover:bg-slate-100 dark:hover:bg-neutral-800'
             }`}
           >
-            Tümü
+            {t.all}
           </button>
           {categories.map((c) => (
             <button
@@ -93,7 +101,7 @@ export function BlogList({ articles }: { articles: Article[] }) {
       ) : (
         <div className="py-16 text-center bg-white dark:bg-neutral-900 border border-dashed border-slate-200 dark:border-neutral-800 rounded-2xl">
           <span className="text-4xl">📝</span>
-          <p className="mt-4 text-sm text-neutral-500">Bu kategoride henüz yazı yok.</p>
+          <p className="mt-4 text-sm text-neutral-500">{t.noPostsInCategory}</p>
         </div>
       )}
     </>

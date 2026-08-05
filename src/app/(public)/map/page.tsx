@@ -49,10 +49,6 @@ export default async function MapPage() {
       <Header />
 
       <main className="mx-auto max-w-6xl px-6 py-12">
-        <h1 className="text-2xl font-bold text-neutral-900 dark:text-white mb-2">Etkileşimli Harita</h1>
-        <p className="text-sm text-neutral-500 mb-6">
-          Tüm adalar, plajlar ve restoranlar tek haritada. Bir işarete tıklayarak detaylara ulaşabilirsin.
-        </p>
         <MapPageClient points={points} />
       </main>
     </div>
