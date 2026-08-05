@@ -17,6 +17,7 @@ export interface Island {
   budget_level: 'budget' | 'mid' | 'luxury'
   cover_image_url: string | null
   is_published: boolean
+  updated_at?: string
 }
 
 export interface Beach {
@@ -43,6 +44,7 @@ export interface Beach {
   latitude: number | null
   longitude: number | null
   cover_image_url: string | null
+  updated_at?: string
 }
 
 export interface Restaurant {
@@ -65,6 +67,7 @@ export interface Restaurant {
   latitude: number | null
   longitude: number | null
   cover_image_url: string | null
+  updated_at?: string
 }
 
 export const MOCK_ISLANDS: Island[] = [

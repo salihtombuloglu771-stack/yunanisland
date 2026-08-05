@@ -5,6 +5,7 @@ import { AdBanner } from '@/components/AdBanner'
 import { CurrencyWidget } from '@/components/CurrencyWidget'
 import { RecentlyViewedBar } from '@/components/RecentlyViewedBar'
 import { NearbyIslands } from '@/components/NearbyIslands'
+import { TrustStats } from '@/components/TrustStats'
 import { SiteFooter } from '@/components/SiteFooter'
 import { createClient } from '@/lib/supabase/server'
 import { getRatingsMap } from '@/lib/ratings'
@@ -18,6 +19,12 @@ export default async function Home() {
     .order('name')
 
   const ratings = await getRatingsMap(supabase, 'island', (islands ?? []).map((i) => i.id))
+
+  const [{ count: beachCount }, { count: restaurantCount }, { count: attractionCount }] = await Promise.all([
+    supabase.from('beaches').select('id', { count: 'exact', head: true }),
+    supabase.from('restaurants').select('id', { count: 'exact', head: true }),
+    supabase.from('attractions').select('id', { count: 'exact', head: true }),
+  ])
 
   const { data: trending } = await supabase.rpc('get_trending_islands', { days_back: 30, limit_count: 3 })
   const trendingSlugs = new Set((trending ?? []).map((t: { slug: string }) => t.slug))
@@ -35,6 +42,12 @@ export default async function Home() {
 
       <main className="mx-auto max-w-7xl px-6 py-12">
         <AdBanner placement="homepage" />
+        <TrustStats
+          islandCount={islandsWithRatings.length}
+          beachCount={beachCount ?? 0}
+          restaurantCount={restaurantCount ?? 0}
+          attractionCount={attractionCount ?? 0}
+        />
         <RecentlyViewedBar />
         <NearbyIslands islands={islandsWithRatings} />
         <CurrencyWidget />

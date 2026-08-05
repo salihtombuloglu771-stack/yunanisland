@@ -10,6 +10,8 @@ import { ShareButtons } from '@/components/ShareButtons'
 import { LiveViewers } from '@/components/LiveViewers'
 import { ReviewSection } from '@/components/ReviewSection'
 import { TripNoteBox } from '@/components/TripNoteBox'
+import { ReportIssue } from '@/components/ReportIssue'
+import { LastUpdated } from '@/components/LastUpdated'
 import { Breadcrumbs } from '@/components/Breadcrumbs'
 import { Gallery, type MediaItem } from '@/components/Gallery'
 import { PhotoContribution } from '@/components/PhotoContribution'
@@ -39,6 +41,7 @@ interface AttractionDetailClientProps {
     description: string | null; description_en?: string | null; description_el?: string | null
     opening_hours: string | null; ticket_price: string | null
     cover_image_url: string | null
+    updated_at?: string | null
   }
   island: { name: string; slug: string } | null
   media: MediaItem[]
@@ -133,6 +136,10 @@ export function AttractionDetailClient({ attraction, island, media }: Attraction
 
         <ReviewSection entityType="attraction" entityId={attraction.id} />
         <TripNoteBox entityType="attraction" entityId={attraction.id} />
+        <div className="mt-6 flex items-center justify-between gap-4">
+          <LastUpdated date={attraction.updated_at} />
+          <ReportIssue entityType="attraction" entityId={attraction.id} />
+        </div>
       </main>
     </div>
   )

@@ -19,6 +19,7 @@ export interface Attraction {
   cover_image_url: string | null
   avgRating?: number | null
   reviewCount?: number
+  updated_at?: string
 }
 
 const CATEGORY_LABELS: Record<'tr' | 'en' | 'el', Record<Attraction['category'], string>> = {

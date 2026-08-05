@@ -13,6 +13,8 @@ import { ShareButtons } from '@/components/ShareButtons'
 import { LiveViewers } from '@/components/LiveViewers'
 import { ReviewSection } from '@/components/ReviewSection'
 import { TripNoteBox } from '@/components/TripNoteBox'
+import { ReportIssue } from '@/components/ReportIssue'
+import { LastUpdated } from '@/components/LastUpdated'
 import { Gallery, type MediaItem } from '@/components/Gallery'
 import { PhotoContribution } from '@/components/PhotoContribution'
 import { Breadcrumbs } from '@/components/Breadcrumbs'
@@ -294,6 +296,10 @@ export function IslandDetailClient({ island, allBeaches, allRestaurants, allHote
                   <FaqAccordion faqs={island.faqs ?? []} />
                   <ReviewSection entityType="island" entityId={island.id} />
                   <TripNoteBox entityType="island" entityId={island.id} />
+                  <div className="mt-6 flex items-center justify-between gap-4">
+                    <LastUpdated date={island.updated_at} />
+                    <ReportIssue entityType="island" entityId={island.id} />
+                  </div>
                 </>
               )}
 

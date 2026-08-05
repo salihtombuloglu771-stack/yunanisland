@@ -10,6 +10,8 @@ import { ShareButtons } from '@/components/ShareButtons'
 import { LiveViewers } from '@/components/LiveViewers'
 import { ReviewSection } from '@/components/ReviewSection'
 import { TripNoteBox } from '@/components/TripNoteBox'
+import { ReportIssue } from '@/components/ReportIssue'
+import { LastUpdated } from '@/components/LastUpdated'
 import { Breadcrumbs } from '@/components/Breadcrumbs'
 import { TryPrice } from '@/components/TryPrice'
 import { useLanguage } from '@/lib/i18n/LanguageProvider'
@@ -30,6 +32,7 @@ interface RestaurantDetailClientProps {
     phone: string | null; website: string | null; cover_image_url: string | null
     sea_view: boolean; outdoor_seating: boolean; family_friendly: boolean
     vegan: boolean; vegetarian: boolean; gluten_free: boolean
+    updated_at?: string | null
   }
   island: { name: string; slug: string } | null
 }
@@ -142,6 +145,10 @@ export function RestaurantDetailClient({ restaurant, island }: RestaurantDetailC
 
         <ReviewSection entityType="restaurant" entityId={restaurant.id} />
         <TripNoteBox entityType="restaurant" entityId={restaurant.id} />
+        <div className="mt-6 flex items-center justify-between gap-4">
+          <LastUpdated date={restaurant.updated_at} />
+          <ReportIssue entityType="restaurant" entityId={restaurant.id} />
+        </div>
       </main>
     </div>
   )

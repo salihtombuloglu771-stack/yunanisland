@@ -10,6 +10,8 @@ import { ShareButtons } from '@/components/ShareButtons'
 import { LiveViewers } from '@/components/LiveViewers'
 import { ReviewSection } from '@/components/ReviewSection'
 import { TripNoteBox } from '@/components/TripNoteBox'
+import { ReportIssue } from '@/components/ReportIssue'
+import { LastUpdated } from '@/components/LastUpdated'
 import { TryPrice } from '@/components/TryPrice'
 import { Breadcrumbs } from '@/components/Breadcrumbs'
 import { Gallery, type MediaItem } from '@/components/Gallery'
@@ -33,6 +35,7 @@ interface BeachDetailClientProps {
     has_toilets: boolean; has_beach_bar: boolean; has_lifeguard: boolean
     family_friendly: boolean; pet_friendly: boolean; sunbed_price: number | null
     umbrella_price: number | null; accessibility: string | null
+    updated_at?: string | null
   }
   island: { name: string; slug: string } | null
   media: MediaItem[]
@@ -159,6 +162,10 @@ export function BeachDetailClient({ beach, island, media }: BeachDetailClientPro
 
         <ReviewSection entityType="beach" entityId={beach.id} />
         <TripNoteBox entityType="beach" entityId={beach.id} />
+        <div className="mt-6 flex items-center justify-between gap-4">
+          <LastUpdated date={beach.updated_at} />
+          <ReportIssue entityType="beach" entityId={beach.id} />
+        </div>
       </main>
     </div>
   )

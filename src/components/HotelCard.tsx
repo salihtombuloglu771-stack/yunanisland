@@ -22,6 +22,7 @@ export interface Hotel {
   longitude?: number | null
   avgRating?: number | null
   reviewCount?: number
+  updated_at?: string
 }
 
 const CATEGORY_LABELS = {

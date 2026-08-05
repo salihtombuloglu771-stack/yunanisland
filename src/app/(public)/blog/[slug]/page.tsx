@@ -33,7 +33,7 @@ export default async function ArticlePage({ params }: PageProps) {
 
   const { data: article } = await supabase
     .from('articles')
-    .select('id, title, content, published_at, categories(name)')
+    .select('id, title, content, published_at, author_name, categories(name)')
     .eq('slug', slug)
     .eq('is_published', true)
     .maybeSingle()
@@ -74,11 +74,11 @@ export default async function ArticlePage({ params }: PageProps) {
             )}
             <h1 className="text-3xl font-bold text-neutral-900 dark:text-white">{article.title}</h1>
             <div className="flex items-center justify-between not-prose mb-6">
-              {article.published_at ? (
-                <p className="text-xs text-neutral-400">
-                  {new Date(article.published_at).toLocaleDateString('tr-TR')}
-                </p>
-              ) : <span />}
+              <p className="text-xs text-neutral-400">
+                {article.author_name && <span className="font-semibold text-neutral-600 dark:text-neutral-300">{article.author_name}</span>}
+                {article.author_name && article.published_at && ' · '}
+                {article.published_at && new Date(article.published_at).toLocaleDateString('tr-TR')}
+              </p>
               <ShareButtons url={`${SITE_URL}/blog/${slug}`} title={article.title} />
             </div>
             {article.content && (

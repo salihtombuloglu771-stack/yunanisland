@@ -10,6 +10,8 @@ import { ShareButtons } from '@/components/ShareButtons'
 import { LiveViewers } from '@/components/LiveViewers'
 import { ReviewSection } from '@/components/ReviewSection'
 import { TripNoteBox } from '@/components/TripNoteBox'
+import { ReportIssue } from '@/components/ReportIssue'
+import { LastUpdated } from '@/components/LastUpdated'
 import { Breadcrumbs } from '@/components/Breadcrumbs'
 import { useLanguage } from '@/lib/i18n/LanguageProvider'
 
@@ -27,6 +29,7 @@ interface HotelDetailClientProps {
     description_en?: string | null; description_el?: string | null
     category: string; price_range: string | null; affiliate_link: string | null
     cover_image_url: string | null
+    updated_at?: string | null
   }
   island: { name: string; slug: string } | null
 }
@@ -107,6 +110,10 @@ export function HotelDetailClient({ hotel, island }: HotelDetailClientProps) {
 
         <ReviewSection entityType="hotel" entityId={hotel.id} />
         <TripNoteBox entityType="hotel" entityId={hotel.id} />
+        <div className="mt-6 flex items-center justify-between gap-4">
+          <LastUpdated date={hotel.updated_at} />
+          <ReportIssue entityType="hotel" entityId={hotel.id} />
+        </div>
       </main>
     </div>
   )
