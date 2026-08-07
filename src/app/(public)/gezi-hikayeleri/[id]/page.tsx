@@ -25,11 +25,13 @@ export default async function TravelStoryPage({ params }: PageProps) {
   const { id } = await params
   const supabase = await createClient()
 
+  // is_published filtresi burada değil RLS'e bırakıldı ("Public can view
+  // published stories": is_published or user_id = auth.uid() or is_admin())
+  // — böylece yazar kendi taslağını, admin ise moderasyon önizlemesini görebiliyor.
   const { data: story } = await supabase
     .from('travel_stories')
     .select('id, title, content, cover_image_url, created_at, users(full_name), islands(name, slug)')
     .eq('id', id)
-    .eq('is_published', true)
     .maybeSingle()
 
   return <TravelStoryDetailClient story={story} id={id} siteUrl={SITE_URL} />
