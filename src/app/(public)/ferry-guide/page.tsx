@@ -11,6 +11,20 @@ import { useLanguage } from '@/lib/i18n/LanguageProvider'
 
 const PORTS = ['Bodrum', 'Kos', 'Atina (Pire)', 'Santorini', 'Rhodes', 'Patras', 'Igoumenitsa', 'Killini', 'Girit', 'Korfu', 'Kefalonya']
 
+// Feribot bileti satan tek bir doğrulanmış siteye (Ferryhopper/DirectFerries vb.)
+// derin bağlantı vermiyoruz çünkü rota URL'leri tahmin edilemez formatta
+// (bazıları kırık çıktı) — flight-guide'daki Google Flights deseniyle aynı
+// mantık: Google'ın kendi canlı arama sonucuna yönlendiriyoruz, hiçbir slug
+// tahmin etmiyoruz, her zaman çalışır.
+function buildFerrySearchUrl(from: string, to: string, locale: 'tr' | 'en' | 'el') {
+  const q = locale === 'en'
+    ? `ferry tickets from ${from} to ${to}`
+    : locale === 'el'
+    ? `εισιτήρια πλοίου από ${from} προς ${to}`
+    : `${from} ${to} feribot bilet`
+  return `https://www.google.com/search?q=${encodeURIComponent(q)}`
+}
+
 function FerrySearchForm() {
   const searchParams = useSearchParams()
   const { locale } = useLanguage()
@@ -21,20 +35,18 @@ function FerrySearchForm() {
     to: locale === 'en' ? 'To (Arrival)' : locale === 'el' ? 'Προς (Άφιξη)' : 'Nereye (Varış)',
     searching: locale === 'en' ? 'Searching...' : locale === 'el' ? 'Αναζήτηση...' : 'Aranıyor...',
     search: locale === 'en' ? 'Search Ferries 🔍' : locale === 'el' ? 'Αναζήτηση Δρομολογίων 🔍' : 'Seferleri Ara 🔍',
-    reservationSuccess: locale === 'en' ? '🎉 Reservation Successful! (Simulation)' : locale === 'el' ? '🎉 Επιτυχής Κράτηση! (Προσομοίωση)' : '🎉 Rezervasyon Başarılı! (Simülasyon)',
-    reservationDesc: (from: string, to: string) =>
-      locale === 'en'
-        ? <>Your ticket purchase for the <strong>{from} → {to}</strong> ferry has been successfully simulated.<br />In the live system, this area would redirect visitors to ticket-selling partner agencies (FerriesinGreece, Ferryhopper, etc.).</>
-        : locale === 'el'
-        ? <>Η αγορά εισιτηρίου για το φέρι <strong>{from} → {to}</strong> προσομοιώθηκε με επιτυχία.<br />Στο ζωντανό σύστημα, αυτή η περιοχή θα κατεύθυνε τους επισκέπτες σε συνεργαζόμενα πρακτορεία πώλησης εισιτηρίων (FerriesinGreece, Ferryhopper κ.λπ.).</>
-        : <><strong>{from} → {to}</strong> feribotu için bilet alım işlemi başarıyla simüle edilmiştir.<br />Canlı sistemde bu alan ziyaretçileri bilet satış ortağı acentelere (FerriesinGreece, Ferryhopper vb.) yönlendirecektir.</>,
+    ticketDisclaimer: locale === 'en'
+      ? 'We don\'t sell tickets — we take you straight to live search results from real ferry ticket sellers.'
+      : locale === 'el'
+      ? 'Δεν πουλάμε εισιτήρια — σας πάμε απευθείας σε ζωντανά αποτελέσματα αναζήτησης από πραγματικούς πωλητές εισιτηρίων πλοίου.'
+      : 'Bilet satmıyoruz — seni doğrudan gerçek feribot bileti satan sitelerin canlı arama sonuçlarına götürüyoruz.',
     searchResults: (from: string, to: string) =>
       locale === 'en' ? `Search Results (${from} ➔ ${to})` : locale === 'el' ? `Αποτελέσματα Αναζήτησης (${from} ➔ ${to})` : `Arama Sonuçları (${from} ➔ ${to})`,
     tripDuration: locale === 'en' ? 'Trip Duration:' : locale === 'el' ? 'Διάρκεια Ταξιδιού:' : 'Yolculuk Süresi:',
     ticket: locale === 'en' ? 'Ticket:' : locale === 'el' ? 'Εισιτήριο:' : 'Bilet:',
     operatingCompanies: locale === 'en' ? 'Operating Companies' : locale === 'el' ? 'Εταιρείες Λειτουργίας' : 'İşleten Firmalar',
     startingFrom: locale === 'en' ? 'Starting Per Person' : locale === 'el' ? 'Τιμή Ανά Άτομο Από' : 'Kişi Başı Başlayan',
-    buyTicket: locale === 'en' ? 'Buy Ticket 🎫' : locale === 'el' ? 'Αγορά Εισιτηρίου 🎫' : 'Bilet Al 🎫',
+    buyTicket: locale === 'en' ? 'Search Tickets ↗' : locale === 'el' ? 'Αναζήτηση Εισιτηρίων ↗' : 'Bilet Ara ↗',
     noDirectTitle: locale === 'en' ? 'No Direct Route Found' : locale === 'el' ? 'Δεν Βρέθηκε Απευθείας Δρομολόγιο' : 'Direkt Sefer Bulunmamadı',
     noDirectDesc: locale === 'en'
       ? 'There is no direct route between the ports you selected. You can try researching connecting routes or change the departure port.'
@@ -72,7 +84,6 @@ function FerrySearchForm() {
   const [toPort, setToPort] = useState(initialToPort)
   const [routes, setRoutes] = useState<FerryRoute[]>([])
   const [hasSearched, setHasSearched] = useState(false)
-  const [selectedRouteForTicket, setSelectedRouteForTicket] = useState<FerryRoute | null>(null)
   const [searching, setSearching] = useState(false)
 
   const handleSearch = async (e: React.FormEvent) => {
@@ -86,8 +97,11 @@ function FerrySearchForm() {
       .ilike('to_port', toPort)
     setRoutes((data as FerryRoute[]) ?? [])
     setHasSearched(true)
-    setSelectedRouteForTicket(null)
     setSearching(false)
+  }
+
+  const handleBuyTicket = (route: FerryRoute) => {
+    window.open(buildFerrySearchUrl(route.from_port, route.to_port, locale), '_blank', 'noopener,noreferrer')
   }
 
   return (
@@ -141,24 +155,6 @@ function FerrySearchForm() {
 
       {/* Sağ Panel: Sefer Sonuçları */}
       <div className="lg:col-span-2 space-y-6">
-        
-        {/* Bilet Simülasyon Popup */}
-        {selectedRouteForTicket && (
-          <div className="bg-emerald-500/10 border border-emerald-500/20 text-emerald-700 dark:text-emerald-400 p-5 rounded-2xl animate-fade-in relative">
-            <button 
-              onClick={() => setSelectedRouteForTicket(null)}
-              className="absolute top-3 right-3 text-emerald-800 dark:text-emerald-400 hover:scale-110 transition-transform font-bold text-sm"
-            >
-              ✕
-            </button>
-            <h3 className="font-bold text-base flex items-center gap-2">
-              {t.reservationSuccess}
-            </h3>
-            <p className="mt-2 text-xs leading-relaxed">
-              {t.reservationDesc(selectedRouteForTicket.from_port, selectedRouteForTicket.to_port)}
-            </p>
-          </div>
-        )}
 
         {hasSearched ? (
           <div>
@@ -201,7 +197,7 @@ function FerrySearchForm() {
                         <p className="text-2xl font-extrabold text-sky-600 dark:text-sky-400">{route.price_min} €</p>
                       </div>
                       <button
-                        onClick={() => setSelectedRouteForTicket(route)}
+                        onClick={() => handleBuyTicket(route)}
                         className="rounded-xl bg-sky-600 hover:bg-sky-500 px-5 py-2.5 text-xs font-semibold text-white shadow-md transition-colors"
                       >
                         {t.buyTicket}
@@ -209,6 +205,7 @@ function FerrySearchForm() {
                     </div>
                   </div>
                 ))}
+                <p className="text-xs text-neutral-400 text-center">{t.ticketDisclaimer}</p>
               </div>
             ) : (
               <div className="py-16 text-center bg-white dark:bg-neutral-900 border border-slate-100 dark:border-neutral-900 rounded-2xl">
