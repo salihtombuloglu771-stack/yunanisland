@@ -41,8 +41,21 @@ function SearchForm() {
       : `"${q}" için sonuç bulunamadı.`
   const [query, setQuery] = useState(searchParams.get('q') ?? '')
   const [results, setResults] = useState<Result[]>([])
+  const [totalCounts, setTotalCounts] = useState<Partial<Record<Result['type'], number>>>({})
   const [loading, setLoading] = useState(false)
   const [searched, setSearched] = useState(false)
+
+  const t2 = {
+    seeAll: (n: number, label: string) =>
+      locale === 'en' ? `See all ${n} ${label} →` : locale === 'el' ? `Δείτε όλα τα ${n} →` : `${n} ${label} tümünü gör →`,
+  }
+  const indexPathByType: Record<Result['type'], string | null> = {
+    island: null,
+    beach: '/beaches',
+    restaurant: '/restaurants',
+    hotel: '/hotels',
+    attraction: '/attractions',
+  }
 
   const runSearch = async (term: string, logSearch = false) => {
     if (!term.trim()) {
@@ -57,12 +70,20 @@ function SearchForm() {
     const ilikeTerm = `%${term.trim()}%`
 
     const [islandsRes, beachesRes, restaurantsRes, hotelsRes, attractionsRes] = await Promise.all([
-      supabase.from('islands').select('id, name, slug, description, description_en, description_el').ilike('name', ilikeTerm).limit(10),
-      supabase.from('beaches').select('id, name, slug, description, description_en, description_el, islands(slug)').ilike('name', ilikeTerm).limit(10),
-      supabase.from('restaurants').select('id, name, slug, cuisine, cuisine_en, cuisine_el, islands(slug)').ilike('name', ilikeTerm).limit(10),
-      supabase.from('hotels').select('id, name, slug, description, islands(slug)').ilike('name', ilikeTerm).limit(10),
-      supabase.from('attractions').select('id, name, slug, description, description_en, description_el, islands(slug)').ilike('name', ilikeTerm).limit(10),
+      supabase.from('islands').select('id, name, slug, description, description_en, description_el', { count: 'exact' }).ilike('name', ilikeTerm).limit(10),
+      supabase.from('beaches').select('id, name, slug, description, description_en, description_el, islands(slug)', { count: 'exact' }).ilike('name', ilikeTerm).limit(10),
+      supabase.from('restaurants').select('id, name, slug, cuisine, cuisine_en, cuisine_el, islands(slug)', { count: 'exact' }).ilike('name', ilikeTerm).limit(10),
+      supabase.from('hotels').select('id, name, slug, description, islands(slug)', { count: 'exact' }).ilike('name', ilikeTerm).limit(10),
+      supabase.from('attractions').select('id, name, slug, description, description_en, description_el, islands(slug)', { count: 'exact' }).ilike('name', ilikeTerm).limit(10),
     ])
+
+    setTotalCounts({
+      island: islandsRes.count ?? 0,
+      beach: beachesRes.count ?? 0,
+      restaurant: restaurantsRes.count ?? 0,
+      hotel: hotelsRes.count ?? 0,
+      attraction: attractionsRes.count ?? 0,
+    })
 
     const localized = (tr: string | null, en: string | null | undefined, el: string | null | undefined) =>
       locale === 'en' ? (en || tr) : locale === 'el' ? (el || tr) : tr
@@ -163,6 +184,22 @@ function SearchForm() {
                 <p className="mt-1 text-sm text-neutral-500 line-clamp-1">{r.description}</p>
               )}
             </Link>
+            )
+          })}
+
+          {(Object.keys(indexPathByType) as Result['type'][]).map((type) => {
+            const total = totalCounts[type] ?? 0
+            const shown = results.filter((r) => r.type === type).length
+            const indexPath = indexPathByType[type]
+            if (!indexPath || total <= shown) return null
+            return (
+              <Link
+                key={`see-all-${type}`}
+                href={`${indexPath}?q=${encodeURIComponent(query)}`}
+                className="block text-center text-xs font-semibold text-sky-600 dark:text-sky-400 hover:underline py-2"
+              >
+                {t2.seeAll(total, TYPE_LABELS[locale][type])}
+              </Link>
             )
           })}
 

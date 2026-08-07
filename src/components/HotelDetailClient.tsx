@@ -31,6 +31,8 @@ interface HotelDetailClientProps {
     category: string; price_range: string | null; affiliate_link: string | null
     cover_image_url: string | null
     updated_at?: string | null
+    star_rating?: number | null
+    has_wifi?: boolean; has_pool?: boolean; has_breakfast?: boolean; beachfront?: boolean
   }
   island: { name: string; slug: string } | null
 }
@@ -91,7 +93,16 @@ export function HotelDetailClient({ hotel, island }: HotelDetailClientProps) {
               {CATEGORY_LABELS[locale][hotel.category as keyof typeof CATEGORY_LABELS['tr']]}
             </span>
             {hotel.price_range && <span className="text-xs bg-white/10 backdrop-blur-md px-3 py-1 rounded-full font-medium">{hotel.price_range}</span>}
+            {hotel.star_rating && <span className="text-xs bg-white/10 backdrop-blur-md px-3 py-1 rounded-full font-medium">{'★'.repeat(hotel.star_rating)}</span>}
           </div>
+          {(hotel.has_wifi || hotel.has_pool || hotel.has_breakfast || hotel.beachfront) && (
+            <div className="mt-2 flex flex-wrap gap-1.5">
+              {hotel.has_wifi && <span className="text-[10px] font-semibold bg-white/10 backdrop-blur-md rounded-lg px-2 py-0.5">📶 Wifi</span>}
+              {hotel.has_pool && <span className="text-[10px] font-semibold bg-white/10 backdrop-blur-md rounded-lg px-2 py-0.5">🏊 Havuz</span>}
+              {hotel.has_breakfast && <span className="text-[10px] font-semibold bg-white/10 backdrop-blur-md rounded-lg px-2 py-0.5">🍳 Kahvaltı</span>}
+              {hotel.beachfront && <span className="text-[10px] font-semibold bg-white/10 backdrop-blur-md rounded-lg px-2 py-0.5">🏖️ Plaja Sıfır</span>}
+            </div>
+          )}
         </div>
       </section>
 

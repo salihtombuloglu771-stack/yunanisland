@@ -18,9 +18,14 @@ export default async function EditIslandPage({ params }: PageProps) {
     <main className="max-w-2xl mx-auto px-6 py-16">
       <div className="flex items-center justify-between mb-8">
         <h1 className="text-2xl font-bold text-neutral-900 dark:text-white">{island.name} Düzenle</h1>
-        <Link href={`/admin/islands/${island.id}/media`} className="text-sm font-semibold text-sky-600 hover:underline">
-          📸 Galeriyi Yönet
-        </Link>
+        <div className="flex items-center gap-4">
+          <Link href={`/islands/${island.slug}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-emerald-600 hover:underline">
+            👁️ Önizle ↗
+          </Link>
+          <Link href={`/admin/islands/${island.id}/media`} className="text-sm font-semibold text-sky-600 hover:underline">
+            📸 Galeriyi Yönet
+          </Link>
+        </div>
       </div>
       <IslandForm
         initial={{

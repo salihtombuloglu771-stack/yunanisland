@@ -23,6 +23,11 @@ export interface Hotel {
   avgRating?: number | null
   reviewCount?: number
   updated_at?: string
+  star_rating?: number | null
+  has_wifi?: boolean
+  has_pool?: boolean
+  has_breakfast?: boolean
+  beachfront?: boolean
 }
 
 const CATEGORY_LABELS = {
@@ -99,9 +104,22 @@ export function HotelCard({ hotel, islandLat, islandLng, carId }: HotelCardProps
           <RatingBadge avgRating={hotel.avgRating} reviewCount={hotel.reviewCount} />
         </div>
 
+        {hotel.star_rating && (
+          <p className="mt-1 text-amber-500 text-sm">{'★'.repeat(hotel.star_rating)}<span className="text-neutral-300 dark:text-neutral-700">{'★'.repeat(5 - hotel.star_rating)}</span></p>
+        )}
+
         <p className="mt-2 text-sm text-neutral-600 dark:text-neutral-400 line-clamp-2">
           {description || t.noDescription}
         </p>
+
+        {(hotel.has_wifi || hotel.has_pool || hotel.has_breakfast || hotel.beachfront) && (
+          <div className="mt-2 flex flex-wrap gap-1.5">
+            {hotel.has_wifi && <span className="text-[10px] font-semibold bg-slate-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 rounded-lg px-2 py-0.5">📶 Wifi</span>}
+            {hotel.has_pool && <span className="text-[10px] font-semibold bg-slate-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 rounded-lg px-2 py-0.5">🏊 Havuz</span>}
+            {hotel.has_breakfast && <span className="text-[10px] font-semibold bg-slate-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 rounded-lg px-2 py-0.5">🍳 Kahvaltı</span>}
+            {hotel.beachfront && <span className="text-[10px] font-semibold bg-slate-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 rounded-lg px-2 py-0.5">🏖️ Plaja Sıfır</span>}
+          </div>
+        )}
 
         {carId && (
           <div className="mt-3">

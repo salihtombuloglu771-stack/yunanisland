@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
+import { AdminDuplicateButton } from '@/components/admin/AdminDuplicateButton'
 
 export default async function AdminBeachesPage() {
   const supabase = await createClient()
@@ -37,7 +38,8 @@ export default async function AdminBeachesPage() {
                   </td>
                   <td className="px-5 py-3 text-neutral-500">{island?.name}</td>
                   <td className="px-5 py-3 text-neutral-500">{beach.beach_type}</td>
-                  <td className="px-5 py-3 text-right">
+                  <td className="px-5 py-3 text-right space-x-3">
+                    <AdminDuplicateButton table="beaches" id={beach.id} routeBase="/admin/beaches" />
                     <Link href={`/admin/beaches/${beach.id}`} className="text-sky-600 hover:underline font-semibold">Düzenle</Link>
                   </td>
                 </tr>

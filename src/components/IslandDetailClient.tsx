@@ -7,7 +7,7 @@ import { Header } from '@/components/Header'
 import { BeachCard } from '@/components/BeachCard'
 import { RestaurantCard } from '@/components/RestaurantCard'
 import { HotelCard, type Hotel } from '@/components/HotelCard'
-import { AttractionCard, type Attraction } from '@/components/AttractionCard'
+import { AttractionCard, type Attraction, ATTRACTION_CATEGORIES, CATEGORY_LABELS as ATTRACTION_CATEGORY_LABELS } from '@/components/AttractionCard'
 import { FavoriteButton } from '@/components/FavoriteButton'
 import { ShareButtons } from '@/components/ShareButtons'
 import { LiveViewers } from '@/components/LiveViewers'
@@ -63,6 +63,14 @@ export function IslandDetailClient({ island, allBeaches, allRestaurants, allHote
   const [restSeaViewFilter, setRestSeaViewFilter] = useState(false)
   const [restVeganFilter, setRestVeganFilter] = useState(false)
   const [restOutdoorFilter, setRestOutdoorFilter] = useState(false)
+
+  const [hotelMinStarFilter, setHotelMinStarFilter] = useState(0)
+  const [hotelWifiFilter, setHotelWifiFilter] = useState(false)
+  const [hotelPoolFilter, setHotelPoolFilter] = useState(false)
+  const [hotelBreakfastFilter, setHotelBreakfastFilter] = useState(false)
+  const [hotelBeachfrontFilter, setHotelBeachfrontFilter] = useState(false)
+
+  const [attractionCategoryFilter, setAttractionCategoryFilter] = useState<Attraction['category'] | 'all'>('all')
 
   const [weather, setWeather] = useState<{
     temp: number
@@ -182,6 +190,20 @@ export function IslandDetailClient({ island, allBeaches, allRestaurants, allHote
       return true
     })
     .sort((a, b) => RESTAURANT_PRICE_ORDER[a.price_level] - RESTAURANT_PRICE_ORDER[b.price_level])
+
+  const filteredHotels = allHotels.filter(hotel => {
+    if (hotelMinStarFilter > 0 && (!hotel.star_rating || hotel.star_rating < hotelMinStarFilter)) return false
+    if (hotelWifiFilter && !hotel.has_wifi) return false
+    if (hotelPoolFilter && !hotel.has_pool) return false
+    if (hotelBreakfastFilter && !hotel.has_breakfast) return false
+    if (hotelBeachfrontFilter && !hotel.beachfront) return false
+    return true
+  })
+
+  const filteredAttractions = allAttractions.filter(attraction => {
+    if (attractionCategoryFilter !== 'all' && attraction.category !== attractionCategoryFilter) return false
+    return true
+  })
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-neutral-950 transition-colors duration-300">
@@ -480,9 +502,53 @@ export function IslandDetailClient({ island, allBeaches, allRestaurants, allHote
                       <CarSelector carId={carId} onChange={setCarId} />
                     </div>
                   )}
-                  {allHotels.length > 0 ? (
+
+                  {allHotels.length > 0 && (
+                    <div className="bg-white dark:bg-neutral-900 p-5 rounded-2xl border border-slate-100 dark:border-neutral-900 shadow-sm mb-6">
+                      <h4 className="text-xs font-bold text-neutral-400 dark:text-neutral-500 uppercase tracking-wider mb-3">Otel Filtreleri</h4>
+                      <div className="flex gap-2 flex-wrap mb-4">
+                        {[0, 3, 4, 5].map(stars => (
+                          <button
+                            key={stars}
+                            onClick={() => setHotelMinStarFilter(stars)}
+                            className={`rounded-lg px-3 py-1.5 text-xs font-medium border transition-all ${
+                              hotelMinStarFilter === stars
+                                ? 'bg-sky-50 dark:bg-sky-950/30 text-sky-600 border-sky-300'
+                                : 'bg-slate-50 dark:bg-neutral-950 border-slate-200 dark:border-neutral-800 text-neutral-600 dark:text-neutral-400'
+                            }`}
+                          >
+                            {stars === 0 ? 'Tüm Yıldızlar' : `${stars}+ ★`}
+                          </button>
+                        ))}
+                      </div>
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 border-t border-slate-100 dark:border-neutral-800 pt-4">
+                        <label className="flex items-center gap-2 text-xs text-neutral-600 dark:text-neutral-400 cursor-pointer">
+                          <input type="checkbox" checked={hotelWifiFilter} onChange={(e) => setHotelWifiFilter(e.target.checked)}
+                            className="rounded border-slate-300 text-sky-600 focus:ring-sky-500 h-4 w-4" />
+                          📶 Wifi
+                        </label>
+                        <label className="flex items-center gap-2 text-xs text-neutral-600 dark:text-neutral-400 cursor-pointer">
+                          <input type="checkbox" checked={hotelPoolFilter} onChange={(e) => setHotelPoolFilter(e.target.checked)}
+                            className="rounded border-slate-300 text-sky-600 focus:ring-sky-500 h-4 w-4" />
+                          🏊 Havuz
+                        </label>
+                        <label className="flex items-center gap-2 text-xs text-neutral-600 dark:text-neutral-400 cursor-pointer">
+                          <input type="checkbox" checked={hotelBreakfastFilter} onChange={(e) => setHotelBreakfastFilter(e.target.checked)}
+                            className="rounded border-slate-300 text-sky-600 focus:ring-sky-500 h-4 w-4" />
+                          🍳 Kahvaltı Dahil
+                        </label>
+                        <label className="flex items-center gap-2 text-xs text-neutral-600 dark:text-neutral-400 cursor-pointer">
+                          <input type="checkbox" checked={hotelBeachfrontFilter} onChange={(e) => setHotelBeachfrontFilter(e.target.checked)}
+                            className="rounded border-slate-300 text-sky-600 focus:ring-sky-500 h-4 w-4" />
+                          🏖️ Plaja Sıfır
+                        </label>
+                      </div>
+                    </div>
+                  )}
+
+                  {filteredHotels.length > 0 ? (
                     <div className="grid gap-6 sm:grid-cols-2">
-                      {allHotels.map(hotel => (
+                      {filteredHotels.map(hotel => (
                         <HotelCard key={hotel.id} hotel={hotel} islandLat={island.latitude} islandLng={island.longitude} carId={carId} />
                       ))}
                     </div>
@@ -499,9 +565,36 @@ export function IslandDetailClient({ island, allBeaches, allRestaurants, allHote
 
               {activeTab === 'attractions' && (
                 <div>
-                  {allAttractions.length > 0 ? (
+                  {allAttractions.length > 0 && (
+                    <div className="flex gap-2 flex-wrap mb-6">
+                      <button
+                        onClick={() => setAttractionCategoryFilter('all')}
+                        className={`rounded-lg px-3 py-1.5 text-xs font-medium border transition-all ${
+                          attractionCategoryFilter === 'all'
+                            ? 'bg-sky-50 dark:bg-sky-950/30 text-sky-600 border-sky-300'
+                            : 'bg-slate-50 dark:bg-neutral-950 border-slate-200 dark:border-neutral-800 text-neutral-600 dark:text-neutral-400'
+                        }`}
+                      >
+                        Tümü
+                      </button>
+                      {ATTRACTION_CATEGORIES.map(cat => (
+                        <button
+                          key={cat}
+                          onClick={() => setAttractionCategoryFilter(cat)}
+                          className={`rounded-lg px-3 py-1.5 text-xs font-medium border transition-all ${
+                            attractionCategoryFilter === cat
+                              ? 'bg-sky-50 dark:bg-sky-950/30 text-sky-600 border-sky-300'
+                              : 'bg-slate-50 dark:bg-neutral-950 border-slate-200 dark:border-neutral-800 text-neutral-600 dark:text-neutral-400'
+                          }`}
+                        >
+                          {ATTRACTION_CATEGORY_LABELS[locale][cat]}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                  {filteredAttractions.length > 0 ? (
                     <div className="grid gap-6 sm:grid-cols-2">
-                      {allAttractions.map(attraction => (
+                      {filteredAttractions.map(attraction => (
                         <AttractionCard key={attraction.id} attraction={attraction} />
                       ))}
                     </div>

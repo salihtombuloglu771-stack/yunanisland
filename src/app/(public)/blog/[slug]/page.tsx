@@ -32,11 +32,13 @@ export default async function ArticlePage({ params }: PageProps) {
   const { slug } = await params
   const supabase = await createClient()
 
+  // is_published filtresi burada değil RLS'e bırakıldı ("Public can view
+  // published articles": is_published or is_admin()) — böylece admin,
+  // yayınlamadan önce kendi hesabıyla önizleme yapabiliyor.
   const { data: article } = await supabase
     .from('articles')
     .select('id, title, content, published_at, author_name, categories(name)')
     .eq('slug', slug)
-    .eq('is_published', true)
     .maybeSingle()
 
   const category = article && (Array.isArray(article.categories) ? article.categories[0] : article.categories)

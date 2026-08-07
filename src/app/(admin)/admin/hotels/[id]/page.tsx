@@ -34,6 +34,11 @@ export default async function EditHotelPage({ params }: PageProps) {
           latitude: hotel.latitude?.toString() ?? '',
           longitude: hotel.longitude?.toString() ?? '',
           cover_image_url: hotel.cover_image_url ?? '',
+          star_rating: hotel.star_rating?.toString() ?? '',
+          has_wifi: hotel.has_wifi ?? false,
+          has_pool: hotel.has_pool ?? false,
+          has_breakfast: hotel.has_breakfast ?? false,
+          beachfront: hotel.beachfront ?? false,
         }}
       />
     </main>

@@ -5,6 +5,7 @@ import { createClient } from '@/lib/supabase/client'
 import { useLanguage } from '@/lib/i18n/LanguageProvider'
 
 type EntityType = 'island' | 'beach' | 'restaurant' | 'hotel' | 'attraction'
+type SortOption = 'newest' | 'highest' | 'lowest'
 
 interface Review {
   id: string
@@ -16,36 +17,78 @@ interface Review {
   users: { full_name: string | null } | null
 }
 
+const PAGE_SIZE = 10
+
 export function ReviewSection({ entityType, entityId }: { entityType: EntityType; entityId: string }) {
   const { locale } = useLanguage()
   const [reviews, setReviews] = useState<Review[]>([])
+  const [totalCount, setTotalCount] = useState(0)
+  const [averageRating, setAverageRating] = useState<number | null>(null)
+  const [sort, setSort] = useState<SortOption>('newest')
   const [userId, setUserId] = useState<string | null>(null)
   const [rating, setRating] = useState(5)
   const [comment, setComment] = useState('')
   const [imageUrl, setImageUrl] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const [loading, setLoading] = useState(true)
+  const [loadingMore, setLoadingMore] = useState(false)
+
+  const orderBy: Record<SortOption, { column: string; ascending: boolean }> = {
+    newest: { column: 'created_at', ascending: false },
+    highest: { column: 'rating', ascending: false },
+    lowest: { column: 'rating', ascending: true },
+  }
+
+  const loadPage = async (from: number) => {
+    const supabase = createClient()
+    const { column, ascending } = orderBy[sort]
+    const { data, count } = await supabase
+      .from('reviews')
+      .select('id, rating, comment, image_url, created_at, user_id, users(full_name)', { count: 'exact' })
+      .eq('entity_type', entityType)
+      .eq('entity_id', entityId)
+      .order(column, { ascending })
+      .range(from, from + PAGE_SIZE - 1)
+
+    if (from === 0) {
+      setReviews((data as unknown as Review[]) ?? [])
+    } else {
+      setReviews((prev) => [...prev, ...((data as unknown as Review[]) ?? [])])
+    }
+    setTotalCount(count ?? 0)
+  }
+
+  const loadAverage = async () => {
+    const supabase = createClient()
+    const { data } = await supabase
+      .from('reviews')
+      .select('rating')
+      .eq('entity_type', entityType)
+      .eq('entity_id', entityId)
+
+    const ratings = data ?? []
+    setAverageRating(ratings.length ? ratings.reduce((sum, r) => sum + r.rating, 0) / ratings.length : null)
+  }
 
   const load = async () => {
     const supabase = createClient()
     const { data: { user } } = await supabase.auth.getUser()
     setUserId(user?.id ?? null)
-
-    const { data } = await supabase
-      .from('reviews')
-      .select('id, rating, comment, image_url, created_at, user_id, users(full_name)')
-      .eq('entity_type', entityType)
-      .eq('entity_id', entityId)
-      .order('created_at', { ascending: false })
-
-    setReviews((data as unknown as Review[]) ?? [])
+    await Promise.all([loadPage(0), loadAverage()])
     setLoading(false)
   }
 
+  const handleLoadMore = async () => {
+    setLoadingMore(true)
+    await loadPage(reviews.length)
+    setLoadingMore(false)
+  }
+
   useEffect(() => {
+    setLoading(true)
     load()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [entityType, entityId])
+  }, [entityType, entityId, sort])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -69,10 +112,6 @@ export function ReviewSection({ entityType, entityId }: { entityType: EntityType
     await load()
   }
 
-  const average = reviews.length
-    ? (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1)
-    : null
-
   const t = {
     title: locale === 'en' ? 'Reviews & Ratings' : locale === 'el' ? 'Κριτικές & Βαθμολογίες' : 'Yorumlar & Değerlendirmeler',
     star: locale === 'en' ? 'star' : locale === 'el' ? 'αστέρι' : 'yıldız',
@@ -82,14 +121,30 @@ export function ReviewSection({ entityType, entityId }: { entityType: EntityType
     submit: locale === 'en' ? 'Post Review' : locale === 'el' ? 'Δημοσίευση Κριτικής' : 'Yorum Yap',
     empty: locale === 'en' ? 'No reviews yet. Be the first to write one!' : locale === 'el' ? 'Δεν υπάρχουν ακόμη κριτικές. Γράψτε την πρώτη!' : 'Henüz yorum yapılmamış. İlk yorumu sen yaz!',
     photoAlt: locale === 'en' ? 'Review photo' : locale === 'el' ? 'Φωτογραφία κριτικής' : 'Yorum fotoğrafı',
+    sortNewest: locale === 'en' ? 'Newest' : locale === 'el' ? 'Νεότερα' : 'En Yeni',
+    sortHighest: locale === 'en' ? 'Highest rated' : locale === 'el' ? 'Υψηλότερη βαθμολογία' : 'En Yüksek Puan',
+    sortLowest: locale === 'en' ? 'Lowest rated' : locale === 'el' ? 'Χαμηλότερη βαθμολογία' : 'En Düşük Puan',
+    loadMore: locale === 'en' ? 'Load more reviews' : locale === 'el' ? 'Φόρτωση περισσότερων κριτικών' : 'Daha Fazla Yorum Göster',
+    loadingMore: locale === 'en' ? 'Loading...' : locale === 'el' ? 'Φόρτωση...' : 'Yükleniyor...',
   }
 
   return (
     <div className="mt-8">
-      <div className="flex items-center gap-3 mb-4">
+      <div className="flex items-center gap-3 mb-4 flex-wrap">
         <h3 className="text-lg font-bold text-neutral-900 dark:text-white">{t.title}</h3>
-        {average && (
-          <span className="text-sm font-semibold text-amber-500">⭐ {average} ({reviews.length})</span>
+        {averageRating !== null && (
+          <span className="text-sm font-semibold text-amber-500">⭐ {averageRating.toFixed(1)} ({totalCount})</span>
+        )}
+        {totalCount > 1 && (
+          <select
+            value={sort}
+            onChange={(e) => setSort(e.target.value as SortOption)}
+            className="ml-auto rounded-lg border border-slate-200 dark:border-neutral-800 bg-slate-50 dark:bg-neutral-950 py-1.5 px-3 text-xs outline-none focus:border-sky-500"
+          >
+            <option value="newest">{t.sortNewest}</option>
+            <option value="highest">{t.sortHighest}</option>
+            <option value="lowest">{t.sortLowest}</option>
+          </select>
         )}
       </div>
 
@@ -172,6 +227,16 @@ export function ReviewSection({ entityType, entityId }: { entityType: EntityType
           </div>
         ))}
       </div>
+
+      {reviews.length < totalCount && (
+        <button
+          onClick={handleLoadMore}
+          disabled={loadingMore}
+          className="mt-4 w-full rounded-xl border border-slate-200 dark:border-neutral-800 py-2.5 text-sm font-semibold text-neutral-600 dark:text-neutral-400 hover:bg-slate-50 dark:hover:bg-neutral-900 transition-colors disabled:opacity-50"
+        >
+          {loadingMore ? t.loadingMore : t.loadMore}
+        </button>
+      )}
     </div>
   )
 }

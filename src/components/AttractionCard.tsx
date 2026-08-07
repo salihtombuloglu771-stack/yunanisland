@@ -22,7 +22,11 @@ export interface Attraction {
   updated_at?: string
 }
 
-const CATEGORY_LABELS: Record<'tr' | 'en' | 'el', Record<Attraction['category'], string>> = {
+export const ATTRACTION_CATEGORIES: Attraction['category'][] = [
+  'archaeological', 'viewpoint', 'museum', 'church', 'nature', 'village', 'castle', 'landmark',
+]
+
+export const CATEGORY_LABELS: Record<'tr' | 'en' | 'el', Record<Attraction['category'], string>> = {
   tr: {
     archaeological: '🏛️ Antik Kalıntı', viewpoint: '🌅 Manzara Noktası', museum: '🖼️ Müze',
     church: '⛪ Kilise', nature: '🌿 Doğa', village: '🏘️ Köy', castle: '🏰 Kale', landmark: '📍 Simge Yapı',
