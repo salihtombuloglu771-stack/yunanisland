@@ -4,6 +4,7 @@ import { useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Header } from '@/components/Header'
+import { SiteFooter } from '@/components/SiteFooter'
 import { addRecentlyViewed } from '@/lib/useRecentlyViewed'
 import { FavoriteButton } from '@/components/FavoriteButton'
 import { ShareButtons } from '@/components/ShareButtons'
@@ -141,6 +142,7 @@ export function AttractionDetailClient({ attraction, island, media }: Attraction
           <ReportIssue entityType="attraction" entityId={attraction.id} />
         </div>
       </main>
+      <SiteFooter />
     </div>
   )
 }

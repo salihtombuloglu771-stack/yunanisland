@@ -1,4 +1,5 @@
 import { Header } from '@/components/Header'
+import { SiteFooter } from '@/components/SiteFooter'
 import { createClient } from '@/lib/supabase/server'
 import { StoryForm } from '@/components/StoryForm'
 import { NewStoryIntro } from '@/components/NewStoryIntro'
@@ -20,6 +21,7 @@ export default async function NewTravelStoryPage() {
 
         <StoryForm islands={islands ?? []} />
       </main>
+      <SiteFooter />
     </div>
   )
 }

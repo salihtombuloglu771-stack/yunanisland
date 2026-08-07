@@ -1,4 +1,5 @@
 import { Header } from '@/components/Header'
+import { SiteFooter } from '@/components/SiteFooter'
 import { PageHeroI18n } from '@/components/PageHeroI18n'
 import { CompareClient } from '@/components/CompareClient'
 import { createClient } from '@/lib/supabase/server'
@@ -33,6 +34,7 @@ export default async function ComparePage() {
       <main className="mx-auto max-w-5xl px-6 py-12">
         <CompareClient options={islands ?? []} />
       </main>
+      <SiteFooter />
     </div>
   )
 }

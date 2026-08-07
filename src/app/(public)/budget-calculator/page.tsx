@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from 'react'
 import { Header } from '@/components/Header'
+import { SiteFooter } from '@/components/SiteFooter'
 import { PageHero } from '@/components/PageHero'
 import { useLanguage } from '@/lib/i18n/LanguageProvider'
 
@@ -214,6 +215,7 @@ export default function BudgetCalculatorPage() {
           </p>
         </div>
       </main>
+      <SiteFooter />
     </div>
   )
 }

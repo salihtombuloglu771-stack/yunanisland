@@ -16,6 +16,9 @@ export function SiteFooter() {
         <p className="text-sm text-neutral-500 dark:text-neutral-400">
           &copy; 2026 Yunanisland. {t('footer.rights')}
         </p>
+        <p className="text-xs text-neutral-400 dark:text-neutral-500 max-w-2xl mx-auto">
+          {t('footer.license')}
+        </p>
         <div className="flex items-center justify-center gap-4">
           <Link href="/hakkimizda" className="inline-block text-xs text-neutral-400 hover:text-sky-600 dark:hover:text-sky-400 hover:underline">
             Hakkımızda

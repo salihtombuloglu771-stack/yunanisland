@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { Header } from '@/components/Header'
+import { SiteFooter } from '@/components/SiteFooter'
 import { PageHero } from '@/components/PageHero'
 import { useLocalStorageState } from '@/lib/useLocalStorageState'
 import { useLanguage } from '@/lib/i18n/LanguageProvider'
@@ -170,6 +171,7 @@ export default function TripToolsPage() {
         <VacationCountdown />
         <TravelChecklist />
       </main>
+      <SiteFooter />
     </div>
   )
 }

@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { Header } from '@/components/Header'
+import { SiteFooter } from '@/components/SiteFooter'
 import { MfaEnrollment } from '@/components/MfaEnrollment'
 import { useLanguage } from '@/lib/i18n/LanguageProvider'
 
@@ -214,6 +215,7 @@ export function AccountClient({ displayName, badges, storiesCount, notes, island
           )}
         </section>
       </main>
+      <SiteFooter />
     </div>
   )
 }

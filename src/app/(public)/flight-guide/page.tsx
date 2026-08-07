@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { Header } from '@/components/Header'
 import { PageHero } from '@/components/PageHero'
+import { SiteFooter } from '@/components/SiteFooter'
 import { useLanguage } from '@/lib/i18n/LanguageProvider'
 
 const ORIGIN_AIRPORTS = [
@@ -161,13 +162,7 @@ export default function FlightGuidePage() {
         </form>
       </main>
 
-      <footer className="border-t border-slate-100 dark:border-neutral-900 bg-white dark:bg-neutral-950 py-8 mt-24">
-        <div className="mx-auto max-w-7xl px-6 text-center">
-          <p className="text-sm text-neutral-500 dark:text-neutral-400">
-            &copy; 2026 Yunanisland. Tüm hakları saklıdır.
-          </p>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   )
 }

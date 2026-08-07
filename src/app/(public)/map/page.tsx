@@ -1,4 +1,5 @@
 import { Header } from '@/components/Header'
+import { SiteFooter } from '@/components/SiteFooter'
 import { MapPageClient } from '@/components/MapPageClient'
 import { createClient } from '@/lib/supabase/server'
 import type { MapPoint } from '@/components/IslandMap'
@@ -51,6 +52,7 @@ export default async function MapPage() {
       <main className="mx-auto max-w-6xl px-6 py-12">
         <MapPageClient points={points} />
       </main>
+      <SiteFooter />
     </div>
   )
 }

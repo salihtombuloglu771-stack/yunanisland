@@ -1,4 +1,5 @@
 import { Header } from '@/components/Header'
+import { SiteFooter } from '@/components/SiteFooter'
 import { PageHeroI18n } from '@/components/PageHeroI18n'
 import { EventsList } from '@/components/EventsList'
 import { createClient } from '@/lib/supabase/server'
@@ -40,6 +41,7 @@ export default async function EventsPage() {
       <main className="mx-auto max-w-3xl px-6 py-12">
         <EventsList events={events ?? []} />
       </main>
+      <SiteFooter />
     </div>
   )
 }
