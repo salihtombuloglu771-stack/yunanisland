@@ -7,7 +7,7 @@ import { useLanguage } from '@/lib/i18n/LanguageProvider'
 const CONTENT = {
   tr: {
     title: 'Hakkımızda',
-    intro: 'Yunanisland, T.C. Kültür ve Turizm Bakanlığı\'ndan A Grubu Seyahat Acentası belgesine sahip Adema Turizm Dış Ticaret Limited Şirketi (Pars Safari Turizm) çatısı altında hazırlanan bir gezi rehberi projesidir. Amacımız, Yunan Adaları\'nı gezmeyi planlayan Türkçe konuşan gezginler için tarafsız, güncel ve gerçek bilgiye dayalı bir kaynak oluşturmak.',
+    intro: 'Yunanisland, Türkiye Cumhuriyeti\'nde TÜRSAB\'dan (Türkiye Seyahat Acenteleri Birliği) A Grubu Seyahat Acentası belgesine sahip Adema Turizm Dış Ticaret Limited Şirketi (Pars Safari Turizm) çatısı altında hazırlanan bir gezi rehberi projesidir. Amacımız, Yunan Adaları\'nı gezmeyi planlayan Türkçe konuşan gezginler için tarafsız, güncel ve gerçek bilgiye dayalı bir kaynak oluşturmak.',
     whatTitle: 'Sitede Neler Var?',
     whatItems: [
       'Yunan adaları, plajları, restoranları, otelleri ve gezilecek yerleri hakkında detaylı, gerçek bilgi',
@@ -20,7 +20,7 @@ const CONTENT = {
     legalItems: [
       { label: 'Şirket', value: 'Adema Turizm Dış Ticaret Limited Şirketi' },
       { label: 'Marka', value: 'Pars Safari Turizm' },
-      { label: 'Belge Türü', value: 'A Grubu Seyahat Acentası İşletme Belgesi' },
+      { label: 'Belge Türü', value: 'TÜRSAB A Grubu Seyahat Acentası İşletme Belgesi' },
       { label: 'Belge No', value: '13637' },
       { label: 'Merkezi', value: 'Burdur' },
     ],
@@ -33,7 +33,7 @@ const CONTENT = {
   },
   en: {
     title: 'About Us',
-    intro: 'Yunanisland is a travel guide project run under Adema Turizm Dış Ticaret Limited Şirketi (Pars Safari Turizm), a Group A licensed travel agency registered with the Turkish Ministry of Culture and Tourism. Our goal is to provide an unbiased, up-to-date resource grounded in real information for Turkish-speaking travelers planning a trip to the Greek Islands.',
+    intro: 'Yunanisland is a travel guide project run under Adema Turizm Dış Ticaret Limited Şirketi (Pars Safari Turizm), a Group A licensed travel agency registered with TÜRSAB (the Association of Turkish Travel Agencies), Republic of Turkey. Our goal is to provide an unbiased, up-to-date resource grounded in real information for Turkish-speaking travelers planning a trip to the Greek Islands.',
     whatTitle: 'What\'s on the Site?',
     whatItems: [
       'Detailed, real information on Greek islands, beaches, restaurants, hotels and attractions',
@@ -46,7 +46,7 @@ const CONTENT = {
     legalItems: [
       { label: 'Company', value: 'Adema Turizm Dış Ticaret Limited Şirketi' },
       { label: 'Brand', value: 'Pars Safari Turizm' },
-      { label: 'License Type', value: 'Group A Travel Agency License' },
+      { label: 'License Type', value: 'TÜRSAB Group A Travel Agency License' },
       { label: 'License No.', value: '13637' },
       { label: 'Headquarters', value: 'Burdur, Turkey' },
     ],
@@ -59,7 +59,7 @@ const CONTENT = {
   },
   el: {
     title: 'Σχετικά με Εμάς',
-    intro: 'Το Yunanisland είναι ένα έργο ταξιδιωτικού οδηγού που λειτουργεί υπό την Adema Turizm Dış Ticaret Limited Şirketi (Pars Safari Turizm), ένα αδειοδοτημένο ταξιδιωτικό γραφείο Ομάδας Α, καταχωρημένο στο Τουρκικό Υπουργείο Πολιτισμού και Τουρισμού. Στόχος μας είναι μια αμερόληπτη, ενημερωμένη πηγή βασισμένη σε πραγματικές πληροφορίες για τουρκόφωνους ταξιδιώτες που σχεδιάζουν ταξίδι στα Ελληνικά Νησιά.',
+    intro: 'Το Yunanisland είναι ένα έργο ταξιδιωτικού οδηγού που λειτουργεί υπό την Adema Turizm Dış Ticaret Limited Şirketi (Pars Safari Turizm), ένα αδειοδοτημένο ταξιδιωτικό γραφείο Ομάδας Α, καταχωρημένο στο TÜRSAB (Σύνδεσμος Τουρκικών Ταξιδιωτικών Γραφείων), Δημοκρατία της Τουρκίας. Στόχος μας είναι μια αμερόληπτη, ενημερωμένη πηγή βασισμένη σε πραγματικές πληροφορίες για τουρκόφωνους ταξιδιώτες που σχεδιάζουν ταξίδι στα Ελληνικά Νησιά.',
     whatTitle: 'Τι Περιλαμβάνει η Ιστοσελίδα;',
     whatItems: [
       'Λεπτομερείς, πραγματικές πληροφορίες για ελληνικά νησιά, παραλίες, εστιατόρια, ξενοδοχεία και αξιοθέατα',
@@ -72,7 +72,7 @@ const CONTENT = {
     legalItems: [
       { label: 'Εταιρεία', value: 'Adema Turizm Dış Ticaret Limited Şirketi' },
       { label: 'Εμπορικό Σήμα', value: 'Pars Safari Turizm' },
-      { label: 'Τύπος Άδειας', value: 'Άδεια Ταξιδιωτικού Γραφείου Ομάδας Α' },
+      { label: 'Τύπος Άδειας', value: 'TÜRSAB Άδεια Ταξιδιωτικού Γραφείου Ομάδας Α' },
       { label: 'Αρ. Άδειας', value: '13637' },
       { label: 'Έδρα', value: 'Burdur, Τουρκία' },
     ],

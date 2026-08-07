@@ -25,7 +25,7 @@ export const dictionary = {
     'home.subtitle': 'Yunan Adaları\'nın saklı koyları, eşsiz plajları, en özel restoranları ve feribot rotalarıyla dolu en kapsamlı gezi planlayıcınız.',
     'home.destinations': 'Popüler Destinasyonlar',
     'footer.rights': 'Tüm hakları saklıdır.',
-    'footer.license': 'Adema Turizm Dış Ticaret Ltd. Şti. (Pars Safari Turizm) — T.C. Kültür ve Turizm Bakanlığı A Grubu Seyahat Acentası, Belge No: 13637',
+    'footer.license': 'Adema Turizm Dış Ticaret Ltd. Şti. (Pars Safari Turizm) — Türkiye Cumhuriyeti, TÜRSAB A Grubu Seyahat Acentası, Belge No: 13637',
   },
   en: {
     'nav.home': 'Home',
@@ -51,7 +51,7 @@ export const dictionary = {
     'home.subtitle': 'Your most comprehensive travel planner for the Greek Islands\' hidden coves, unique beaches, finest restaurants, and ferry routes.',
     'home.destinations': 'Popular Destinations',
     'footer.rights': 'All rights reserved.',
-    'footer.license': 'Adema Turizm Dış Ticaret Ltd. Şti. (Pars Safari Turizm) — Licensed Group A Travel Agency, Turkish Ministry of Culture and Tourism, License No: 13637',
+    'footer.license': 'Adema Turizm Dış Ticaret Ltd. Şti. (Pars Safari Turizm) — Republic of Turkey, TÜRSAB Group A Travel Agency, License No: 13637',
   },
   el: {
     'nav.home': 'Αρχική',
@@ -77,7 +77,7 @@ export const dictionary = {
     'home.subtitle': 'Ο πιο ολοκληρωμένος σχεδιαστής ταξιδιών για τους κρυμμένους όρμους, τις μοναδικές παραλίες, τα καλύτερα εστιατόρια και τις γραμμές πλοίων των Ελληνικών Νησιών.',
     'home.destinations': 'Δημοφιλείς Προορισμοί',
     'footer.rights': 'Με επιφύλαξη παντός δικαιώματος.',
-    'footer.license': 'Adema Turizm Dış Ticaret Ltd. Şti. (Pars Safari Turizm) — Αδειούχο Ταξιδιωτικό Γραφείο Ομάδας Α, Υπουργείο Πολιτισμού και Τουρισμού Τουρκίας, Αρ. Άδειας: 13637',
+    'footer.license': 'Adema Turizm Dış Ticaret Ltd. Şti. (Pars Safari Turizm) — Δημοκρατία της Τουρκίας, TÜRSAB Ταξιδιωτικό Γραφείο Ομάδας Α, Αρ. Άδειας: 13637',
   },
 } as const satisfies Record<Locale, Record<string, string>>
 
