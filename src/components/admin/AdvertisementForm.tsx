@@ -12,6 +12,7 @@ interface AdFormValues {
   is_active: boolean
   starts_at: string
   ends_at: string
+  priority: number
 }
 
 const EMPTY: AdFormValues = {
@@ -22,6 +23,7 @@ const EMPTY: AdFormValues = {
   is_active: true,
   starts_at: '',
   ends_at: '',
+  priority: 0,
 }
 
 export function AdvertisementForm({ initial }: { initial?: Partial<AdFormValues> & { id: string } }) {
@@ -47,6 +49,7 @@ export function AdvertisementForm({ initial }: { initial?: Partial<AdFormValues>
       is_active: values.is_active,
       starts_at: values.starts_at || null,
       ends_at: values.ends_at || null,
+      priority: values.priority,
     }
 
     const result = initial?.id
@@ -99,6 +102,13 @@ export function AdvertisementForm({ initial }: { initial?: Partial<AdFormValues>
           <option value="homepage">Ana Sayfa</option>
           <option value="blog">Blog</option>
         </select>
+      </div>
+
+      <div>
+        <label className="block text-xs font-bold text-neutral-400 uppercase tracking-wider mb-1.5">Öncelik</label>
+        <input type="number" value={values.priority} onChange={(e) => set('priority', Number(e.target.value))}
+          className="w-full rounded-xl border border-slate-200 dark:border-neutral-800 bg-slate-50 dark:bg-neutral-950 py-2.5 px-4 text-sm outline-none focus:border-sky-500" />
+        <p className="mt-1 text-xs text-neutral-400">Aynı yerleşimde birden fazla aktif reklam varsa, en yüksek öncelikli olan gösterilir.</p>
       </div>
 
       <div className="grid grid-cols-2 gap-4">

@@ -3,7 +3,7 @@ import { createClient } from '@/lib/supabase/server'
 
 export default async function AdminAdvertisementsPage() {
   const supabase = await createClient()
-  const { data: ads } = await supabase.from('advertisements').select('id, title, placement, is_active').order('title')
+  const { data: ads } = await supabase.from('advertisements').select('id, title, placement, is_active, priority').order('priority', { ascending: false })
 
   return (
     <main className="max-w-4xl mx-auto px-6 py-16">
@@ -23,6 +23,7 @@ export default async function AdminAdvertisementsPage() {
             <tr>
               <th className="px-5 py-3">Başlık</th>
               <th className="px-5 py-3">Yerleşim</th>
+              <th className="px-5 py-3">Öncelik</th>
               <th className="px-5 py-3">Durum</th>
               <th className="px-5 py-3"></th>
             </tr>
@@ -32,6 +33,7 @@ export default async function AdminAdvertisementsPage() {
               <tr key={ad.id} className="border-t border-slate-100 dark:border-neutral-800">
                 <td className="px-5 py-3 font-medium text-neutral-800 dark:text-neutral-200">{ad.title}</td>
                 <td className="px-5 py-3 text-neutral-500">{ad.placement}</td>
+                <td className="px-5 py-3 text-neutral-500">{ad.priority}</td>
                 <td className="px-5 py-3">
                   <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${ad.is_active ? 'bg-emerald-500/10 text-emerald-600' : 'bg-neutral-500/10 text-neutral-500'}`}>
                     {ad.is_active ? 'Aktif' : 'Pasif'}

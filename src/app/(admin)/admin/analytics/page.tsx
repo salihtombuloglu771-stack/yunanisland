@@ -25,32 +25,27 @@ export default async function AdminAnalyticsPage() {
   const supabase = await createClient()
   const since = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString()
 
-  const [{ data: views }, { data: searches }, { data: islands }] = await Promise.all([
-    supabase.from('page_views').select('path').gte('created_at', since),
-    supabase.from('search_logs').select('query, results_count').gte('created_at', since),
+  const [
+    { data: topPathsRaw },
+    { data: topQueriesRaw },
+    { data: islands },
+    { count: totalViews },
+    { count: totalSearches },
+  ] = await Promise.all([
+    supabase.rpc('get_page_view_stats', { p_since: since, p_limit: 15 }),
+    supabase.rpc('get_search_query_stats', { p_since: since, p_limit: 15 }),
     supabase.from('islands').select('slug, name'),
+    supabase.from('page_views').select('*', { count: 'exact', head: true }).gte('created_at', since),
+    supabase.from('search_logs').select('*', { count: 'exact', head: true }).gte('created_at', since),
   ])
 
   const islandNames = new Map((islands ?? []).map((i) => [i.slug, i.name]))
 
-  const pathCounts = new Map<string, number>()
-  for (const v of views ?? []) {
-    pathCounts.set(v.path, (pathCounts.get(v.path) ?? 0) + 1)
-  }
-  const topPaths = Array.from(pathCounts.entries())
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 15)
+  const pathStats = (topPathsRaw ?? []) as { path: string; view_count: number }[]
+  const queryStats = (topQueriesRaw ?? []) as { query: string; search_count: number; total_results: number }[]
 
-  const queryCounts = new Map<string, { count: number; totalResults: number }>()
-  for (const s of searches ?? []) {
-    const key = s.query.trim().toLowerCase()
-    if (!key) continue
-    const existing = queryCounts.get(key) ?? { count: 0, totalResults: 0 }
-    queryCounts.set(key, { count: existing.count + 1, totalResults: existing.totalResults + s.results_count })
-  }
-  const topQueries = Array.from(queryCounts.entries())
-    .sort((a, b) => b[1].count - a[1].count)
-    .slice(0, 15)
+  const topPaths = pathStats.map((p) => [p.path, Number(p.view_count)] as const)
+  const topQueries = queryStats.map((q) => [q.query, { count: Number(q.search_count), totalResults: Number(q.total_results) }] as const)
 
   const maxPathCount = topPaths[0]?.[1] ?? 1
   const maxQueryCount = topQueries[0]?.[1].count ?? 1
@@ -66,11 +61,11 @@ export default async function AdminAnalyticsPage() {
 
       <div className="mt-8 grid grid-cols-2 sm:grid-cols-3 gap-4">
         <div className="bg-white dark:bg-neutral-900 p-4 rounded-2xl border border-slate-100 dark:border-neutral-900 shadow-sm">
-          <p className="text-2xl font-extrabold text-neutral-900 dark:text-white">{views?.length ?? 0}</p>
+          <p className="text-2xl font-extrabold text-neutral-900 dark:text-white">{totalViews ?? 0}</p>
           <p className="text-xs text-neutral-500">Sayfa Görüntüleme</p>
         </div>
         <div className="bg-white dark:bg-neutral-900 p-4 rounded-2xl border border-slate-100 dark:border-neutral-900 shadow-sm">
-          <p className="text-2xl font-extrabold text-neutral-900 dark:text-white">{searches?.length ?? 0}</p>
+          <p className="text-2xl font-extrabold text-neutral-900 dark:text-white">{totalSearches ?? 0}</p>
           <p className="text-xs text-neutral-500">Arama Sorgusu</p>
         </div>
         <div className="bg-white dark:bg-neutral-900 p-4 rounded-2xl border border-slate-100 dark:border-neutral-900 shadow-sm">

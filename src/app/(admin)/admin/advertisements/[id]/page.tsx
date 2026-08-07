@@ -26,6 +26,7 @@ export default async function EditAdvertisementPage({ params }: PageProps) {
           is_active: ad.is_active,
           starts_at: ad.starts_at ? ad.starts_at.slice(0, 10) : '',
           ends_at: ad.ends_at ? ad.ends_at.slice(0, 10) : '',
+          priority: ad.priority ?? 0,
         }}
       />
     </main>

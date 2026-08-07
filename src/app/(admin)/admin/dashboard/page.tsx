@@ -4,7 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 export default async function AdminDashboardPage() {
   const supabase = await createClient()
 
-  const [islands, beaches, restaurants, attractions, users, reviews, adInquiries, contactMessages, pendingMedia, newsletterSubscribers, contentReports] = await Promise.all([
+  const [islands, beaches, restaurants, attractions, users, reviews, adInquiries, contactMessages, pendingMedia, newsletterSubscribers, contentReports, travelStories] = await Promise.all([
     supabase.from('islands').select('id', { count: 'exact', head: true }),
     supabase.from('beaches').select('id', { count: 'exact', head: true }),
     supabase.from('restaurants').select('id', { count: 'exact', head: true }),
@@ -16,6 +16,7 @@ export default async function AdminDashboardPage() {
     supabase.from('media').select('id', { count: 'exact', head: true }).eq('status', 'pending'),
     supabase.from('newsletter_subscribers').select('id', { count: 'exact', head: true }),
     supabase.from('content_reports').select('id', { count: 'exact', head: true }).eq('status', 'new'),
+    supabase.from('travel_stories').select('id', { count: 'exact', head: true }),
   ])
 
   const stats = [
@@ -24,7 +25,8 @@ export default async function AdminDashboardPage() {
     { label: 'Restoranlar', count: restaurants.count ?? 0, href: '/admin/restaurants', emoji: '🍽️' },
     { label: 'Gezilecek Yerler', count: attractions.count ?? 0, href: '/admin/attractions', emoji: '📍' },
     { label: 'Kullanıcılar', count: users.count ?? 0, href: '/admin/users', emoji: '👤' },
-    { label: 'Yorumlar', count: reviews.count ?? 0, href: '#', emoji: '⭐' },
+    { label: 'Yorumlar', count: reviews.count ?? 0, href: '/admin/reviews', emoji: '⭐' },
+    { label: 'Gezi Hikayeleri', count: travelStories.count ?? 0, href: '/admin/travel-stories', emoji: '📖' },
     { label: 'Yeni Reklam Talebi', count: adInquiries.count ?? 0, href: '/admin/ad-inquiries', emoji: '📬' },
     { label: 'Yeni İletişim Mesajı', count: contactMessages.count ?? 0, href: '/admin/contact-messages', emoji: '✉️' },
     { label: 'Bekleyen Fotoğraf', count: pendingMedia.count ?? 0, href: '/admin/media-review', emoji: '🖼️' },
