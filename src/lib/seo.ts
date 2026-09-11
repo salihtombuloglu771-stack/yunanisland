@@ -26,7 +26,7 @@ export const RESTAURANT_PRICE_TR: Record<string, string> = {
 
 export const HOTEL_CATEGORY_TR: Record<string, string> = {
   budget: 'ekonomik',
-  'mid-range': 'orta segment',
+  'mid-range': 'orta',
   luxury: 'lüks',
 }
 
