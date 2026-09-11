@@ -4,6 +4,7 @@ import { Header } from '@/components/Header'
 import { JsonLd } from '@/components/JsonLd'
 import { RestaurantDetailClient } from '@/components/RestaurantDetailClient'
 import { createClient } from '@/lib/supabase/server'
+import { ensureMinLength, RESTAURANT_PRICE_TR } from '@/lib/seo'
 
 const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://yunanisland.vercel.app'
 
@@ -14,14 +15,25 @@ interface PageProps {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params
   const supabase = await createClient()
-  const { data: restaurant } = await supabase.from('restaurants').select('name, cuisine, cover_image_url').eq('slug', slug).maybeSingle()
+  const { data: restaurant } = await supabase
+    .from('restaurants')
+    .select('name, cuisine, price_level, sea_view, cover_image_url, islands(name)')
+    .eq('slug', slug)
+    .maybeSingle()
   if (!restaurant) return { title: 'Restoran Bulunamadı — Yunanisland' }
+
+  const islandRel = restaurant.islands as unknown as { name: string } | { name: string }[] | null
+  const islandName = Array.isArray(islandRel) ? islandRel[0]?.name : islandRel?.name
+  const title = islandName ? `${restaurant.name} Restoranı — ${islandName} Adası | Yunanisland` : `${restaurant.name} Restoranı — Yunanisland`
+  const priceLabel = RESTAURANT_PRICE_TR[restaurant.price_level] ?? restaurant.price_level
+  const description = `${islandName ? `${islandName} adasında ` : ''}${restaurant.cuisine ?? 'yerel lezzetler'} sunan ${restaurant.name}, ${priceLabel} fiyat seviyesinde${restaurant.sea_view ? ' ve deniz manzaralı' : ''} bir restoran. Menü, konum ve gezgin yorumları için Yunanisland'ı ziyaret edin.`
+
   return {
-    title: `${restaurant.name} — Yunanisland`,
-    description: restaurant.cuisine ?? undefined,
+    title,
+    description,
     openGraph: {
-      title: `${restaurant.name} — Yunanisland`,
-      description: restaurant.cuisine ?? undefined,
+      title,
+      description,
       images: restaurant.cover_image_url ? [restaurant.cover_image_url] : undefined,
     },
   }

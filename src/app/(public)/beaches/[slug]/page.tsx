@@ -4,6 +4,7 @@ import { Header } from '@/components/Header'
 import { JsonLd } from '@/components/JsonLd'
 import { BeachDetailClient } from '@/components/BeachDetailClient'
 import { createClient } from '@/lib/supabase/server'
+import { ensureMinLength, BEACH_TYPE_TR } from '@/lib/seo'
 
 const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://yunanisland.vercel.app'
 
@@ -14,14 +15,26 @@ interface PageProps {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params
   const supabase = await createClient()
-  const { data: beach } = await supabase.from('beaches').select('name, description, cover_image_url').eq('slug', slug).maybeSingle()
+  const { data: beach } = await supabase
+    .from('beaches')
+    .select('name, description, beach_type, blue_flag, cover_image_url, islands(name)')
+    .eq('slug', slug)
+    .maybeSingle()
   if (!beach) return { title: 'Plaj Bulunamadı — Yunanisland' }
+
+  const islandRel = beach.islands as unknown as { name: string } | { name: string }[] | null
+  const islandName = Array.isArray(islandRel) ? islandRel[0]?.name : islandRel?.name
+  const title = islandName ? `${beach.name} Plajı — ${islandName} Adası | Yunanisland` : `${beach.name} Plajı — Yunanisland`
+  const typeLabel = BEACH_TYPE_TR[beach.beach_type] ?? beach.beach_type
+  const filler = `${islandName ? `${islandName} adasındaki ` : ''}${beach.name}, ${typeLabel} yapısıyla${beach.blue_flag ? ' Mavi Bayrak ödüllü' : ''} bir plaj. Ulaşım, olanaklar ve gezgin yorumları için Yunanisland'ı ziyaret edin.`
+  const description = ensureMinLength(beach.description, filler)
+
   return {
-    title: `${beach.name} — Yunanisland`,
-    description: beach.description ?? undefined,
+    title,
+    description,
     openGraph: {
-      title: `${beach.name} — Yunanisland`,
-      description: beach.description ?? undefined,
+      title,
+      description,
       images: beach.cover_image_url ? [beach.cover_image_url] : undefined,
     },
   }

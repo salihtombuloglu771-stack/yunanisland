@@ -4,6 +4,7 @@ import { Header } from '@/components/Header'
 import { JsonLd } from '@/components/JsonLd'
 import { AttractionDetailClient } from '@/components/AttractionDetailClient'
 import { createClient } from '@/lib/supabase/server'
+import { ensureMinLength, ATTRACTION_CATEGORY_TR } from '@/lib/seo'
 
 const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://yunanisland.vercel.app'
 
@@ -14,14 +15,26 @@ interface PageProps {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params
   const supabase = await createClient()
-  const { data: attraction } = await supabase.from('attractions').select('name, description, cover_image_url').eq('slug', slug).maybeSingle()
+  const { data: attraction } = await supabase
+    .from('attractions')
+    .select('name, description, category, cover_image_url, islands(name)')
+    .eq('slug', slug)
+    .maybeSingle()
   if (!attraction) return { title: 'Yer Bulunamadı — Yunanisland' }
+
+  const islandRel = attraction.islands as unknown as { name: string } | { name: string }[] | null
+  const islandName = Array.isArray(islandRel) ? islandRel[0]?.name : islandRel?.name
+  const title = islandName ? `${attraction.name} — ${islandName} Gezilecek Yerleri | Yunanisland` : `${attraction.name} — Yunanisland`
+  const categoryLabel = ATTRACTION_CATEGORY_TR[attraction.category] ?? attraction.category
+  const filler = `${islandName ? `${islandName} adasındaki ` : ''}${attraction.name}, ziyaretçilerin ilgisini çeken bir ${categoryLabel}. Giriş ücreti, ziyaret saatleri ve gezgin yorumları için Yunanisland'ı ziyaret edin.`
+  const description = ensureMinLength(attraction.description, filler)
+
   return {
-    title: `${attraction.name} — Yunanisland`,
-    description: attraction.description ?? undefined,
+    title,
+    description,
     openGraph: {
-      title: `${attraction.name} — Yunanisland`,
-      description: attraction.description ?? undefined,
+      title,
+      description,
       images: attraction.cover_image_url ? [attraction.cover_image_url] : undefined,
     },
   }

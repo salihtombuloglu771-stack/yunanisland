@@ -4,6 +4,7 @@ import { Header } from '@/components/Header'
 import { JsonLd } from '@/components/JsonLd'
 import { HotelDetailClient } from '@/components/HotelDetailClient'
 import { createClient } from '@/lib/supabase/server'
+import { ensureMinLength, HOTEL_CATEGORY_TR } from '@/lib/seo'
 
 const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://yunanisland.vercel.app'
 
@@ -14,14 +15,26 @@ interface PageProps {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params
   const supabase = await createClient()
-  const { data: hotel } = await supabase.from('hotels').select('name, description, cover_image_url').eq('slug', slug).maybeSingle()
+  const { data: hotel } = await supabase
+    .from('hotels')
+    .select('name, description, category, star_rating, cover_image_url, islands(name)')
+    .eq('slug', slug)
+    .maybeSingle()
   if (!hotel) return { title: 'Otel Bulunamadı — Yunanisland' }
+
+  const islandRel = hotel.islands as unknown as { name: string } | { name: string }[] | null
+  const islandName = Array.isArray(islandRel) ? islandRel[0]?.name : islandRel?.name
+  const title = islandName ? `${hotel.name} Oteli — ${islandName} Adası | Yunanisland` : `${hotel.name} Oteli — Yunanisland`
+  const categoryLabel = HOTEL_CATEGORY_TR[hotel.category] ?? hotel.category
+  const filler = `${islandName ? `${islandName} adasındaki ` : ''}${hotel.name}, ${categoryLabel} segmentte${hotel.star_rating ? ` ${hotel.star_rating} yıldızlı` : ''} bir otel. Fiyatlar, olanaklar ve gezgin yorumları için Yunanisland'ı ziyaret edin.`
+  const description = ensureMinLength(hotel.description, filler)
+
   return {
-    title: `${hotel.name} — Yunanisland`,
-    description: hotel.description ?? undefined,
+    title,
+    description,
     openGraph: {
-      title: `${hotel.name} — Yunanisland`,
-      description: hotel.description ?? undefined,
+      title,
+      description,
       images: hotel.cover_image_url ? [hotel.cover_image_url] : undefined,
     },
   }

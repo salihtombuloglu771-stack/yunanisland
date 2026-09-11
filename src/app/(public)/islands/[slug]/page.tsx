@@ -5,6 +5,7 @@ import { IslandDetailClient } from '@/components/IslandDetailClient'
 import { JsonLd } from '@/components/JsonLd'
 import { createClient } from '@/lib/supabase/server'
 import { getRatingsMap } from '@/lib/ratings'
+import { ensureMinLength } from '@/lib/seo'
 
 const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://yunanisland.vercel.app'
 
@@ -19,12 +20,16 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   if (!island) return { title: 'Ada Bulunamadı — Yunanisland' }
 
+  const title = `${island.name} Adası Gezi Rehberi — Plajlar, Oteller, Restoranlar | Yunanisland`
+  const filler = `${island.name} adası hakkında plajlar, oteller, restoranlar, gezilecek yerler ve pratik seyahat bilgileri için Yunanisland'ı ziyaret edin.`
+  const description = ensureMinLength(island.description, filler)
+
   return {
-    title: `${island.name} — Yunanisland`,
-    description: island.description ?? `${island.name} adası hakkında gezi rehberi.`,
+    title,
+    description,
     openGraph: {
-      title: `${island.name} — Yunanisland`,
-      description: island.description ?? undefined,
+      title,
+      description,
       images: island.cover_image_url ? [island.cover_image_url] : undefined,
     },
   }
