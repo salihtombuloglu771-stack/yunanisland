@@ -14,6 +14,8 @@ import { TripNoteBox } from '@/components/TripNoteBox'
 import { ReportIssue } from '@/components/ReportIssue'
 import { LastUpdated } from '@/components/LastUpdated'
 import { Breadcrumbs } from '@/components/Breadcrumbs'
+import { FaqAccordion } from '@/components/FaqAccordion'
+import { getHotelFaqs } from '@/lib/generatedFaqs'
 import { useLanguage } from '@/lib/i18n/LanguageProvider'
 
 const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://yunanisland.vercel.app'
@@ -119,6 +121,13 @@ export function HotelDetailClient({ hotel, island }: HotelDetailClientProps) {
             {t.seePrices}
           </a>
         )}
+
+        <FaqAccordion
+          faqs={getHotelFaqs(
+            { ...hotel, categoryLabel: CATEGORY_LABELS[locale][hotel.category as keyof typeof CATEGORY_LABELS['tr']] },
+            locale
+          )}
+        />
 
         <ReviewSection entityType="hotel" entityId={hotel.id} />
         <TripNoteBox entityType="hotel" entityId={hotel.id} />

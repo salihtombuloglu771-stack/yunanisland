@@ -5,6 +5,7 @@ import { HotelsIndexClient } from '@/components/HotelsIndexClient'
 export const metadata = {
   title: 'Yunan Adaları\'ndaki Tüm Oteller | Yunanisland',
   description: 'Yunan Adaları\'ndaki tüm otelleri tek yerden keşfedin — yıldıza, kategoriye, wifi/havuz gibi özelliklere göre filtreleyin.',
+  alternates: { canonical: '/hotels' },
 }
 
 export default async function HotelsIndexPage({ searchParams }: { searchParams: Promise<{ q?: string }> }) {

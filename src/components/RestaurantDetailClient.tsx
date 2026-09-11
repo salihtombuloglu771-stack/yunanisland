@@ -15,6 +15,8 @@ import { ReportIssue } from '@/components/ReportIssue'
 import { LastUpdated } from '@/components/LastUpdated'
 import { Breadcrumbs } from '@/components/Breadcrumbs'
 import { TryPrice } from '@/components/TryPrice'
+import { FaqAccordion } from '@/components/FaqAccordion'
+import { getRestaurantFaqs } from '@/lib/generatedFaqs'
 import { useLanguage } from '@/lib/i18n/LanguageProvider'
 
 const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://yunanisland.vercel.app'
@@ -143,6 +145,13 @@ export function RestaurantDetailClient({ restaurant, island }: RestaurantDetailC
           {restaurant.phone && <a href={`tel:${restaurant.phone}`} className="text-sky-600 hover:underline">📞 {restaurant.phone}</a>}
           {restaurant.website && <a href={restaurant.website} target="_blank" rel="noopener noreferrer" className="text-sky-600 hover:underline">{t.website}</a>}
         </div>
+
+        <FaqAccordion
+          faqs={getRestaurantFaqs(
+            { ...restaurant, priceLabel: PRICE_LABELS[locale][restaurant.price_level as keyof typeof PRICE_LABELS['tr']] },
+            locale
+          )}
+        />
 
         <ReviewSection entityType="restaurant" entityId={restaurant.id} />
         <TripNoteBox entityType="restaurant" entityId={restaurant.id} />

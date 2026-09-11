@@ -17,6 +17,8 @@ import { TryPrice } from '@/components/TryPrice'
 import { Breadcrumbs } from '@/components/Breadcrumbs'
 import { Gallery, type MediaItem } from '@/components/Gallery'
 import { PhotoContribution } from '@/components/PhotoContribution'
+import { FaqAccordion } from '@/components/FaqAccordion'
+import { getBeachFaqs } from '@/lib/generatedFaqs'
 import { useLanguage } from '@/lib/i18n/LanguageProvider'
 
 const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://yunanisland.vercel.app'
@@ -160,6 +162,8 @@ export function BeachDetailClient({ beach, island, media }: BeachDetailClientPro
           <Gallery items={media} />
           <PhotoContribution entityType="beach" entityId={beach.id} />
         </div>
+
+        <FaqAccordion faqs={getBeachFaqs(beach, locale)} />
 
         <ReviewSection entityType="beach" entityId={beach.id} />
         <TripNoteBox entityType="beach" entityId={beach.id} />

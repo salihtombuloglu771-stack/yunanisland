@@ -5,6 +5,7 @@ import { BeachesIndexClient } from '@/components/BeachesIndexClient'
 export const metadata = {
   title: 'Yunan Adaları\'ndaki Tüm Plajlar | Yunanisland',
   description: 'Yunan Adaları\'ndaki tüm plajları tek yerden keşfedin — tipe, aile dostu, mavi bayrak gibi özelliklere göre filtreleyin.',
+  alternates: { canonical: '/beaches' },
 }
 
 export default async function BeachesIndexPage({ searchParams }: { searchParams: Promise<{ q?: string }> }) {

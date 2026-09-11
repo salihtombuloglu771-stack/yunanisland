@@ -5,6 +5,7 @@ import { RestaurantsIndexClient } from '@/components/RestaurantsIndexClient'
 export const metadata = {
   title: 'Yunan Adaları\'ndaki Tüm Restoranlar | Yunanisland',
   description: 'Yunan Adaları\'ndaki tüm restoranları tek yerden keşfedin — fiyat seviyesine, deniz manzarasına, vegan seçeneklere göre filtreleyin.',
+  alternates: { canonical: '/restaurants' },
 }
 
 export default async function RestaurantsIndexPage({ searchParams }: { searchParams: Promise<{ q?: string }> }) {

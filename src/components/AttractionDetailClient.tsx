@@ -16,6 +16,8 @@ import { LastUpdated } from '@/components/LastUpdated'
 import { Breadcrumbs } from '@/components/Breadcrumbs'
 import { Gallery, type MediaItem } from '@/components/Gallery'
 import { PhotoContribution } from '@/components/PhotoContribution'
+import { FaqAccordion } from '@/components/FaqAccordion'
+import { getAttractionFaqs } from '@/lib/generatedFaqs'
 import { useLanguage } from '@/lib/i18n/LanguageProvider'
 import type { Attraction } from '@/components/AttractionCard'
 
@@ -134,6 +136,13 @@ export function AttractionDetailClient({ attraction, island, media }: Attraction
           <Gallery items={media} />
           <PhotoContribution entityType="attraction" entityId={attraction.id} />
         </div>
+
+        <FaqAccordion
+          faqs={getAttractionFaqs(
+            { ...attraction, categoryLabel: CATEGORY_LABELS[locale][attraction.category] },
+            locale
+          )}
+        />
 
         <ReviewSection entityType="attraction" entityId={attraction.id} />
         <TripNoteBox entityType="attraction" entityId={attraction.id} />

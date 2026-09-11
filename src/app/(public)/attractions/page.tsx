@@ -5,6 +5,7 @@ import { AttractionsIndexClient } from '@/components/AttractionsIndexClient'
 export const metadata = {
   title: 'Yunan Adaları\'ndaki Tüm Gezilecek Yerler | Yunanisland',
   description: 'Yunan Adaları\'ndaki antik kalıntılar, manzara noktaları, müzeler ve daha fazlasını tek yerden keşfedin.',
+  alternates: { canonical: '/attractions' },
 }
 
 export default async function AttractionsIndexPage({ searchParams }: { searchParams: Promise<{ q?: string }> }) {
