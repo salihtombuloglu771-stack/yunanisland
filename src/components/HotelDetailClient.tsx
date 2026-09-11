@@ -72,7 +72,7 @@ export function HotelDetailClient({ hotel, island }: HotelDetailClientProps) {
       <section className="relative h-[300px] w-full overflow-hidden bg-slate-900">
         {hotel.cover_image_url ? (
           <>
-            <Image src={hotel.cover_image_url} alt={hotel.name} fill priority className="object-cover" />
+            <Image src={hotel.cover_image_url} alt={hotel.name} fill loading="eager" fetchPriority="high" className="object-cover" />
             <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent" />
           </>
         ) : (

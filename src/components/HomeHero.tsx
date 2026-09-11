@@ -12,7 +12,8 @@ export function HomeHero() {
         src="/mykonos.jpg"
         alt=""
         fill
-        priority
+        loading="eager"
+        fetchPriority="high"
         className="object-cover"
       />
       <div className="absolute inset-0 bg-gradient-to-b from-slate-950/60 via-slate-950/45 to-slate-950/90" />

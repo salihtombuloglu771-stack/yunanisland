@@ -3,7 +3,7 @@ import Image from 'next/image'
 export function PageHero({ image, badge, title, subtitle }: { image: string; badge: string; title: string; subtitle: string }) {
   return (
     <section className="relative overflow-hidden bg-slate-900 py-16 text-white dark:bg-black">
-      <Image src={image} alt="" fill priority className="object-cover" />
+      <Image src={image} alt="" fill loading="eager" fetchPriority="high" className="object-cover" />
       <div className="absolute inset-0 bg-gradient-to-b from-slate-950/55 via-slate-950/35 to-slate-950/95" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(14,165,233,0.15),rgba(255,255,255,0))]" />
       <div className="relative mx-auto max-w-4xl px-6 text-center">

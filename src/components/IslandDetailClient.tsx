@@ -227,7 +227,8 @@ export function IslandDetailClient({ island, allBeaches, allRestaurants, allHote
               src={island.cover_image_url}
               alt={island.name}
               fill
-              priority
+              loading="eager"
+              fetchPriority="high"
               className="object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent" />

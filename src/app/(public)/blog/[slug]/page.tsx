@@ -81,7 +81,7 @@ export default async function ArticlePage({ params }: PageProps) {
           <article className="prose max-w-none dark:prose-invert">
             {article.cover_image_url && (
               <div className="relative not-prose h-56 sm:h-72 w-full overflow-hidden rounded-2xl mb-6">
-                <Image src={article.cover_image_url} alt={article.title} fill sizes="(max-width: 768px) 100vw, 768px" className="object-cover" priority />
+                <Image src={article.cover_image_url} alt={article.title} fill sizes="(max-width: 768px) 100vw, 768px" className="object-cover" loading="eager" fetchPriority="high" />
               </div>
             )}
             {category && (

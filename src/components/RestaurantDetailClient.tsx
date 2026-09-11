@@ -90,7 +90,7 @@ export function RestaurantDetailClient({ restaurant, island }: RestaurantDetailC
       <section className="relative h-[300px] w-full overflow-hidden bg-slate-900">
         {restaurant.cover_image_url ? (
           <>
-            <Image src={restaurant.cover_image_url} alt={restaurant.name} fill priority className="object-cover" />
+            <Image src={restaurant.cover_image_url} alt={restaurant.name} fill loading="eager" fetchPriority="high" className="object-cover" />
             <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent" />
           </>
         ) : (
