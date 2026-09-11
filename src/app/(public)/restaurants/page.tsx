@@ -18,7 +18,11 @@ export default async function RestaurantsIndexPage({ searchParams }: { searchPar
     .order('name')
 
   const ratings = await getRatingsMap(supabase, 'restaurant', (restaurants ?? []).map((r) => r.id))
-  const restaurantsWithRatings = (restaurants ?? []).map((r) => ({ ...r, ...ratings[r.id] }))
+
+  const { data: trending } = await supabase.rpc('get_trending_entities', { p_path_prefix: 'restaurants', days_back: 30, limit_count: 3 })
+  const trendingSlugs = new Set((trending ?? []).map((t: { slug: string }) => t.slug))
+
+  const restaurantsWithRatings = (restaurants ?? []).map((r) => ({ ...r, ...ratings[r.id], isTrending: trendingSlugs.has(r.slug) }))
 
   return <RestaurantsIndexClient restaurants={restaurantsWithRatings} initialQuery={q ?? ''} />
 }

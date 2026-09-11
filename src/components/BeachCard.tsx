@@ -10,7 +10,7 @@ import { TryPrice } from '@/components/TryPrice'
 import { useLanguage } from '@/lib/i18n/LanguageProvider'
 
 interface BeachCardProps {
-  beach: Beach & { avgRating?: number | null; reviewCount?: number; description_en?: string | null; description_el?: string | null }
+  beach: Beach & { avgRating?: number | null; reviewCount?: number; description_en?: string | null; description_el?: string | null; isTrending?: boolean }
   islandLat?: number | null
   islandLng?: number | null
   carId?: string
@@ -73,12 +73,19 @@ export function BeachCard({ beach, islandLat, islandLng, carId }: BeachCardProps
           </div>
         )}
 
-        {/* Blue Flag */}
-        {beach.blue_flag && (
-          <div className="absolute top-3 left-3 bg-blue-600/90 backdrop-blur-md px-2.5 py-1 rounded-full text-xs font-bold text-white flex items-center gap-1 shadow-md">
-            {t.blueFlag}
-          </div>
-        )}
+        {/* Trend & Blue Flag */}
+        <div className="absolute top-3 left-3 flex flex-col items-start gap-1.5">
+          {beach.isTrending && (
+            <span className="inline-flex items-center gap-1 rounded-full bg-rose-500 text-white px-2.5 py-1 text-[11px] font-bold shadow-md">
+              🔥 Trend
+            </span>
+          )}
+          {beach.blue_flag && (
+            <div className="bg-blue-600/90 backdrop-blur-md px-2.5 py-1 rounded-full text-xs font-bold text-white flex items-center gap-1 shadow-md">
+              {t.blueFlag}
+            </div>
+          )}
+        </div>
 
         <div className="absolute bottom-3 right-3">
           <FavoriteButton entityType="beach" entityId={beach.id} />

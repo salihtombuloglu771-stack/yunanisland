@@ -18,7 +18,11 @@ export default async function HotelsIndexPage({ searchParams }: { searchParams: 
     .order('name')
 
   const ratings = await getRatingsMap(supabase, 'hotel', (hotels ?? []).map((h) => h.id))
-  const hotelsWithRatings = (hotels ?? []).map((h) => ({ ...h, ...ratings[h.id] }))
+
+  const { data: trending } = await supabase.rpc('get_trending_entities', { p_path_prefix: 'hotels', days_back: 30, limit_count: 3 })
+  const trendingSlugs = new Set((trending ?? []).map((t: { slug: string }) => t.slug))
+
+  const hotelsWithRatings = (hotels ?? []).map((h) => ({ ...h, ...ratings[h.id], isTrending: trendingSlugs.has(h.slug) }))
 
   return <HotelsIndexClient hotels={hotelsWithRatings} initialQuery={q ?? ''} />
 }

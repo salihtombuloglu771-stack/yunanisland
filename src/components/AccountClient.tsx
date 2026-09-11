@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { Header } from '@/components/Header'
 import { SiteFooter } from '@/components/SiteFooter'
 import { MfaEnrollment } from '@/components/MfaEnrollment'
+import { ShareFavoritesCard } from '@/components/ShareFavoritesCard'
 import { useLanguage } from '@/lib/i18n/LanguageProvider'
 
 export interface BadgeState {
@@ -35,6 +36,7 @@ interface AccountClientProps {
   islandFavorites: FavoriteItem[]
   beachFavorites: FavoriteItem[]
   restaurantFavorites: FavoriteItem[]
+  shareToken: string | null
 }
 
 const BADGE_LABELS: Record<string, { tr: { label: string; desc: string }; en: { label: string; desc: string }; el: { label: string; desc: string } }> = {
@@ -70,7 +72,7 @@ const BADGE_LABELS: Record<string, { tr: { label: string; desc: string }; en: { 
   },
 }
 
-export function AccountClient({ displayName, badges, storiesCount, notes, islandFavorites, beachFavorites, restaurantFavorites }: AccountClientProps) {
+export function AccountClient({ displayName, badges, storiesCount, notes, islandFavorites, beachFavorites, restaurantFavorites, shareToken }: AccountClientProps) {
   const { locale } = useLanguage()
 
   const t = {
@@ -168,6 +170,10 @@ export function AccountClient({ displayName, badges, storiesCount, notes, island
           ) : (
             <p className="text-sm text-neutral-500">{t.noTripNotes}</p>
           )}
+        </section>
+
+        <section className="mt-10">
+          <ShareFavoritesCard initialToken={shareToken} />
         </section>
 
         <section className="mt-10">

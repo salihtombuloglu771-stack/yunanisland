@@ -8,7 +8,7 @@ import { TryPrice } from '@/components/TryPrice'
 import { useLanguage } from '@/lib/i18n/LanguageProvider'
 
 interface RestaurantCardProps {
-  restaurant: Restaurant & { avgRating?: number | null; reviewCount?: number; cuisine_en?: string | null; cuisine_el?: string | null }
+  restaurant: Restaurant & { avgRating?: number | null; reviewCount?: number; cuisine_en?: string | null; cuisine_el?: string | null; isTrending?: boolean }
 }
 
 const PRICE_LEVEL_LABELS = {
@@ -57,9 +57,16 @@ export function RestaurantCard({ restaurant }: RestaurantCardProps) {
         {/* Başlık ve Fiyat Seviyesi */}
         <div className="flex items-start justify-between gap-4">
           <div>
-            <span className="text-xs font-semibold uppercase tracking-wider text-sky-600 dark:text-sky-400">
-              {cuisine || t.restaurant}
-            </span>
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-semibold uppercase tracking-wider text-sky-600 dark:text-sky-400">
+                {cuisine || t.restaurant}
+              </span>
+              {restaurant.isTrending && (
+                <span className="inline-flex items-center gap-1 rounded-full bg-rose-500 text-white px-2 py-0.5 text-[10px] font-bold shadow-sm">
+                  🔥 Trend
+                </span>
+              )}
+            </div>
             <h3 className="text-lg font-bold text-neutral-900 dark:text-white mt-1 group-hover:text-sky-600 dark:group-hover:text-sky-400 transition-colors">
               {restaurant.name}
             </h3>

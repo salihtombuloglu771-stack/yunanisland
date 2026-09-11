@@ -28,6 +28,7 @@ export interface Hotel {
   has_pool?: boolean
   has_breakfast?: boolean
   beachfront?: boolean
+  isTrending?: boolean
 }
 
 const CATEGORY_LABELS = {
@@ -82,6 +83,13 @@ export function HotelCard({ hotel, islandLat, islandLng, carId }: HotelCardProps
         ) : (
           <div className="flex h-full w-full items-center justify-center text-neutral-400 text-3xl">
             🏨
+          </div>
+        )}
+        {hotel.isTrending && (
+          <div className="absolute top-3 left-3">
+            <span className="inline-flex items-center gap-1 rounded-full bg-rose-500 text-white px-2.5 py-1 text-[11px] font-bold shadow-md">
+              🔥 Trend
+            </span>
           </div>
         )}
         <div className="absolute bottom-3 right-3">

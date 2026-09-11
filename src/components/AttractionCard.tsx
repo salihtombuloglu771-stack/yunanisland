@@ -20,6 +20,7 @@ export interface Attraction {
   avgRating?: number | null
   reviewCount?: number
   updated_at?: string
+  isTrending?: boolean
 }
 
 export const ATTRACTION_CATEGORIES: Attraction['category'][] = [
@@ -71,6 +72,13 @@ export function AttractionCard({ attraction }: { attraction: Attraction }) {
         <div className="absolute top-3 left-3 bg-black/70 backdrop-blur-md px-2.5 py-1 rounded-full text-xs font-bold text-white shadow-md">
           {CATEGORY_LABELS[locale][attraction.category]}
         </div>
+        {attraction.isTrending && (
+          <div className="absolute top-3 right-3">
+            <span className="inline-flex items-center gap-1 rounded-full bg-rose-500 text-white px-2.5 py-1 text-[11px] font-bold shadow-md">
+              🔥 Trend
+            </span>
+          </div>
+        )}
         <div className="absolute bottom-3 right-3">
           <FavoriteButton entityType="attraction" entityId={attraction.id} />
         </div>

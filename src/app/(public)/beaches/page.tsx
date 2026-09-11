@@ -18,7 +18,11 @@ export default async function BeachesIndexPage({ searchParams }: { searchParams:
     .order('name')
 
   const ratings = await getRatingsMap(supabase, 'beach', (beaches ?? []).map((b) => b.id))
-  const beachesWithRatings = (beaches ?? []).map((b) => ({ ...b, ...ratings[b.id] }))
+
+  const { data: trending } = await supabase.rpc('get_trending_entities', { p_path_prefix: 'beaches', days_back: 30, limit_count: 3 })
+  const trendingSlugs = new Set((trending ?? []).map((t: { slug: string }) => t.slug))
+
+  const beachesWithRatings = (beaches ?? []).map((b) => ({ ...b, ...ratings[b.id], isTrending: trendingSlugs.has(b.slug) }))
 
   return <BeachesIndexClient beaches={beachesWithRatings} initialQuery={q ?? ''} />
 }

@@ -18,7 +18,11 @@ export default async function AttractionsIndexPage({ searchParams }: { searchPar
     .order('name')
 
   const ratings = await getRatingsMap(supabase, 'attraction', (attractions ?? []).map((a) => a.id))
-  const attractionsWithRatings = (attractions ?? []).map((a) => ({ ...a, ...ratings[a.id] }))
+
+  const { data: trending } = await supabase.rpc('get_trending_entities', { p_path_prefix: 'attractions', days_back: 30, limit_count: 3 })
+  const trendingSlugs = new Set((trending ?? []).map((t: { slug: string }) => t.slug))
+
+  const attractionsWithRatings = (attractions ?? []).map((a) => ({ ...a, ...ratings[a.id], isTrending: trendingSlugs.has(a.slug) }))
 
   return <AttractionsIndexClient attractions={attractionsWithRatings} initialQuery={q ?? ''} />
 }

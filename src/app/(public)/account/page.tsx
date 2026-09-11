@@ -28,6 +28,7 @@ export default async function AccountPage() {
   }
 
   const { data: profile } = await supabase.from('users').select('full_name, email').eq('id', user.id).single()
+  const { data: shareTokenRow } = await supabase.from('share_tokens').select('token').eq('user_id', user.id).maybeSingle()
   const { data: favorites } = await supabase
     .from('favorites')
     .select('entity_type, entity_id')
@@ -126,6 +127,7 @@ export default async function AccountPage() {
       islandFavorites={islandFavorites}
       beachFavorites={beachFavorites}
       restaurantFavorites={restaurantFavorites}
+      shareToken={shareTokenRow?.token ?? null}
     />
   )
 }
