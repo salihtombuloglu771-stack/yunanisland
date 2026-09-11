@@ -4,7 +4,7 @@ import { Header } from '@/components/Header'
 import { JsonLd } from '@/components/JsonLd'
 import { BeachDetailClient } from '@/components/BeachDetailClient'
 import { createClient } from '@/lib/supabase/server'
-import { ensureMinLength, BEACH_TYPE_TR } from '@/lib/seo'
+import { ensureMinLength, titleWithSuffix, BEACH_TYPE_TR } from '@/lib/seo'
 
 const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://yunanisland.vercel.app'
 
@@ -24,7 +24,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   const islandRel = beach.islands as unknown as { name: string } | { name: string }[] | null
   const islandName = Array.isArray(islandRel) ? islandRel[0]?.name : islandRel?.name
-  const title = islandName ? `${beach.name} Plajı — ${islandName} Adası | Yunanisland` : `${beach.name} Plajı — Yunanisland`
+  const displayName = titleWithSuffix(beach.name, 'Plajı', /plaj|beach/i)
+  const title = islandName ? `${displayName} — ${islandName} Adası | Yunanisland` : `${displayName} — Yunanisland`
   const typeLabel = BEACH_TYPE_TR[beach.beach_type] ?? beach.beach_type
   const filler = `${islandName ? `${islandName} adasındaki ` : ''}${beach.name}, ${typeLabel} yapısıyla${beach.blue_flag ? ' Mavi Bayrak ödüllü' : ''} bir plaj. Ulaşım, olanaklar ve gezgin yorumları için Yunanisland'ı ziyaret edin.`
   const description = ensureMinLength(beach.description, filler)

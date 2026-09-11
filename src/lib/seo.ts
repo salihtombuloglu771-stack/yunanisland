@@ -5,6 +5,13 @@ export function ensureMinLength(text: string | null | undefined, filler: string,
   return `${base} ${filler}`
 }
 
+// Adds a Turkish category suffix to a title unless the name already conveys
+// the category itself (e.g. "Alea Restaurant", "Super Paradise Beach") —
+// avoids redundant titles like "Alea Restaurant Restoranı".
+export function titleWithSuffix(name: string, suffix: string, skipPattern: RegExp): string {
+  return skipPattern.test(name) ? name : `${name} ${suffix}`
+}
+
 export const BEACH_TYPE_TR: Record<string, string> = {
   sand: 'kumsal',
   pebble: 'çakıllı',

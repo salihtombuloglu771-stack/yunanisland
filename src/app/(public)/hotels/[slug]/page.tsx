@@ -4,7 +4,7 @@ import { Header } from '@/components/Header'
 import { JsonLd } from '@/components/JsonLd'
 import { HotelDetailClient } from '@/components/HotelDetailClient'
 import { createClient } from '@/lib/supabase/server'
-import { ensureMinLength, HOTEL_CATEGORY_TR } from '@/lib/seo'
+import { ensureMinLength, titleWithSuffix, HOTEL_CATEGORY_TR } from '@/lib/seo'
 
 const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://yunanisland.vercel.app'
 
@@ -24,7 +24,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   const islandRel = hotel.islands as unknown as { name: string } | { name: string }[] | null
   const islandName = Array.isArray(islandRel) ? islandRel[0]?.name : islandRel?.name
-  const title = islandName ? `${hotel.name} Oteli — ${islandName} Adası | Yunanisland` : `${hotel.name} Oteli — Yunanisland`
+  const displayName = titleWithSuffix(hotel.name, 'Oteli', /otel|hotel|suites?/i)
+  const title = islandName ? `${displayName} — ${islandName} Adası | Yunanisland` : `${displayName} — Yunanisland`
   const categoryLabel = HOTEL_CATEGORY_TR[hotel.category] ?? hotel.category
   const filler = `${islandName ? `${islandName} adasındaki ` : ''}${hotel.name}, ${categoryLabel} segmentte${hotel.star_rating ? ` ${hotel.star_rating} yıldızlı` : ''} bir otel. Fiyatlar, olanaklar ve gezgin yorumları için Yunanisland'ı ziyaret edin.`
   const description = ensureMinLength(hotel.description, filler)
