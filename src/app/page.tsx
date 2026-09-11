@@ -28,21 +28,32 @@ export const metadata: Metadata = {
 
 export default async function Home() {
   const supabase = await createClient()
-  const { data: islands } = await supabase
-    .from('islands')
-    .select('id, name, slug, description, description_en, budget_level, moods, population, best_time_to_visit, best_time_to_visit_en, cover_image_url, latitude, longitude')
-    .eq('is_published', true)
-    .order('name')
 
-  const ratings = await getRatingsMap(supabase, 'island', (islands ?? []).map((i) => i.id))
-
-  const [{ count: beachCount }, { count: restaurantCount }, { count: attractionCount }] = await Promise.all([
+  // Birbirine bağımlı olmayan sorgular paralel çalıştırılıyor — önceden
+  // hepsi sırayla await ediliyordu, bu da her biri ayrı bir round-trip
+  // olduğu için sayfa oluşturma süresini gereksiz uzatıyordu (Lighthouse
+  // denetiminde bulundu).
+  const [
+    { data: islands },
+    { count: beachCount },
+    { count: restaurantCount },
+    { count: attractionCount },
+    { data: trending },
+  ] = await Promise.all([
+    supabase
+      .from('islands')
+      .select('id, name, slug, description, description_en, budget_level, moods, population, best_time_to_visit, best_time_to_visit_en, cover_image_url, latitude, longitude')
+      .eq('is_published', true)
+      .order('name'),
     supabase.from('beaches').select('id', { count: 'exact', head: true }),
     supabase.from('restaurants').select('id', { count: 'exact', head: true }),
     supabase.from('attractions').select('id', { count: 'exact', head: true }),
+    supabase.rpc('get_trending_islands', { days_back: 30, limit_count: 3 }),
   ])
 
-  const { data: trending } = await supabase.rpc('get_trending_islands', { days_back: 30, limit_count: 3 })
+  // Puanlar ada id'lerine bağımlı olduğu için yukarıdaki paralel gruba
+  // dahil edilemiyor, ondan sonra ayrı çalışıyor.
+  const ratings = await getRatingsMap(supabase, 'island', (islands ?? []).map((i) => i.id))
   const trendingSlugs = new Set((trending ?? []).map((t: { slug: string }) => t.slug))
 
   const islandsWithRatings = (islands ?? []).map((i) => ({
