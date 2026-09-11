@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import { Header } from '@/components/Header'
 import { HomeHero } from '@/components/HomeHero'
 import { HomeClient } from '@/components/HomeClient'
@@ -6,9 +7,24 @@ import { CurrencyWidget } from '@/components/CurrencyWidget'
 import { RecentlyViewedBar } from '@/components/RecentlyViewedBar'
 import { NearbyIslands } from '@/components/NearbyIslands'
 import { TrustStats } from '@/components/TrustStats'
+import { HomeSeoContent } from '@/components/HomeSeoContent'
 import { SiteFooter } from '@/components/SiteFooter'
 import { createClient } from '@/lib/supabase/server'
 import { getRatingsMap } from '@/lib/ratings'
+
+const homeTitle = 'Yunan Adaları Rehberi: Plajlar, Oteller, Gezilecek Yerler | Yunanisland'
+const homeDescription = 'Yunan Adaları için en kapsamlı gezi rehberi: plajlar, restoranlar, oteller, gezilecek yerler, feribot rotaları, bütçe hesaplayıcı ve gerçek gezgin yorumları. Bütçenize ve tarzınıza uygun Yunan adasını bulun.'
+
+export const metadata: Metadata = {
+  title: homeTitle,
+  description: homeDescription,
+  alternates: { canonical: '/' },
+  openGraph: {
+    title: homeTitle,
+    description: homeDescription,
+    images: ['/santorini.jpg'],
+  },
+}
 
 export default async function Home() {
   const supabase = await createClient()
@@ -52,6 +68,7 @@ export default async function Home() {
         <NearbyIslands islands={islandsWithRatings} />
         <CurrencyWidget />
         <HomeClient islands={islandsWithRatings} />
+        <HomeSeoContent islands={islandsWithRatings} />
       </main>
 
       <SiteFooter />
