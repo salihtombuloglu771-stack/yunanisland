@@ -12,6 +12,7 @@ interface Article {
   title: string
   content: string | null
   published_at: string | null
+  cover_image_url: string | null
   category: { name: string; slug: string } | null
 }
 

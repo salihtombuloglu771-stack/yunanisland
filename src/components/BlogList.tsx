@@ -1,6 +1,7 @@
 'use client'
 
 import { useMemo, useState } from 'react'
+import Image from 'next/image'
 import Link from 'next/link'
 import { stripMarkdown } from '@/lib/markdown'
 import { useLanguage } from '@/lib/i18n/LanguageProvider'
@@ -11,6 +12,7 @@ interface Article {
   title: string
   content: string | null
   published_at: string | null
+  cover_image_url: string | null
   category: { name: string; slug: string } | null
 }
 
@@ -79,22 +81,29 @@ export function BlogList({ articles }: { articles: Article[] }) {
             <Link
               key={article.id}
               href={`/blog/${article.slug}`}
-              className="block bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-slate-100 dark:border-neutral-900 shadow-sm hover:-translate-y-0.5 hover:shadow-lg transition-all"
+              className="flex gap-4 bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-slate-100 dark:border-neutral-900 shadow-sm hover:-translate-y-0.5 hover:shadow-lg transition-all"
             >
-              {article.category && (
-                <span className="inline-flex items-center rounded-full bg-sky-500/10 text-sky-600 dark:text-sky-400 px-2.5 py-0.5 text-xs font-semibold mb-3">
-                  {article.category.name}
-                </span>
+              {article.cover_image_url && (
+                <div className="relative hidden sm:block h-24 w-24 shrink-0 overflow-hidden rounded-xl bg-slate-100 dark:bg-neutral-800">
+                  <Image src={article.cover_image_url} alt={article.title} fill sizes="96px" className="object-cover" />
+                </div>
               )}
-              <h2 className="text-xl font-bold text-neutral-900 dark:text-white">{article.title}</h2>
-              <p className="mt-2 text-sm text-neutral-600 dark:text-neutral-400 line-clamp-2">
-                {article.content ? stripMarkdown(article.content) : ''}
-              </p>
-              {article.published_at && (
-                <p className="mt-3 text-xs text-neutral-400">
-                  {new Date(article.published_at).toLocaleDateString('tr-TR')}
+              <div className="min-w-0">
+                {article.category && (
+                  <span className="inline-flex items-center rounded-full bg-sky-500/10 text-sky-600 dark:text-sky-400 px-2.5 py-0.5 text-xs font-semibold mb-3">
+                    {article.category.name}
+                  </span>
+                )}
+                <h2 className="text-xl font-bold text-neutral-900 dark:text-white">{article.title}</h2>
+                <p className="mt-2 text-sm text-neutral-600 dark:text-neutral-400 line-clamp-2">
+                  {article.content ? stripMarkdown(article.content) : ''}
                 </p>
-              )}
+                {article.published_at && (
+                  <p className="mt-3 text-xs text-neutral-400">
+                    {new Date(article.published_at).toLocaleDateString('tr-TR')}
+                  </p>
+                )}
+              </div>
             </Link>
           ))}
         </div>

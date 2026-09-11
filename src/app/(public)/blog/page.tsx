@@ -6,7 +6,7 @@ export default async function BlogPage() {
   const supabase = await createClient()
   const { data: articles } = await supabase
     .from('articles')
-    .select('id, title, slug, content, published_at, categories(name, slug)')
+    .select('id, title, slug, content, published_at, cover_image_url, categories(name, slug)')
     .eq('is_published', true)
     .order('published_at', { ascending: false })
 
@@ -16,6 +16,7 @@ export default async function BlogPage() {
     title: a.title,
     content: a.content,
     published_at: a.published_at,
+    cover_image_url: a.cover_image_url,
     category: Array.isArray(a.categories) ? a.categories[0] ?? null : a.categories,
   }))
 

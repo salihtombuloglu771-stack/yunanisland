@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import type { Metadata } from 'next'
 import { Header } from '@/components/Header'
 import { SiteFooter } from '@/components/SiteFooter'
@@ -18,13 +19,21 @@ interface PageProps {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params
   const supabase = await createClient()
-  const { data: article } = await supabase.from('articles').select('title, content').eq('slug', slug).maybeSingle()
+  const { data: article } = await supabase.from('articles').select('title, content, cover_image_url').eq('slug', slug).maybeSingle()
 
   if (!article) return { title: 'Yazı Bulunamadı — Yunanisland' }
 
+  const title = `${article.title} — Yunanisland Blog`
+  const description = article.content ? stripMarkdown(article.content).slice(0, 160) : undefined
+
   return {
-    title: `${article.title} — Yunanisland Blog`,
-    description: article.content ? stripMarkdown(article.content).slice(0, 160) : undefined,
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      images: article.cover_image_url ? [article.cover_image_url] : undefined,
+    },
   }
 }
 
@@ -37,7 +46,7 @@ export default async function ArticlePage({ params }: PageProps) {
   // yayınlamadan önce kendi hesabıyla önizleme yapabiliyor.
   const { data: article } = await supabase
     .from('articles')
-    .select('id, title, content, published_at, author_name, categories(name)')
+    .select('id, title, content, published_at, author_name, cover_image_url, categories(name)')
     .eq('slug', slug)
     .maybeSingle()
 
@@ -70,6 +79,11 @@ export default async function ArticlePage({ params }: PageProps) {
             ]}
           />
           <article className="prose max-w-none dark:prose-invert">
+            {article.cover_image_url && (
+              <div className="relative not-prose h-56 sm:h-72 w-full overflow-hidden rounded-2xl mb-6">
+                <Image src={article.cover_image_url} alt={article.title} fill sizes="(max-width: 768px) 100vw, 768px" className="object-cover" priority />
+              </div>
+            )}
             {category && (
               <span className="inline-flex items-center rounded-full bg-sky-500/10 text-sky-600 dark:text-sky-400 px-2.5 py-0.5 text-xs font-semibold mb-4 not-prose">
                 {category.name}
