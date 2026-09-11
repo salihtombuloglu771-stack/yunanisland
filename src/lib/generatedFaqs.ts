@@ -17,9 +17,14 @@ export function getBeachFaqs(beach: {
 }, locale: Locale): Faq[] {
   const faqs: Faq[] = []
   const isFree = !beach.sunbed_price && !beach.umbrella_price
+  // İsim zaten "Plajı"/"Beach" içeriyorsa ("Super Paradise Beach" gibi)
+  // ikinci kez eklemiyoruz — "Agios Prokopios Plajı plajı" gibi tekrarı önler.
+  const hasBeachWord = /plaj|beach/i.test(beach.name)
+  const beachSuffix = hasBeachWord ? '' : ' plajı'
+  const bareName = hasBeachWord ? beach.name : `${beach.name} plajı`
 
   faqs.push({
-    question: locale === 'en' ? `Is ${beach.name} a paid beach?` : locale === 'el' ? `Η παραλία ${beach.name} είναι επί πληρωμή;` : `${beach.name} plajı ücretli mi?`,
+    question: locale === 'en' ? `Is ${beach.name} a paid beach?` : locale === 'el' ? `Η παραλία ${beach.name} είναι επί πληρωμή;` : `${beach.name}${beachSuffix} ücretli mi?`,
     answer: isFree
       ? (locale === 'en' ? 'No, sunbeds and umbrellas are free or not offered at this beach.' : locale === 'el' ? 'Όχι, οι ξαπλώστρες και οι ομπρέλες σε αυτή την παραλία είναι δωρεάν ή δεν προσφέρονται.' : 'Hayır, bu plajda şezlong ve şemsiye ücretsiz veya sunulmuyor.')
       : (locale === 'en' ? `Sunbed price is around €${beach.sunbed_price ?? 0}, umbrella price is around €${beach.umbrella_price ?? 0}.` : locale === 'el' ? `Η τιμή ξαπλώστρας είναι περίπου €${beach.sunbed_price ?? 0}, η τιμή ομπρέλας περίπου €${beach.umbrella_price ?? 0}.` : `Şezlong fiyatı yaklaşık ${beach.sunbed_price ?? 0} €, şemsiye fiyatı yaklaşık ${beach.umbrella_price ?? 0} €.`),
@@ -35,7 +40,7 @@ export function getBeachFaqs(beach: {
 
   if (amenities.length > 0) {
     faqs.push({
-      question: locale === 'en' ? `What amenities does ${beach.name} have?` : locale === 'el' ? `Τι παροχές έχει η παραλία ${beach.name};` : `${beach.name} plajında hangi imkanlar var?`,
+      question: locale === 'en' ? `What amenities does ${beach.name} have?` : locale === 'el' ? `Τι παροχές έχει η παραλία ${beach.name};` : `${bareName}nda hangi imkanlar var?`,
       answer: locale === 'en' ? `This beach has ${amenities.join(', ')}.` : locale === 'el' ? `Αυτή η παραλία διαθέτει ${amenities.join(', ')}.` : `Bu plajda ${amenities.join(', ')} bulunuyor.`,
     })
   }
