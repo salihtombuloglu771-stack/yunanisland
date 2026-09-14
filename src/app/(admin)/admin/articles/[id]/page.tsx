@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { ArticleForm } from '@/components/admin/ArticleForm'
+import { SocialCaptionGenerator } from '@/components/admin/SocialCaptionGenerator'
 import { createClient } from '@/lib/supabase/server'
 
 interface PageProps {
@@ -12,11 +13,13 @@ export default async function EditArticlePage({ params }: PageProps) {
   const supabase = await createClient()
 
   const [{ data: article }, { data: categories }] = await Promise.all([
-    supabase.from('articles').select('*').eq('id', id).maybeSingle(),
+    supabase.from('articles').select('*, categories(name)').eq('id', id).maybeSingle(),
     supabase.from('categories').select('id, name').order('name'),
   ])
 
   if (!article) notFound()
+
+  const category = Array.isArray(article.categories) ? article.categories[0] : article.categories
 
   return (
     <main className="max-w-2xl mx-auto px-6 py-16">
@@ -37,6 +40,14 @@ export default async function EditArticlePage({ params }: PageProps) {
           is_published: article.is_published,
         }}
       />
+      {article.is_published && (
+        <SocialCaptionGenerator
+          title={article.title}
+          slug={article.slug}
+          content={article.content}
+          categoryName={category?.name}
+        />
+      )}
     </main>
   )
 }
