@@ -1,9 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient as createAdminClient } from '@supabase/supabase-js'
+import { verifyUnsubscribeToken } from '@/lib/unsubscribeToken'
 
 export async function GET(req: NextRequest) {
   const email = req.nextUrl.searchParams.get('email')
-  if (!email) return NextResponse.json({ error: 'E-posta gerekli.' }, { status: 400 })
+  const token = req.nextUrl.searchParams.get('token')
+  if (!email || !token) return NextResponse.json({ error: 'E-posta ve token gerekli.' }, { status: 400 })
+
+  // Token doğrulanmadan çıkış yapılırsa, e-posta adresini bilen herhangi biri
+  // başkasını abonelikten çıkarabilir — imza mailde gönderilen token'la eşleşmeli.
+  if (!verifyUnsubscribeToken(email, token)) {
+    return NextResponse.json({ error: 'Geçersiz veya süresi dolmuş bağlantı.' }, { status: 403 })
+  }
 
   const admin = createAdminClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient as createAdminClient } from '@supabase/supabase-js'
+import { generateUnsubscribeToken } from '@/lib/unsubscribeToken'
 
 const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://yunanisland.vercel.app'
 
@@ -43,7 +44,7 @@ export async function GET(req: NextRequest) {
 
   let sentCount = 0
   for (const email of emails) {
-    const unsubscribeUrl = `${SITE_URL}/api/newsletter/unsubscribe?email=${encodeURIComponent(email)}`
+    const unsubscribeUrl = `${SITE_URL}/api/newsletter/unsubscribe?email=${encodeURIComponent(email)}&token=${generateUnsubscribeToken(email)}`
     const html = `
       <h2>Yunanisland'da Bu Hafta Yeni</h2>
       <p>Yunan Adaları hakkında yeni yazılarımızı kaçırma:</p>
