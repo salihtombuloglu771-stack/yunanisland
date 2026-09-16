@@ -4,10 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 export default async function AdminUsersPage() {
   const supabase = await createClient()
   const { data: { user: currentUser } } = await supabase.auth.getUser()
-  const { data: users } = await supabase
-    .from('users')
-    .select('id, email, full_name, role, created_at')
-    .order('created_at', { ascending: false })
+  const { data: users } = await supabase.rpc('admin_list_users') as { data: { id: string; email: string; full_name: string | null; role: string; created_at: string }[] | null }
 
   return (
     <main className="max-w-4xl mx-auto px-6 py-16">

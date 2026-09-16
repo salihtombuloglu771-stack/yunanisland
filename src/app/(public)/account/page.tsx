@@ -27,7 +27,7 @@ export default async function AccountPage() {
     redirect('/login?next=/account')
   }
 
-  const { data: profile } = await supabase.from('users').select('full_name, email').eq('id', user.id).single()
+  const { data: profile } = await supabase.from('users').select('full_name').eq('id', user.id).single()
   const { data: shareTokenRow } = await supabase.from('share_tokens').select('token').eq('user_id', user.id).maybeSingle()
   const { data: favorites } = await supabase
     .from('favorites')

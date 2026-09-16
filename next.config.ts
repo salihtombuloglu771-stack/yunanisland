@@ -1,7 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  // Next.js hangi framework'ü kullandığımızı ifşa eden "X-Powered-By: Next.js"
+  // header'ını varsayılan olarak ekliyor — saldırganlara bedava bilgi, işlevsel
+  // bir faydası yok.
+  poweredByHeader: false,
   async headers() {
     return [
       {

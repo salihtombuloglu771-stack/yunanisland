@@ -107,11 +107,14 @@ export default function RegisterPage() {
             <input
               type="password"
               required
-              minLength={6}
+              minLength={8}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="w-full rounded-xl border border-slate-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500"
             />
+            <p className="mt-1 text-xs text-neutral-400">
+              {locale === 'en' ? 'At least 8 characters.' : locale === 'el' ? 'Τουλάχιστον 8 χαρακτήρες.' : 'En az 8 karakter.'}
+            </p>
           </div>
 
           {error && <p className="text-sm text-red-600">{error}</p>}

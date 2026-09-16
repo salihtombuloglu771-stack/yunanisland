@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase/server'
+import { createClient as createAdminClient } from '@supabase/supabase-js'
 import { AdminDeleteButton } from '@/components/admin/AdminDeleteButton'
 
 const ENTITY_TABLES: Record<string, { table: string; path: string }> = {
@@ -10,7 +10,13 @@ const ENTITY_TABLES: Record<string, { table: string; path: string }> = {
 }
 
 export default async function AdminReviewsPage() {
-  const supabase = await createClient()
+  // users.email artık anon/authenticated'dan çekilmiş durumda (bkz. migration
+  // 042) — bu sayfa zaten proxy.ts'de admin-only, service role ile devam.
+  const supabase = createAdminClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    { auth: { autoRefreshToken: false, persistSession: false } }
+  )
   const { data: reviews } = await supabase
     .from('reviews')
     .select('id, rating, comment, image_url, entity_type, entity_id, created_at, users(full_name, email)')
