@@ -21,6 +21,7 @@ import { Breadcrumbs } from '@/components/Breadcrumbs'
 import { SiteFooter } from '@/components/SiteFooter'
 import { FaqAccordion, type Faq } from '@/components/FaqAccordion'
 import { SimilarIslands } from '@/components/SimilarIslands'
+import { AffiliateLinksCard, type AffiliateLinkItem } from '@/components/AffiliateLinksCard'
 import { CarSelector } from '@/components/CarSelector'
 import { useLanguage } from '@/lib/i18n/LanguageProvider'
 import { useLocalStorageState } from '@/lib/useLocalStorageState'
@@ -37,7 +38,7 @@ const BUDGET_LEVEL_LABELS = {
   luxury: { label: 'Lüks', color: 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20' },
 }
 
-export function IslandDetailClient({ island, allBeaches, allRestaurants, allHotels, allAttractions, media, similarIslands }: { island: Island & { faqs?: Faq[]; faqs_en?: Faq[]; faqs_el?: Faq[] }; allBeaches: Beach[]; allRestaurants: Restaurant[]; allHotels: Hotel[]; allAttractions: Attraction[]; media: MediaItem[]; similarIslands: IslandCardType[] }) {
+export function IslandDetailClient({ island, allBeaches, allRestaurants, allHotels, allAttractions, media, similarIslands, affiliateLinks }: { island: Island & { faqs?: Faq[]; faqs_en?: Faq[]; faqs_el?: Faq[] }; allBeaches: Beach[]; allRestaurants: Restaurant[]; allHotels: Hotel[]; allAttractions: Attraction[]; media: MediaItem[]; similarIslands: IslandCardType[]; affiliateLinks?: AffiliateLinkItem[] }) {
   const { locale } = useLanguage()
   const description = locale === 'en' ? (island.description_en || island.description)
     : locale === 'el' ? (island.description_el || island.description)
@@ -706,6 +707,8 @@ export function IslandDetailClient({ island, allBeaches, allRestaurants, allHote
                 ✈️ Uçak Bileti Fiyatlarını Karşılaştır
               </Link>
             </div>
+
+            <AffiliateLinksCard items={affiliateLinks ?? []} locale={locale} />
 
           </div>
 

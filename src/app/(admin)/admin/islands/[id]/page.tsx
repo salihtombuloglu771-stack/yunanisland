@@ -25,6 +25,9 @@ export default async function EditIslandPage({ params }: PageProps) {
           <Link href={`/admin/islands/${island.id}/media`} className="text-sm font-semibold text-sky-600 hover:underline">
             📸 Galeriyi Yönet
           </Link>
+          <Link href={`/admin/islands/${island.id}/affiliate-links`} className="text-sm font-semibold text-sky-600 hover:underline">
+            🔗 Partner Linkleri
+          </Link>
         </div>
       </div>
       <IslandForm

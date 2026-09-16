@@ -63,13 +63,14 @@ export default async function IslandPage({ params }: PageProps) {
     )
   }
 
-  const [{ data: allBeaches }, { data: allRestaurants }, { data: allHotels }, { data: allAttractions }, { data: media }, { data: reviews }, { data: similarIslands }] = await Promise.all([
+  const [{ data: allBeaches }, { data: allRestaurants }, { data: allHotels }, { data: allAttractions }, { data: media }, { data: reviews }, { data: affiliateLinks }, { data: similarIslands }] = await Promise.all([
     supabase.from('beaches').select('*').eq('island_id', island.id),
     supabase.from('restaurants').select('*').eq('island_id', island.id),
     supabase.from('hotels').select('*').eq('island_id', island.id),
     supabase.from('attractions').select('*').eq('island_id', island.id),
     supabase.from('media').select('id, url, media_type').eq('entity_type', 'island').eq('entity_id', island.id).eq('status', 'approved'),
     supabase.from('reviews').select('rating').eq('entity_type', 'island').eq('entity_id', island.id),
+    supabase.from('affiliate_links').select('id, provider, url').eq('entity_type', 'island').eq('entity_id', island.id),
     supabase
       .from('islands')
       .select('id, name, slug, description, budget_level, population, best_time_to_visit, cover_image_url')
@@ -123,6 +124,7 @@ export default async function IslandPage({ params }: PageProps) {
         allAttractions={attractionsWithRatings}
         media={media ?? []}
         similarIslands={similarIslandsWithRatings}
+        affiliateLinks={affiliateLinks ?? []}
       />
     </>
   )
