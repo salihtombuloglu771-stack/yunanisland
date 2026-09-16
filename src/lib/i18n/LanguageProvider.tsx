@@ -1,6 +1,7 @@
 'use client'
 
 import { createContext, useContext, useEffect, useState } from 'react'
+import { usePathname } from 'next/navigation'
 import { dictionary, type Locale, type TranslationKey } from './dictionary'
 
 interface LanguageContextValue {
@@ -19,12 +20,22 @@ function readCookieLocale(): Locale {
   return (match?.[1] as Locale) ?? 'tr'
 }
 
+// URL'de /en veya /el ön eki varsa (bkz. proxy.ts rewrite'ı) o, kaydedilmiş
+// çerez tercihinden ÖNCELİKLİDİR — aksi halde /en/... adresine girildiğinde
+// header hâlâ eski çerezdeki dili gösterirdi, içerikle uyumsuz kalırdı.
+function localeFromPathname(pathname: string): Locale | null {
+  if (pathname === '/en' || pathname.startsWith('/en/')) return 'en'
+  if (pathname === '/el' || pathname.startsWith('/el/')) return 'el'
+  return null
+}
+
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname()
   const [locale, setLocaleState] = useState<Locale>('tr')
 
   useEffect(() => {
-    setLocaleState(readCookieLocale())
-  }, [])
+    setLocaleState(localeFromPathname(pathname) ?? readCookieLocale())
+  }, [pathname])
 
   const setLocale = (next: Locale) => {
     setLocaleState(next)

@@ -14,8 +14,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     supabase.from('attractions').select('slug'),
   ])
 
+  const languageAlternates = (path: string) => ({
+    languages: {
+      tr: `${baseUrl}${path}`,
+      en: `${baseUrl}/en${path}`,
+      el: `${baseUrl}/el${path}`,
+    },
+  })
+
   const staticRoutes: MetadataRoute.Sitemap = [
-    { url: baseUrl, changeFrequency: 'weekly', priority: 1 },
+    { url: baseUrl, changeFrequency: 'weekly', priority: 1, alternates: languageAlternates('') },
     { url: `${baseUrl}/ferry-guide`, changeFrequency: 'weekly', priority: 0.8 },
     { url: `${baseUrl}/beaches`, changeFrequency: 'weekly', priority: 0.7 },
     { url: `${baseUrl}/restaurants`, changeFrequency: 'weekly', priority: 0.7 },
@@ -37,6 +45,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     url: `${baseUrl}/islands/${i.slug}`,
     changeFrequency: 'weekly',
     priority: 0.9,
+    alternates: languageAlternates(`/islands/${i.slug}`),
   }))
 
   const articleRoutes: MetadataRoute.Sitemap = (articles ?? []).map((a) => ({
@@ -49,24 +58,28 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     url: `${baseUrl}/beaches/${b.slug}`,
     changeFrequency: 'monthly',
     priority: 0.6,
+    alternates: languageAlternates(`/beaches/${b.slug}`),
   }))
 
   const restaurantRoutes: MetadataRoute.Sitemap = (restaurants ?? []).map((r) => ({
     url: `${baseUrl}/restaurants/${r.slug}`,
     changeFrequency: 'monthly',
     priority: 0.6,
+    alternates: languageAlternates(`/restaurants/${r.slug}`),
   }))
 
   const hotelRoutes: MetadataRoute.Sitemap = (hotels ?? []).map((h) => ({
     url: `${baseUrl}/hotels/${h.slug}`,
     changeFrequency: 'monthly',
     priority: 0.6,
+    alternates: languageAlternates(`/hotels/${h.slug}`),
   }))
 
   const attractionRoutes: MetadataRoute.Sitemap = (attractions ?? []).map((a) => ({
     url: `${baseUrl}/attractions/${a.slug}`,
     changeFrequency: 'monthly',
     priority: 0.6,
+    alternates: languageAlternates(`/attractions/${a.slug}`),
   }))
 
   return [...staticRoutes, ...islandRoutes, ...articleRoutes, ...beachRoutes, ...restaurantRoutes, ...hotelRoutes, ...attractionRoutes]

@@ -13,19 +13,40 @@ import { SiteFooter } from '@/components/SiteFooter'
 import { createClient } from '@/lib/supabase/server'
 import { getRatingsMap } from '@/lib/ratings'
 import { pickIslandOfWeek } from '@/lib/islandOfWeek'
+import { getUrlLocale, buildHreflangAlternates } from '@/lib/i18n/urlLocale'
 
-const homeTitle = 'Yunan Adaları Rehberi: Plajlar, Oteller, Gezilecek Yerler | Yunanisland'
-const homeDescription = 'Yunan Adaları için en kapsamlı gezi rehberi: plajlar, restoranlar, oteller, gezilecek yerler, feribot rotaları, bütçe hesaplayıcı ve gerçek gezgin yorumları. Bütçenize ve tarzınıza uygun Yunan adasını bulun.'
+const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://yunanisland.vercel.app'
 
-export const metadata: Metadata = {
-  title: homeTitle,
-  description: homeDescription,
-  alternates: { canonical: '/' },
-  openGraph: {
-    title: homeTitle,
-    description: homeDescription,
-    images: ['/santorini.jpg'],
+const HOME_COPY = {
+  tr: {
+    title: 'Yunan Adaları Rehberi: Plajlar, Oteller, Gezilecek Yerler | Yunanisland',
+    description: 'Yunan Adaları için en kapsamlı gezi rehberi: plajlar, restoranlar, oteller, gezilecek yerler, feribot rotaları, bütçe hesaplayıcı ve gerçek gezgin yorumları. Bütçenize ve tarzınıza uygun Yunan adasını bulun.',
   },
+  en: {
+    title: 'Greek Islands Guide: Beaches, Hotels, Attractions | Yunanisland',
+    description: 'The most complete Greek Islands travel guide: beaches, restaurants, hotels, attractions, ferry routes, a budget calculator and real traveler reviews. Find the Greek island that fits your budget and style.',
+  },
+  el: {
+    title: 'Οδηγός Ελληνικών Νησιών: Παραλίες, Ξενοδοχεία, Αξιοθέατα | Yunanisland',
+    description: 'Ο πληρέστερος ταξιδιωτικός οδηγός για τα Ελληνικά Νησιά: παραλίες, εστιατόρια, ξενοδοχεία, αξιοθέατα, δρομολόγια φέρι, υπολογιστής προϋπολογισμού και πραγματικές κριτικές ταξιδιωτών.',
+  },
+} as const
+
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getUrlLocale()
+  const copy = HOME_COPY[locale]
+  const alternates = buildHreflangAlternates('/', SITE_URL, locale)
+
+  return {
+    title: copy.title,
+    description: copy.description,
+    alternates,
+    openGraph: {
+      title: copy.title,
+      description: copy.description,
+      images: ['/santorini.jpg'],
+    },
+  }
 }
 
 export default async function Home() {

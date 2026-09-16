@@ -5,6 +5,7 @@ import { JsonLd } from '@/components/JsonLd'
 import { AttractionDetailClient } from '@/components/AttractionDetailClient'
 import { createClient } from '@/lib/supabase/server'
 import { ensureMinLength, ATTRACTION_CATEGORY_TR } from '@/lib/seo'
+import { getUrlLocale, buildHreflangAlternates } from '@/lib/i18n/urlLocale'
 
 const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://yunanisland.vercel.app'
 
@@ -14,24 +15,40 @@ interface PageProps {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params
+  const locale = await getUrlLocale()
   const supabase = await createClient()
   const { data: attraction } = await supabase
     .from('attractions')
-    .select('name, description, category, cover_image_url, islands(name)')
+    .select('name, description, description_en, description_el, category, cover_image_url, islands(name)')
     .eq('slug', slug)
     .maybeSingle()
   if (!attraction) return { title: 'Yer Bulunamadı — Yunanisland' }
 
   const islandRel = attraction.islands as unknown as { name: string } | { name: string }[] | null
   const islandName = Array.isArray(islandRel) ? islandRel[0]?.name : islandRel?.name
-  const title = islandName ? `${attraction.name} — ${islandName} Gezilecek Yerleri | Yunanisland` : `${attraction.name} — Yunanisland`
   const categoryLabel = ATTRACTION_CATEGORY_TR[attraction.category] ?? attraction.category
-  const filler = `${islandName ? `${islandName} adasındaki ` : ''}${attraction.name}, ziyaretçilerin ilgisini çeken bir ${categoryLabel}. Giriş ücreti, ziyaret saatleri ve gezgin yorumları için Yunanisland'ı ziyaret edin.`
-  const description = ensureMinLength(attraction.description, filler)
+
+  const titleByLocale = {
+    tr: islandName ? `${attraction.name} — ${islandName} Gezilecek Yerleri | Yunanisland` : `${attraction.name} — Yunanisland`,
+    en: islandName ? `${attraction.name} — Things to Do in ${islandName} | Yunanisland` : `${attraction.name} | Yunanisland`,
+    el: islandName ? `${attraction.name} — Αξιοθέατα στο ${islandName} | Yunanisland` : `${attraction.name} | Yunanisland`,
+  }
+  const fillerByLocale = {
+    tr: `${islandName ? `${islandName} adasındaki ` : ''}${attraction.name}, ziyaretçilerin ilgisini çeken bir ${categoryLabel}. Giriş ücreti, ziyaret saatleri ve gezgin yorumları için Yunanisland'ı ziyaret edin.`,
+    en: `Visit Yunanisland for ticket prices, opening hours and traveler reviews of ${attraction.name}${islandName ? ` on ${islandName} island` : ''}.`,
+    el: `Επισκεφθείτε το Yunanisland για τιμές εισιτηρίων, ωράρια και κριτικές ταξιδιωτών για ${attraction.name}${islandName ? ` στο νησί ${islandName}` : ''}.`,
+  }
+  const rawDescription = locale === 'en' ? (attraction.description_en || attraction.description)
+    : locale === 'el' ? (attraction.description_el || attraction.description)
+    : attraction.description
+
+  const title = titleByLocale[locale]
+  const description = ensureMinLength(rawDescription, fillerByLocale[locale])
 
   return {
     title,
     description,
+    alternates: buildHreflangAlternates(`/attractions/${slug}`, SITE_URL, locale),
     openGraph: {
       title,
       description,

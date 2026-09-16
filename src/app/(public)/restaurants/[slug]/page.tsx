@@ -5,6 +5,7 @@ import { JsonLd } from '@/components/JsonLd'
 import { RestaurantDetailClient } from '@/components/RestaurantDetailClient'
 import { createClient } from '@/lib/supabase/server'
 import { titleWithSuffix, RESTAURANT_PRICE_TR } from '@/lib/seo'
+import { getUrlLocale, buildHreflangAlternates } from '@/lib/i18n/urlLocale'
 
 const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://yunanisland.vercel.app'
 
@@ -14,10 +15,11 @@ interface PageProps {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params
+  const locale = await getUrlLocale()
   const supabase = await createClient()
   const { data: restaurant } = await supabase
     .from('restaurants')
-    .select('name, cuisine, price_level, sea_view, cover_image_url, islands(name)')
+    .select('name, cuisine, cuisine_en, cuisine_el, price_level, sea_view, cover_image_url, islands(name)')
     .eq('slug', slug)
     .maybeSingle()
   if (!restaurant) return { title: 'Restoran Bulunamadı — Yunanisland' }
@@ -25,13 +27,29 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const islandRel = restaurant.islands as unknown as { name: string } | { name: string }[] | null
   const islandName = Array.isArray(islandRel) ? islandRel[0]?.name : islandRel?.name
   const displayName = titleWithSuffix(restaurant.name, 'Restoranı', /restoran|restaurant|tavern/i)
-  const title = islandName ? `${displayName} — ${islandName} Adası | Yunanisland` : `${displayName} — Yunanisland`
   const priceLabel = RESTAURANT_PRICE_TR[restaurant.price_level] ?? restaurant.price_level
-  const description = `${islandName ? `${islandName} adasında ` : ''}${restaurant.cuisine ?? 'yerel lezzetler'} sunan ${restaurant.name}, ${priceLabel} fiyat seviyesinde${restaurant.sea_view ? ' ve deniz manzaralı' : ''} bir restoran. Menü, konum ve gezgin yorumları için Yunanisland'ı ziyaret edin.`
+  const cuisine = locale === 'en' ? (restaurant.cuisine_en || restaurant.cuisine)
+    : locale === 'el' ? (restaurant.cuisine_el || restaurant.cuisine)
+    : restaurant.cuisine
+
+  const titleByLocale = {
+    tr: islandName ? `${displayName} — ${islandName} Adası | Yunanisland` : `${displayName} — Yunanisland`,
+    en: islandName ? `${restaurant.name} Restaurant — ${islandName} Island | Yunanisland` : `${restaurant.name} Restaurant | Yunanisland`,
+    el: islandName ? `Εστιατόριο ${restaurant.name} — Νησί ${islandName} | Yunanisland` : `Εστιατόριο ${restaurant.name} | Yunanisland`,
+  }
+  const descriptionByLocale = {
+    tr: `${islandName ? `${islandName} adasında ` : ''}${cuisine ?? 'yerel lezzetler'} sunan ${restaurant.name}, ${priceLabel} fiyat seviyesinde${restaurant.sea_view ? ' ve deniz manzaralı' : ''} bir restoran. Menü, konum ve gezgin yorumları için Yunanisland'ı ziyaret edin.`,
+    en: `${restaurant.name} serves ${cuisine ?? 'local cuisine'}${islandName ? ` on ${islandName} island` : ''}. Visit Yunanisland for menu, location and traveler reviews.`,
+    el: `Το ${restaurant.name} σερβίρει ${cuisine ?? 'τοπική κουζίνα'}${islandName ? ` στο νησί ${islandName}` : ''}. Επισκεφθείτε το Yunanisland για μενού, τοποθεσία και κριτικές.`,
+  }
+
+  const title = titleByLocale[locale]
+  const description = descriptionByLocale[locale]
 
   return {
     title,
     description,
+    alternates: buildHreflangAlternates(`/restaurants/${slug}`, SITE_URL, locale),
     openGraph: {
       title,
       description,

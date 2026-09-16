@@ -1,7 +1,25 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
+const URL_LOCALES = ['en', 'el'] as const
+
+// URL'de /en veya /el ön eki varsa (ör. /en/islands/mykonos) bunu asıl route'a
+// (/islands/mykonos) çeviriyoruz — böylece dosya yapısı/statik sayfa üretimi
+// hiç değişmiyor, sadece istek şu anki route'a rewrite ediliyor. Çözülen dil
+// downstream Server Component'lerin headers() ile okuyabilmesi için
+// `x-locale` request header'ında taşınıyor (bkz. hreflang/URL-tabanlı i18n).
+function stripLocalePrefix(pathname: string): { pathname: string; locale: (typeof URL_LOCALES)[number] | null } {
+  for (const locale of URL_LOCALES) {
+    if (pathname === `/${locale}` || pathname.startsWith(`/${locale}/`)) {
+      return { pathname: pathname.slice(locale.length + 1) || '/', locale }
+    }
+  }
+  return { pathname, locale: null }
+}
+
 export async function proxy(request: NextRequest) {
+  const { pathname, locale } = stripLocalePrefix(request.nextUrl.pathname)
+
   let supabaseResponse = NextResponse.next({ request })
 
   const supabase = createServerClient(
@@ -24,7 +42,6 @@ export async function proxy(request: NextRequest) {
   )
 
   const { data: { user } } = await supabase.auth.getUser()
-  const pathname = request.nextUrl.pathname
 
   if (pathname.startsWith('/admin')) {
     if (!user) {
@@ -65,7 +82,19 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(url)
   }
 
-  return supabaseResponse
+  if (!locale) {
+    return supabaseResponse
+  }
+
+  const rewriteUrl = request.nextUrl.clone()
+  rewriteUrl.pathname = pathname
+
+  const requestHeaders = new Headers(request.headers)
+  requestHeaders.set('x-locale', locale)
+
+  const rewriteResponse = NextResponse.rewrite(rewriteUrl, { request: { headers: requestHeaders } })
+  supabaseResponse.cookies.getAll().forEach((cookie) => rewriteResponse.cookies.set(cookie))
+  return rewriteResponse
 }
 
 export const config = {

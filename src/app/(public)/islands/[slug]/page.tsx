@@ -6,6 +6,7 @@ import { JsonLd } from '@/components/JsonLd'
 import { createClient } from '@/lib/supabase/server'
 import { getRatingsMap } from '@/lib/ratings'
 import { ensureMinLength } from '@/lib/seo'
+import { getUrlLocale, buildHreflangAlternates } from '@/lib/i18n/urlLocale'
 
 const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://yunanisland.vercel.app'
 
@@ -15,18 +16,33 @@ interface PageProps {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params
+  const locale = await getUrlLocale()
   const supabase = await createClient()
-  const { data: island } = await supabase.from('islands').select('name, description, cover_image_url').eq('slug', slug).maybeSingle()
+  const { data: island } = await supabase.from('islands').select('name, description, description_en, description_el, cover_image_url').eq('slug', slug).maybeSingle()
 
   if (!island) return { title: 'Ada Bulunamadı — Yunanisland' }
 
-  const title = `${island.name} Adası Gezi Rehberi — Plajlar, Oteller, Restoranlar | Yunanisland`
-  const filler = `${island.name} adası hakkında plajlar, oteller, restoranlar, gezilecek yerler ve pratik seyahat bilgileri için Yunanisland'ı ziyaret edin.`
-  const description = ensureMinLength(island.description, filler)
+  const titleByLocale = {
+    tr: `${island.name} Adası Gezi Rehberi — Plajlar, Oteller, Restoranlar | Yunanisland`,
+    en: `${island.name} Island Travel Guide — Beaches, Hotels, Restaurants | Yunanisland`,
+    el: `Ταξιδιωτικός Οδηγός ${island.name} — Παραλίες, Ξενοδοχεία, Εστιατόρια | Yunanisland`,
+  }
+  const fillerByLocale = {
+    tr: `${island.name} adası hakkında plajlar, oteller, restoranlar, gezilecek yerler ve pratik seyahat bilgileri için Yunanisland'ı ziyaret edin.`,
+    en: `Visit Yunanisland for beaches, hotels, restaurants, attractions and practical travel information about ${island.name} island.`,
+    el: `Επισκεφθείτε το Yunanisland για παραλίες, ξενοδοχεία, εστιατόρια, αξιοθέατα και πρακτικές πληροφορίες για το νησί ${island.name}.`,
+  }
+  const rawDescription = locale === 'en' ? (island.description_en || island.description)
+    : locale === 'el' ? (island.description_el || island.description)
+    : island.description
+
+  const title = titleByLocale[locale]
+  const description = ensureMinLength(rawDescription, fillerByLocale[locale])
 
   return {
     title,
     description,
+    alternates: buildHreflangAlternates(`/islands/${slug}`, SITE_URL, locale),
     openGraph: {
       title,
       description,

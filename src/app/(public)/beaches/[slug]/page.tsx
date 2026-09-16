@@ -5,6 +5,7 @@ import { JsonLd } from '@/components/JsonLd'
 import { BeachDetailClient } from '@/components/BeachDetailClient'
 import { createClient } from '@/lib/supabase/server'
 import { ensureMinLength, titleWithSuffix, BEACH_TYPE_TR } from '@/lib/seo'
+import { getUrlLocale, buildHreflangAlternates } from '@/lib/i18n/urlLocale'
 
 const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://yunanisland.vercel.app'
 
@@ -14,10 +15,11 @@ interface PageProps {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params
+  const locale = await getUrlLocale()
   const supabase = await createClient()
   const { data: beach } = await supabase
     .from('beaches')
-    .select('name, description, beach_type, blue_flag, cover_image_url, islands(name)')
+    .select('name, description, description_en, description_el, beach_type, blue_flag, cover_image_url, islands(name)')
     .eq('slug', slug)
     .maybeSingle()
   if (!beach) return { title: 'Plaj Bulunamadı — Yunanisland' }
@@ -25,14 +27,29 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const islandRel = beach.islands as unknown as { name: string } | { name: string }[] | null
   const islandName = Array.isArray(islandRel) ? islandRel[0]?.name : islandRel?.name
   const displayName = titleWithSuffix(beach.name, 'Plajı', /plaj|beach/i)
-  const title = islandName ? `${displayName} — ${islandName} Adası | Yunanisland` : `${displayName} — Yunanisland`
   const typeLabel = BEACH_TYPE_TR[beach.beach_type] ?? beach.beach_type
-  const filler = `${islandName ? `${islandName} adasındaki ` : ''}${beach.name}, ${typeLabel} yapısıyla${beach.blue_flag ? ' Mavi Bayrak ödüllü' : ''} bir plaj. Ulaşım, olanaklar ve gezgin yorumları için Yunanisland'ı ziyaret edin.`
-  const description = ensureMinLength(beach.description, filler)
+
+  const titleByLocale = {
+    tr: islandName ? `${displayName} — ${islandName} Adası | Yunanisland` : `${displayName} — Yunanisland`,
+    en: islandName ? `${beach.name} Beach — ${islandName} Island | Yunanisland` : `${beach.name} Beach | Yunanisland`,
+    el: islandName ? `Παραλία ${beach.name} — Νησί ${islandName} | Yunanisland` : `Παραλία ${beach.name} | Yunanisland`,
+  }
+  const fillerByLocale = {
+    tr: `${islandName ? `${islandName} adasındaki ` : ''}${beach.name}, ${typeLabel} yapısıyla${beach.blue_flag ? ' Mavi Bayrak ödüllü' : ''} bir plaj. Ulaşım, olanaklar ve gezgin yorumları için Yunanisland'ı ziyaret edin.`,
+    en: `Visit Yunanisland for directions, amenities and traveler reviews of ${beach.name} beach${islandName ? ` on ${islandName} island` : ''}.`,
+    el: `Επισκεφθείτε το Yunanisland για οδηγίες, ανέσεις και κριτικές ταξιδιωτών για την παραλία ${beach.name}${islandName ? ` στο νησί ${islandName}` : ''}.`,
+  }
+  const rawDescription = locale === 'en' ? (beach.description_en || beach.description)
+    : locale === 'el' ? (beach.description_el || beach.description)
+    : beach.description
+
+  const title = titleByLocale[locale]
+  const description = ensureMinLength(rawDescription, fillerByLocale[locale])
 
   return {
     title,
     description,
+    alternates: buildHreflangAlternates(`/beaches/${slug}`, SITE_URL, locale),
     openGraph: {
       title,
       description,
