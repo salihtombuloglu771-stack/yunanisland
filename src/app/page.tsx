@@ -8,9 +8,11 @@ import { RecentlyViewedBar } from '@/components/RecentlyViewedBar'
 import { NearbyIslands } from '@/components/NearbyIslands'
 import { TrustStats } from '@/components/TrustStats'
 import { HomeSeoContent } from '@/components/HomeSeoContent'
+import { IslandOfTheWeek } from '@/components/IslandOfTheWeek'
 import { SiteFooter } from '@/components/SiteFooter'
 import { createClient } from '@/lib/supabase/server'
 import { getRatingsMap } from '@/lib/ratings'
+import { pickIslandOfWeek } from '@/lib/islandOfWeek'
 
 const homeTitle = 'Yunan Adaları Rehberi: Plajlar, Oteller, Gezilecek Yerler | Yunanisland'
 const homeDescription = 'Yunan Adaları için en kapsamlı gezi rehberi: plajlar, restoranlar, oteller, gezilecek yerler, feribot rotaları, bütçe hesaplayıcı ve gerçek gezgin yorumları. Bütçenize ve tarzınıza uygun Yunan adasını bulun.'
@@ -62,6 +64,8 @@ export default async function Home() {
     isTrending: trendingSlugs.has(i.slug),
   }))
 
+  const islandOfWeek = pickIslandOfWeek(islandsWithRatings, [...trendingSlugs] as string[])
+
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-neutral-950 transition-colors duration-300">
       <Header />
@@ -69,6 +73,7 @@ export default async function Home() {
 
       <main className="mx-auto max-w-7xl px-6 py-12">
         <AdBanner placement="homepage" />
+        {islandOfWeek && <IslandOfTheWeek island={islandOfWeek} />}
         <TrustStats
           islandCount={islandsWithRatings.length}
           beachCount={beachCount ?? 0}
