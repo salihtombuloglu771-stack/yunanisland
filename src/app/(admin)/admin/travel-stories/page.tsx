@@ -3,8 +3,8 @@ import { AdminDeleteButton } from '@/components/admin/AdminDeleteButton'
 import { StoryPublishToggle } from '@/components/admin/StoryPublishToggle'
 
 export default async function AdminTravelStoriesPage() {
-  // users.email artık anon/authenticated'dan çekilmiş durumda (bkz. migration
-  // 042) — bu sayfa zaten proxy.ts'de admin-only, service role ile devam.
+  // users.email artık ayrı, RLS'li bir tabloda (bkz. migration 044) — bu
+  // sayfa zaten proxy.ts'de admin-only, service role ile devam.
   const supabase = createAdminClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!,
@@ -12,9 +12,21 @@ export default async function AdminTravelStoriesPage() {
   )
   const { data: stories } = await supabase
     .from('travel_stories')
-    .select('id, title, content, is_published, created_at, users(full_name, email), islands(name)')
+    .select('id, title, content, is_published, created_at, users(id, full_name), islands(name)')
     .order('created_at', { ascending: false })
     .limit(200)
+
+  const userIds = [
+    ...new Set(
+      (stories ?? [])
+        .map((s) => (s.users as unknown as { id?: string } | null)?.id)
+        .filter((id): id is string => Boolean(id))
+    ),
+  ]
+  const { data: emailRows } = userIds.length
+    ? await supabase.from('user_emails').select('user_id, email').in('user_id', userIds)
+    : { data: [] }
+  const emailByUserId = Object.fromEntries((emailRows ?? []).map((e) => [e.user_id, e.email]))
 
   return (
     <main className="max-w-4xl mx-auto px-6 py-16">
@@ -23,7 +35,8 @@ export default async function AdminTravelStoriesPage() {
 
       <div className="mt-8 space-y-3">
         {(stories ?? []).map((s) => {
-          const user = s.users as unknown as { full_name?: string; email?: string } | null
+          const user = s.users as unknown as { id?: string; full_name?: string } | null
+          const email = user?.id ? emailByUserId[user.id] : undefined
           const island = s.islands as unknown as { name?: string } | null
           return (
             <div key={s.id} className="bg-white dark:bg-neutral-900 rounded-2xl border border-slate-100 dark:border-neutral-900 shadow-sm p-4">
@@ -33,7 +46,7 @@ export default async function AdminTravelStoriesPage() {
                     {s.title} ↗
                   </a>
                   <p className="text-xs text-neutral-500 mt-0.5">
-                    {user?.full_name ?? '—'} ({user?.email}) {island?.name ? `· ${island.name}` : ''} · {new Date(s.created_at).toLocaleDateString('tr-TR')}
+                    {user?.full_name ?? '—'} ({email}) {island?.name ? `· ${island.name}` : ''} · {new Date(s.created_at).toLocaleDateString('tr-TR')}
                   </p>
                 </div>
                 <div className="flex items-center gap-2 flex-shrink-0">

@@ -10,8 +10,8 @@ const ENTITY_TABLES: Record<string, { table: string; path: string }> = {
 }
 
 export default async function AdminReviewsPage() {
-  // users.email artık anon/authenticated'dan çekilmiş durumda (bkz. migration
-  // 042) — bu sayfa zaten proxy.ts'de admin-only, service role ile devam.
+  // users.email artık ayrı, RLS'li bir tabloda (bkz. migration 044) — bu
+  // sayfa zaten proxy.ts'de admin-only, service role ile devam.
   const supabase = createAdminClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!,
@@ -19,9 +19,21 @@ export default async function AdminReviewsPage() {
   )
   const { data: reviews } = await supabase
     .from('reviews')
-    .select('id, rating, comment, image_url, entity_type, entity_id, created_at, users(full_name, email)')
+    .select('id, rating, comment, image_url, entity_type, entity_id, created_at, users(id, full_name)')
     .order('created_at', { ascending: false })
     .limit(200)
+
+  const userIds = [
+    ...new Set(
+      (reviews ?? [])
+        .map((r) => (r.users as unknown as { id?: string } | null)?.id)
+        .filter((id): id is string => Boolean(id))
+    ),
+  ]
+  const { data: emailRows } = userIds.length
+    ? await supabase.from('user_emails').select('user_id, email').in('user_id', userIds)
+    : { data: [] }
+  const emailByUserId = Object.fromEntries((emailRows ?? []).map((e) => [e.user_id, e.email]))
 
   const idsByType: Record<string, string[]> = {}
   for (const r of reviews ?? []) {
@@ -46,7 +58,8 @@ export default async function AdminReviewsPage() {
 
       <div className="mt-8 space-y-3">
         {(reviews ?? []).map((r) => {
-          const user = r.users as unknown as { full_name?: string; email?: string } | null
+          const user = r.users as unknown as { id?: string; full_name?: string } | null
+          const email = user?.id ? emailByUserId[user.id] : undefined
           const entity = nameMaps[r.entity_type]?.[r.entity_id]
           const conf = ENTITY_TABLES[r.entity_type]
           return (
@@ -55,7 +68,7 @@ export default async function AdminReviewsPage() {
                 <div className="min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
                     <span className="text-sm font-bold text-neutral-900 dark:text-white">{user?.full_name ?? '—'}</span>
-                    <span className="text-xs text-neutral-400">{user?.email}</span>
+                    <span className="text-xs text-neutral-400">{email}</span>
                   </div>
                   <p className="text-xs text-neutral-500 mt-0.5">
                     {entity && conf ? (
