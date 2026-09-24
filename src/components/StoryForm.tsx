@@ -2,11 +2,13 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { useLocalizedHref } from '@/components/LocaleLink'
 import { createClient } from '@/lib/supabase/client'
 import { useLanguage } from '@/lib/i18n/LanguageProvider'
 
 export function StoryForm({ islands }: { islands: { id: string; name: string }[] }) {
   const router = useRouter()
+  const localize = useLocalizedHref()
   const { locale } = useLanguage()
   const [userId, setUserId] = useState<string | null>(null)
   const [checkingAuth, setCheckingAuth] = useState(true)
@@ -71,7 +73,7 @@ export function StoryForm({ islands }: { islands: { id: string; name: string }[]
       return
     }
 
-    router.push(`/gezi-hikayeleri/${data.id}`)
+    router.push(localize(`/gezi-hikayeleri/${data.id}`))
   }
 
   if (checkingAuth) return null

@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, type ReactNode } from 'react'
-import Link from 'next/link'
+import Link from '@/components/LocaleLink'
 import Image from 'next/image'
 import { Header } from '@/components/Header'
 import { SiteFooter } from '@/components/SiteFooter'

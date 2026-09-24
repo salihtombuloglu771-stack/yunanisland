@@ -1,7 +1,7 @@
 'use client'
 
 import Image from 'next/image'
-import Link from 'next/link'
+import Link from '@/components/LocaleLink'
 import { Beach } from '@/lib/mockData'
 import { FavoriteButton } from '@/components/FavoriteButton'
 import { RatingBadge } from '@/components/RatingBadge'

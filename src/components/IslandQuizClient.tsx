@@ -1,7 +1,7 @@
 'use client'
 
 import { useMemo, useState } from 'react'
-import Link from 'next/link'
+import Link, { useLocalizedHref } from '@/components/LocaleLink'
 import Image from 'next/image'
 import { ShareButtons } from '@/components/ShareButtons'
 import { useLanguage } from '@/lib/i18n/LanguageProvider'
@@ -27,6 +27,7 @@ interface IslandQuizClientProps {
 
 export function IslandQuizClient({ islands, siteUrl, sharedResult }: IslandQuizClientProps) {
   const { locale } = useLanguage()
+  const localize = useLocalizedHref()
   const [step, setStep] = useState(0)
   const [answers, setAnswers] = useState<Record<string, string>>({})
 
@@ -61,7 +62,7 @@ export function IslandQuizClient({ islands, siteUrl, sharedResult }: IslandQuizC
 
   if (done && results.length > 0) {
     const [top, ...rest] = results
-    const shareUrl = `${siteUrl}/hangi-ada?sonuc=${top.island.slug}`
+    const shareUrl = `${siteUrl}${localize(`/hangi-ada?sonuc=${top.island.slug}`)}`
     return (
       <div className="space-y-8">
         <div className="overflow-hidden rounded-3xl bg-white dark:bg-neutral-900 border border-slate-100 dark:border-neutral-800 shadow-sm">

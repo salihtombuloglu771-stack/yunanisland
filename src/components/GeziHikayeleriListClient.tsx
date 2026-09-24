@@ -1,6 +1,6 @@
 'use client'
 
-import Link from 'next/link'
+import Link from '@/components/LocaleLink'
 import { Header } from '@/components/Header'
 import { PageHero } from '@/components/PageHero'
 import { SiteFooter } from '@/components/SiteFooter'

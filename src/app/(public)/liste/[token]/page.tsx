@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation'
 import Image from 'next/image'
-import Link from 'next/link'
+import Link from '@/components/LocaleLink'
 import type { Metadata } from 'next'
 import { Header } from '@/components/Header'
 import { SiteFooter } from '@/components/SiteFooter'

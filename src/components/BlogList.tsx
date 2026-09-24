@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react'
 import Image from 'next/image'
-import Link from 'next/link'
+import Link from '@/components/LocaleLink'
 import { stripMarkdown } from '@/lib/markdown'
 import { useLanguage } from '@/lib/i18n/LanguageProvider'
 

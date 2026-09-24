@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import Link from 'next/link'
+import Link from '@/components/LocaleLink'
 import { getConsent, setConsent } from '@/lib/cookieConsent'
 import { useLanguage } from '@/lib/i18n/LanguageProvider'
 

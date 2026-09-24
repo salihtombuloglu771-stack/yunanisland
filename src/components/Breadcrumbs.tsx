@@ -1,4 +1,4 @@
-import Link from 'next/link'
+import Link from '@/components/LocaleLink'
 import { JsonLd } from '@/components/JsonLd'
 
 export interface Crumb { label: string; href?: string }

@@ -1,4 +1,4 @@
-import Link from 'next/link'
+import Link from '@/components/LocaleLink'
 import type { Metadata } from 'next'
 import { Header } from '@/components/Header'
 import { AdBanner } from '@/components/AdBanner'

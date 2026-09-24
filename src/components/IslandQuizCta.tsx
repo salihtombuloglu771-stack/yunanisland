@@ -1,6 +1,6 @@
 'use client'
 
-import Link from 'next/link'
+import Link from '@/components/LocaleLink'
 import { useLanguage } from '@/lib/i18n/LanguageProvider'
 
 const COPY: Record<'tr' | 'en' | 'el', { title: string; subtitle: string; cta: string }> = {

@@ -4,7 +4,7 @@ import { useMemo } from 'react'
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
-import Link from 'next/link'
+import Link from '@/components/LocaleLink'
 import { useLanguage } from '@/lib/i18n/LanguageProvider'
 
 export interface MapPoint {

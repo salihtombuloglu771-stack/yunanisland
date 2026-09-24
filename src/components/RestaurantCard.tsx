@@ -1,6 +1,6 @@
 'use client'
 
-import Link from 'next/link'
+import Link from '@/components/LocaleLink'
 import { Restaurant } from '@/lib/mockData'
 import { FavoriteButton } from '@/components/FavoriteButton'
 import { RatingBadge } from '@/components/RatingBadge'

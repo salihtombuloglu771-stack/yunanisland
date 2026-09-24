@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { useLocalizedHref } from '@/components/LocaleLink'
 import { createClient } from '@/lib/supabase/client'
 import { useLanguage } from '@/lib/i18n/LanguageProvider'
 
@@ -22,6 +23,7 @@ const TYPE_EMOJI: Record<Suggestion['type'], string> = {
 
 export function HeaderSearch() {
   const router = useRouter()
+  const localize = useLocalizedHref()
   const { t } = useLanguage()
   const [open, setOpen] = useState(false)
   const [query, setQuery] = useState('')
@@ -72,7 +74,7 @@ export function HeaderSearch() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (!query.trim()) return
-    router.push(`/search?q=${encodeURIComponent(query.trim())}`)
+    router.push(localize(`/search?q=${encodeURIComponent(query.trim())}`))
     setOpen(false)
     setShowSuggestions(false)
     setQuery('')
@@ -82,7 +84,7 @@ export function HeaderSearch() {
     setShowSuggestions(false)
     setOpen(false)
     setQuery('')
-    router.push(href)
+    router.push(localize(href))
   }
 
   if (!open) {

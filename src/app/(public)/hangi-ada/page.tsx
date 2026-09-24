@@ -4,7 +4,7 @@ import { SiteFooter } from '@/components/SiteFooter'
 import { PageHeroI18n } from '@/components/PageHeroI18n'
 import { IslandQuizClient, type QuizIslandData } from '@/components/IslandQuizClient'
 import { createClient } from '@/lib/supabase/server'
-import { getUrlLocale, buildHreflangAlternates } from '@/lib/i18n/urlLocale'
+import { getUrlLocale, buildHreflangAlternates, localizedPath } from '@/lib/i18n/urlLocale'
 
 const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://yunanisland.vercel.app'
 
@@ -42,7 +42,7 @@ export async function generateMetadata({ searchParams }: { searchParams: Promise
     openGraph: {
       title,
       description: copy.description,
-      url: `${SITE_URL}/hangi-ada${shared ? `?sonuc=${shared.slug}` : ''}`,
+      url: `${SITE_URL}${localizedPath('/hangi-ada', locale)}${shared ? `?sonuc=${shared.slug}` : ''}`,
       ...(shared?.cover_image_url ? { images: [{ url: shared.cover_image_url }] } : {}),
     },
   }

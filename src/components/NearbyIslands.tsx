@@ -1,6 +1,6 @@
 'use client'
 
-import Link from 'next/link'
+import Link from '@/components/LocaleLink'
 import { useMemo } from 'react'
 import { useGeolocation } from '@/lib/useGeolocation'
 import { haversineKm } from '@/lib/geo'
