@@ -13,8 +13,13 @@ create table public.user_emails (
   email text not null
 );
 
+-- Kaynak auth.users (e-postanın asıl kaydı): public.users.email acil
+-- önlem olarak önceden boşaltılmış olsa bile migration doğru çalışsın.
 insert into public.user_emails (user_id, email)
-select id, email from public.users where email is not null;
+select u.id, a.email
+from public.users u
+join auth.users a on a.id = u.id
+where a.email is not null;
 
 alter table public.user_emails enable row level security;
 
