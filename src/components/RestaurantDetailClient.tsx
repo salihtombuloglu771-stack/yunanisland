@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, type ReactNode } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Header } from '@/components/Header'
@@ -38,9 +38,10 @@ interface RestaurantDetailClientProps {
     updated_at?: string | null
   }
   island: { name: string; slug: string } | null
+  adBanner?: ReactNode
 }
 
-export function RestaurantDetailClient({ restaurant, island }: RestaurantDetailClientProps) {
+export function RestaurantDetailClient({ restaurant, island, adBanner }: RestaurantDetailClientProps) {
   const { locale } = useLanguage()
   const cuisine = locale === 'en' ? (restaurant.cuisine_en || restaurant.cuisine)
     : locale === 'el' ? (restaurant.cuisine_el || restaurant.cuisine)
@@ -153,6 +154,7 @@ export function RestaurantDetailClient({ restaurant, island }: RestaurantDetailC
           )}
         />
 
+        {adBanner}
         <ReviewSection entityType="restaurant" entityId={restaurant.id} />
         <TripNoteBox entityType="restaurant" entityId={restaurant.id} />
         <div className="mt-6 flex items-center justify-between gap-4">

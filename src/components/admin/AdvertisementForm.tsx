@@ -101,6 +101,7 @@ export function AdvertisementForm({ initial }: { initial?: Partial<AdFormValues>
           className="w-full rounded-xl border border-slate-200 dark:border-neutral-800 bg-slate-50 dark:bg-neutral-950 py-2.5 px-4 text-sm outline-none focus:border-sky-500">
           <option value="homepage">Ana Sayfa</option>
           <option value="blog">Blog</option>
+          <option value="detail">Detay Sayfaları (ada/plaj/restoran/otel/gezilecek yer)</option>
         </select>
       </div>
 

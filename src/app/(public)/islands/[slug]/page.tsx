@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import type { Metadata } from 'next'
 import { Header } from '@/components/Header'
+import { AdBanner } from '@/components/AdBanner'
 import { IslandDetailClient } from '@/components/IslandDetailClient'
 import { JsonLd } from '@/components/JsonLd'
 import { createClient } from '@/lib/supabase/server'
@@ -141,6 +142,7 @@ export default async function IslandPage({ params }: PageProps) {
         media={media ?? []}
         similarIslands={similarIslandsWithRatings}
         affiliateLinks={affiliateLinks ?? []}
+        adBanner={<AdBanner placement="detail" />}
       />
     </>
   )

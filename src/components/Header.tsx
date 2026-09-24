@@ -36,6 +36,7 @@ export function Header() {
     { href: '/budget-calculator', label: t('nav.budgetCalculator') },
     { href: '/trip-tools', label: t('nav.tripTools') },
     { href: '/compare', label: t('nav.compare') },
+    { href: '/hangi-ada', label: t('nav.quiz') },
     { href: '/reklam-ver', label: t('nav.advertise') },
   ]
 

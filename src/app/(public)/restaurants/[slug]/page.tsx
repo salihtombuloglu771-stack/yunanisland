@@ -2,6 +2,7 @@ import Link from 'next/link'
 import type { Metadata } from 'next'
 import { Header } from '@/components/Header'
 import { JsonLd } from '@/components/JsonLd'
+import { AdBanner } from '@/components/AdBanner'
 import { RestaurantDetailClient } from '@/components/RestaurantDetailClient'
 import { createClient } from '@/lib/supabase/server'
 import { titleWithSuffix, RESTAURANT_PRICE_TR } from '@/lib/seo'
@@ -103,7 +104,7 @@ export default async function RestaurantDetailPage({ params }: PageProps) {
   return (
     <>
       <JsonLd data={jsonLd} />
-      <RestaurantDetailClient restaurant={restaurant} island={island} />
+      <RestaurantDetailClient restaurant={restaurant} island={island} adBanner={<AdBanner placement="detail" />} />
     </>
   )
 }

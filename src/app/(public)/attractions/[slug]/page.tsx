@@ -2,6 +2,7 @@ import Link from 'next/link'
 import type { Metadata } from 'next'
 import { Header } from '@/components/Header'
 import { JsonLd } from '@/components/JsonLd'
+import { AdBanner } from '@/components/AdBanner'
 import { AttractionDetailClient } from '@/components/AttractionDetailClient'
 import { createClient } from '@/lib/supabase/server'
 import { ensureMinLength, ATTRACTION_CATEGORY_TR } from '@/lib/seo'
@@ -101,7 +102,7 @@ export default async function AttractionDetailPage({ params }: PageProps) {
   return (
     <>
       <JsonLd data={jsonLd} />
-      <AttractionDetailClient attraction={attraction} island={island} media={media ?? []} />
+      <AttractionDetailClient attraction={attraction} island={island} media={media ?? []} adBanner={<AdBanner placement="detail" />} />
     </>
   )
 }

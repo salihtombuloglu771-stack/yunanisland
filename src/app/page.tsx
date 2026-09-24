@@ -9,6 +9,7 @@ import { NearbyIslands } from '@/components/NearbyIslands'
 import { TrustStats } from '@/components/TrustStats'
 import { HomeSeoContent } from '@/components/HomeSeoContent'
 import { IslandOfTheWeek } from '@/components/IslandOfTheWeek'
+import { IslandQuizCta } from '@/components/IslandQuizCta'
 import { SiteFooter } from '@/components/SiteFooter'
 import { createClient } from '@/lib/supabase/server'
 import { getRatingsMap } from '@/lib/ratings'
@@ -95,6 +96,7 @@ export default async function Home() {
       <main className="mx-auto max-w-7xl px-6 py-12">
         <AdBanner placement="homepage" />
         {islandOfWeek && <IslandOfTheWeek island={islandOfWeek} />}
+        <IslandQuizCta />
         <TrustStats
           islandCount={islandsWithRatings.length}
           beachCount={beachCount ?? 0}

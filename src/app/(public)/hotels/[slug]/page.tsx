@@ -2,6 +2,7 @@ import Link from 'next/link'
 import type { Metadata } from 'next'
 import { Header } from '@/components/Header'
 import { JsonLd } from '@/components/JsonLd'
+import { AdBanner } from '@/components/AdBanner'
 import { HotelDetailClient } from '@/components/HotelDetailClient'
 import { createClient } from '@/lib/supabase/server'
 import { ensureMinLength, titleWithSuffix, HOTEL_CATEGORY_TR } from '@/lib/seo'
@@ -99,7 +100,7 @@ export default async function HotelDetailPage({ params }: PageProps) {
   return (
     <>
       <JsonLd data={jsonLd} />
-      <HotelDetailClient hotel={hotel} island={island} />
+      <HotelDetailClient hotel={hotel} island={island} adBanner={<AdBanner placement="detail" />} />
     </>
   )
 }

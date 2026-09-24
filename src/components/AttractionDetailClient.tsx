@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, type ReactNode } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Header } from '@/components/Header'
@@ -48,9 +48,10 @@ interface AttractionDetailClientProps {
   }
   island: { name: string; slug: string } | null
   media: MediaItem[]
+  adBanner?: ReactNode
 }
 
-export function AttractionDetailClient({ attraction, island, media }: AttractionDetailClientProps) {
+export function AttractionDetailClient({ attraction, island, media, adBanner }: AttractionDetailClientProps) {
   const { locale } = useLanguage()
   const description = locale === 'en' ? (attraction.description_en || attraction.description)
     : locale === 'el' ? (attraction.description_el || attraction.description)
@@ -144,6 +145,7 @@ export function AttractionDetailClient({ attraction, island, media }: Attraction
           )}
         />
 
+        {adBanner}
         <ReviewSection entityType="attraction" entityId={attraction.id} />
         <TripNoteBox entityType="attraction" entityId={attraction.id} />
         <div className="mt-6 flex items-center justify-between gap-4">

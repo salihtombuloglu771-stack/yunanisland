@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, type ReactNode } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Header } from '@/components/Header'
@@ -37,9 +37,10 @@ interface HotelDetailClientProps {
     has_wifi?: boolean; has_pool?: boolean; has_breakfast?: boolean; beachfront?: boolean
   }
   island: { name: string; slug: string } | null
+  adBanner?: ReactNode
 }
 
-export function HotelDetailClient({ hotel, island }: HotelDetailClientProps) {
+export function HotelDetailClient({ hotel, island, adBanner }: HotelDetailClientProps) {
   const { locale } = useLanguage()
   const description = locale === 'en' ? (hotel.description_en || hotel.description)
     : locale === 'el' ? (hotel.description_el || hotel.description)
@@ -129,6 +130,7 @@ export function HotelDetailClient({ hotel, island }: HotelDetailClientProps) {
           )}
         />
 
+        {adBanner}
         <ReviewSection entityType="hotel" entityId={hotel.id} />
         <TripNoteBox entityType="hotel" entityId={hotel.id} />
         <div className="mt-6 flex items-center justify-between gap-4">

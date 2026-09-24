@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, type ReactNode } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Header } from '@/components/Header'
@@ -42,9 +42,10 @@ interface BeachDetailClientProps {
   }
   island: { name: string; slug: string } | null
   media: MediaItem[]
+  adBanner?: ReactNode
 }
 
-export function BeachDetailClient({ beach, island, media }: BeachDetailClientProps) {
+export function BeachDetailClient({ beach, island, media, adBanner }: BeachDetailClientProps) {
   const { locale } = useLanguage()
   const description = locale === 'en' ? (beach.description_en || beach.description)
     : locale === 'el' ? (beach.description_el || beach.description)
@@ -165,6 +166,7 @@ export function BeachDetailClient({ beach, island, media }: BeachDetailClientPro
 
         <FaqAccordion faqs={getBeachFaqs(beach, locale)} />
 
+        {adBanner}
         <ReviewSection entityType="beach" entityId={beach.id} />
         <TripNoteBox entityType="beach" entityId={beach.id} />
         <div className="mt-6 flex items-center justify-between gap-4">

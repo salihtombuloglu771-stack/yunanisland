@@ -2,6 +2,7 @@ import Link from 'next/link'
 import type { Metadata } from 'next'
 import { Header } from '@/components/Header'
 import { JsonLd } from '@/components/JsonLd'
+import { AdBanner } from '@/components/AdBanner'
 import { BeachDetailClient } from '@/components/BeachDetailClient'
 import { createClient } from '@/lib/supabase/server'
 import { ensureMinLength, titleWithSuffix, BEACH_TYPE_TR } from '@/lib/seo'
@@ -102,7 +103,7 @@ export default async function BeachDetailPage({ params }: PageProps) {
   return (
     <>
       <JsonLd data={jsonLd} />
-      <BeachDetailClient beach={beach} island={island} media={media ?? []} />
+      <BeachDetailClient beach={beach} island={island} media={media ?? []} adBanner={<AdBanner placement="detail" />} />
     </>
   )
 }
