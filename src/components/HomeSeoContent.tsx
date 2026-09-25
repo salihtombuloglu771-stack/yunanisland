@@ -24,7 +24,7 @@ export function HomeSeoContent({ islands }: { islands: IslandSummary[] }) {
     <section className="mt-16 border-t border-slate-200 dark:border-neutral-800 pt-12">
       <h2 className="text-2xl font-bold text-neutral-900 dark:text-white">Yunan Adaları Rehberi: Nereye, Ne Zaman Gitmeli?</h2>
       <p className="mt-4 text-neutral-700 dark:text-neutral-300 leading-relaxed max-w-3xl">
-        Yunan Adaları'nı ziyaret etmeyi planlıyorsanız doğru yerdesiniz. Yunanisland, ilham veren fotoğraflardan öte,
+        Yunan Adaları&apos;nı ziyaret etmeyi planlıyorsanız doğru yerdesiniz. Yunanisland, ilham veren fotoğraflardan öte,
         her ada için gerçek fiyatlar, gezgin yorumları, feribot rotaları ve pratik araçlar sunan kapsamlı bir Yunan
         Adaları rehberidir. Aşağıda bütçenize ve zamanınıza göre hangi adayı seçmeniz gerektiğine dair gerçek verilere
         dayanan bir özet bulacaksınız.
@@ -56,7 +56,7 @@ export function HomeSeoContent({ islands }: { islands: IslandSummary[] }) {
           <p className="mt-2 text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
             Yunan Adaları arasındaki en yaygın ulaşım yöntemi feribotlardır. Hangi adadan hangi adaya, hangi sıklıkla
             feribot olduğunu görmek için{' '}
-            <Link href="/ferry-guide" className="text-sky-600 dark:text-sky-400 hover:underline">Feribot Rehberi</Link>'mizi inceleyebilirsiniz.
+            <Link href="/ferry-guide" className="text-sky-600 dark:text-sky-400 hover:underline">Feribot Rehberi</Link>&apos;mizi inceleyebilirsiniz.
           </p>
         </div>
         <div>
