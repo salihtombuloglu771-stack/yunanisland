@@ -30,6 +30,7 @@ export function ReviewSection({ entityType, entityId }: { entityType: EntityType
   const [comment, setComment] = useState('')
   const [imageUrl, setImageUrl] = useState('')
   const [submitting, setSubmitting] = useState(false)
+  const [submitError, setSubmitError] = useState(false)
   const [loading, setLoading] = useState(true)
   const [loadingMore, setLoadingMore] = useState(false)
 
@@ -94,16 +95,31 @@ export function ReviewSection({ entityType, entityId }: { entityType: EntityType
     e.preventDefault()
     if (!userId) return
     setSubmitting(true)
+    setSubmitError(false)
 
-    const supabase = createClient()
-    await supabase.from('reviews').insert({
-      user_id: userId,
-      entity_type: entityType,
-      entity_id: entityId,
-      rating,
-      comment: comment.trim() || null,
-      image_url: imageUrl.trim() || null,
-    })
+    // Kayıt başarısız olursa (bağlantı kopması, yetki vb.) kullanıcıya bildir ve
+    // yazdıklarını silme ki tekrar deneyebilsin — önceden hata sessizce yutuluyordu.
+    let failed = false
+    try {
+      const supabase = createClient()
+      const { error } = await supabase.from('reviews').insert({
+        user_id: userId,
+        entity_type: entityType,
+        entity_id: entityId,
+        rating,
+        comment: comment.trim() || null,
+        image_url: imageUrl.trim() || null,
+      })
+      failed = !!error
+    } catch {
+      failed = true
+    }
+
+    if (failed) {
+      setSubmitError(true)
+      setSubmitting(false)
+      return
+    }
 
     setComment('')
     setRating(5)
@@ -119,6 +135,7 @@ export function ReviewSection({ entityType, entityId }: { entityType: EntityType
     photoLinkPlaceholder: locale === 'en' ? 'Photo link (optional)' : locale === 'el' ? 'Σύνδεσμος φωτογραφίας (προαιρετικό)' : 'Fotoğraf bağlantısı (isteğe bağlı)',
     sending: locale === 'en' ? 'Sending...' : locale === 'el' ? 'Αποστολή...' : 'Gönderiliyor...',
     submit: locale === 'en' ? 'Post Review' : locale === 'el' ? 'Δημοσίευση Κριτικής' : 'Yorum Yap',
+    submitError: locale === 'en' ? 'Your review could not be posted. Please try again.' : locale === 'el' ? 'Η κριτική σας δεν μπόρεσε να δημοσιευτεί. Δοκιμάστε ξανά.' : 'Yorumun gönderilemedi. Lütfen tekrar dene.',
     empty: locale === 'en' ? 'No reviews yet. Be the first to write one!' : locale === 'el' ? 'Δεν υπάρχουν ακόμη κριτικές. Γράψτε την πρώτη!' : 'Henüz yorum yapılmamış. İlk yorumu sen yaz!',
     photoAlt: locale === 'en' ? 'Review photo' : locale === 'el' ? 'Φωτογραφία κριτικής' : 'Yorum fotoğrafı',
     sortNewest: locale === 'en' ? 'Newest' : locale === 'el' ? 'Νεότερα' : 'En Yeni',
@@ -184,6 +201,11 @@ export function ReviewSection({ entityType, entityId }: { entityType: EntityType
           >
             {submitting ? t.sending : t.submit}
           </button>
+          {submitError && (
+            <p role="alert" className="mt-2 text-sm text-red-600 dark:text-red-400">
+              {t.submitError}
+            </p>
+          )}
         </form>
       ) : (
         <p className="text-sm text-neutral-500 mb-6">
