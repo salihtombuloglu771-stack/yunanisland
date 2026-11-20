@@ -15,7 +15,6 @@ export function Header() {
   const pathname = usePathname()
   const { t } = useLanguage()
   const [email, setEmail] = useState<string | null>(null)
-  const [isAdmin, setIsAdmin] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const [toolsOpen, setToolsOpen] = useState(false)
   const toolsRef = useRef<HTMLDivElement>(null)
@@ -47,12 +46,6 @@ export function Header() {
     const loadUser = async () => {
       const { data: { user } } = await supabase.auth.getUser()
       setEmail(user?.email ?? null)
-      if (user) {
-        const { data: profile } = await supabase.from('users').select('role').eq('id', user.id).single()
-        setIsAdmin(profile?.role === 'admin')
-      } else {
-        setIsAdmin(false)
-      }
     }
     loadUser()
 
@@ -131,11 +124,6 @@ export function Header() {
             )}
           </div>
 
-          {isAdmin && (
-            <Link href="/admin/dashboard" className="text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
-              {t('nav.admin')}
-            </Link>
-          )}
         </nav>
 
         <div className="flex items-center gap-3">
@@ -167,7 +155,7 @@ export function Header() {
             </div>
           )}
           <NextLink
-            href="/admin"
+            href="/admin/dashboard"
             aria-label="Yönetim Paneli"
             title="Yönetim Paneli"
             className="flex h-9 w-9 items-center justify-center rounded-lg text-neutral-500 dark:text-neutral-400 hover:bg-sky-50 hover:text-sky-600 dark:hover:bg-neutral-800 dark:hover:text-sky-400 transition-colors"
@@ -203,7 +191,6 @@ export function Header() {
           <Link href="/gezi-hikayeleri" className="block text-sm font-medium text-neutral-600 dark:text-neutral-400">{t('nav.stories')}</Link>
           <Link href="/reklam-ver" className="block text-sm font-medium text-neutral-600 dark:text-neutral-400">{t('nav.advertise')}</Link>
           <Link href="/search" className="block text-sm font-medium text-neutral-600 dark:text-neutral-400">{t('nav.search')}</Link>
-          {isAdmin && <Link href="/admin/dashboard" className="block text-sm font-medium text-neutral-600 dark:text-neutral-400">{t('nav.admin')}</Link>}
           <div className="pt-3 border-t border-slate-100 dark:border-neutral-900">
             {email ? (
               <div className="flex items-center gap-4">

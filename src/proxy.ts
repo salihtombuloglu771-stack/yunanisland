@@ -43,10 +43,10 @@ export async function proxy(request: NextRequest) {
 
   const { data: { user } } = await supabase.auth.getUser()
 
-  if (pathname.startsWith('/admin')) {
+  if (pathname === '/admin' || pathname.startsWith('/admin/')) {
     if (!user) {
       const url = request.nextUrl.clone()
-      url.pathname = '/login'
+      url.pathname = '/admin-giris'
       url.searchParams.set('next', pathname)
       return NextResponse.redirect(url)
     }
@@ -57,7 +57,7 @@ export async function proxy(request: NextRequest) {
     const { data: aal } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel()
     if (aal && aal.nextLevel === 'aal2' && aal.nextLevel !== aal.currentLevel) {
       const url = request.nextUrl.clone()
-      url.pathname = '/login'
+      url.pathname = '/admin-giris'
       url.searchParams.set('next', pathname)
       return NextResponse.redirect(url)
     }
