@@ -3,9 +3,12 @@
 import Link from '@/components/LocaleLink'
 import { useLanguage } from '@/lib/i18n/LanguageProvider'
 import { NewsletterSignup } from '@/components/NewsletterSignup'
+import { usePathname } from 'next/navigation'
 
 export function SiteFooter() {
   const { t } = useLanguage()
+  // Acenta/belge satırı yalnızca ana sayfada (/, /en, /el) — Hakkımızda sayfasında zaten tam liste var.
+  const isHome = /^/(en|el)?/?$/.test(usePathname() ?? '')
 
   return (
     <footer className="border-t border-slate-100 dark:border-neutral-900 bg-white dark:bg-neutral-950 py-8 mt-24">
@@ -16,9 +19,11 @@ export function SiteFooter() {
         <p className="text-sm text-neutral-500 dark:text-neutral-400">
           &copy; 2026 Yunanisland. {t('footer.rights')}
         </p>
-        <p className="text-xs text-neutral-400 dark:text-neutral-500 max-w-2xl mx-auto">
-          {t('footer.license')}
-        </p>
+        {isHome && (
+          <p className="text-xs text-neutral-400 dark:text-neutral-500 max-w-2xl mx-auto">
+            {t('footer.license')}
+          </p>
+        )}
         <div className="flex items-center justify-center gap-4">
           <Link href="/hakkimizda" className="inline-block text-xs text-neutral-400 hover:text-sky-600 dark:hover:text-sky-400 hover:underline">
             Hakkımızda
