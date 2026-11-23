@@ -26,7 +26,7 @@ export const dictionary = {
     'home.subtitle': 'Yunan Adaları\'nın saklı koyları, eşsiz plajları, en özel restoranları ve feribot rotalarıyla dolu en kapsamlı gezi planlayıcınız.',
     'home.destinations': 'Popüler Destinasyonlar',
     'footer.rights': 'Tüm hakları saklıdır.',
-    'footer.license': 'Adema Turizm Dış Ticaret Ltd. Şti. (Pars Safari Turizm) — Türkiye Cumhuriyeti, TÜRSAB A Grubu Seyahat Acentası, Belge No: 13637',
+    'footer.license': 'Adema Turizm Dış Ticaret Ltd. Şti. (Pars Safari Turizm) — Türkiye Cumhuriyeti, TÜRSAB A Grubu Seyahat Acentası, Belge No: 13637 · Bodrum / Muğla · +90 532 486 02 75',
   },
   en: {
     'nav.home': 'Home',
@@ -53,7 +53,7 @@ export const dictionary = {
     'home.subtitle': 'Your most comprehensive travel planner for the Greek Islands\' hidden coves, unique beaches, finest restaurants, and ferry routes.',
     'home.destinations': 'Popular Destinations',
     'footer.rights': 'All rights reserved.',
-    'footer.license': 'Adema Turizm Dış Ticaret Ltd. Şti. (Pars Safari Turizm) — Republic of Turkey, TÜRSAB Group A Travel Agency, License No: 13637',
+    'footer.license': 'Adema Turizm Dış Ticaret Ltd. Şti. (Pars Safari Turizm) — Republic of Turkey, TÜRSAB Group A Travel Agency, License No: 13637 · Bodrum / Muğla · +90 532 486 02 75',
   },
   el: {
     'nav.home': 'Αρχική',
@@ -80,7 +80,7 @@ export const dictionary = {
     'home.subtitle': 'Ο πιο ολοκληρωμένος σχεδιαστής ταξιδιών για τους κρυμμένους όρμους, τις μοναδικές παραλίες, τα καλύτερα εστιατόρια και τις γραμμές πλοίων των Ελληνικών Νησιών.',
     'home.destinations': 'Δημοφιλείς Προορισμοί',
     'footer.rights': 'Με επιφύλαξη παντός δικαιώματος.',
-    'footer.license': 'Adema Turizm Dış Ticaret Ltd. Şti. (Pars Safari Turizm) — Δημοκρατία της Τουρκίας, TÜRSAB Ταξιδιωτικό Γραφείο Ομάδας Α, Αρ. Άδειας: 13637',
+    'footer.license': 'Adema Turizm Dış Ticaret Ltd. Şti. (Pars Safari Turizm) — Δημοκρατία της Τουρκίας, TÜRSAB Ταξιδιωτικό Γραφείο Ομάδας Α, Αρ. Άδειας: 13637 · Bodrum / Muğla · +90 532 486 02 75',
   },
 } as const satisfies Record<Locale, Record<string, string>>
 

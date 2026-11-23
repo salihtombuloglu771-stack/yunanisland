@@ -19,10 +19,13 @@ const CONTENT = {
     legalTitle: 'Yasal Bilgiler',
     legalItems: [
       { label: 'Şirket', value: 'Adema Turizm Dış Ticaret Limited Şirketi' },
-      { label: 'Marka', value: 'Pars Safari Turizm' },
+      { label: 'Seyahat Acentası Adı', value: 'Pars Safari Turizm' },
       { label: 'Belge Türü', value: 'TÜRSAB A Grubu Seyahat Acentası İşletme Belgesi' },
       { label: 'Belge No', value: '13637' },
-      { label: 'Merkezi', value: 'Burdur' },
+      { label: 'TÜRSAB BTK', value: 'Pamukkale' },
+      { label: 'Telefon', value: '+90 532 486 02 75', href: 'tel:+905324860275' },
+      { label: 'E-posta', value: 'adematurizm@gmail.com', href: 'mailto:adematurizm@gmail.com' },
+      { label: 'Adres', value: 'Kumbahçe Mah. İskele Cad. Bodrum Yolcu Limanı İçi No:13 Ofis No:3, Bodrum / Muğla' },
     ],
     honestyTitle: 'Dürüstlük İlkemiz',
     honesty: 'Sitedeki hiçbir fiyat veya rezervasyon bilgisi uydurma değildir: sitenin kendi üzerinden doğrudan rezervasyon alınmayan yerlerde (ör. uçak bileti), sizi doğrudan gerçek fiyatları gösteren dış kaynaklara (Google Flights gibi) yönlendiriyoruz. İçerik sürekli güncellenmekte ve genişletilmektedir.',
@@ -45,10 +48,13 @@ const CONTENT = {
     legalTitle: 'Legal Information',
     legalItems: [
       { label: 'Company', value: 'Adema Turizm Dış Ticaret Limited Şirketi' },
-      { label: 'Brand', value: 'Pars Safari Turizm' },
+      { label: 'Travel Agency Name', value: 'Pars Safari Turizm' },
       { label: 'License Type', value: 'TÜRSAB Group A Travel Agency License' },
       { label: 'License No.', value: '13637' },
-      { label: 'Headquarters', value: 'Burdur, Turkey' },
+      { label: 'TÜRSAB Regional Board (BTK)', value: 'Pamukkale' },
+      { label: 'Phone', value: '+90 532 486 02 75', href: 'tel:+905324860275' },
+      { label: 'Email', value: 'adematurizm@gmail.com', href: 'mailto:adematurizm@gmail.com' },
+      { label: 'Address', value: 'Kumbahçe Mah. İskele Cad. Bodrum Yolcu Limanı İçi No:13 Ofis No:3, Bodrum / Muğla, Turkey' },
     ],
     honestyTitle: 'Our Honesty Principle',
     honesty: 'No price or booking information on this site is made up: where the site doesn\'t take a direct booking itself (e.g. flights), we send you directly to external sources showing real prices (like Google Flights). Content is continuously updated and expanded.',
@@ -71,10 +77,13 @@ const CONTENT = {
     legalTitle: 'Νομικές Πληροφορίες',
     legalItems: [
       { label: 'Εταιρεία', value: 'Adema Turizm Dış Ticaret Limited Şirketi' },
-      { label: 'Εμπορικό Σήμα', value: 'Pars Safari Turizm' },
+      { label: 'Όνομα Ταξιδιωτικού Γραφείου', value: 'Pars Safari Turizm' },
       { label: 'Τύπος Άδειας', value: 'TÜRSAB Άδεια Ταξιδιωτικού Γραφείου Ομάδας Α' },
       { label: 'Αρ. Άδειας', value: '13637' },
-      { label: 'Έδρα', value: 'Burdur, Τουρκία' },
+      { label: 'TÜRSAB Περιφερειακό Συμβούλιο (BTK)', value: 'Pamukkale' },
+      { label: 'Τηλέφωνο', value: '+90 532 486 02 75', href: 'tel:+905324860275' },
+      { label: 'Email', value: 'adematurizm@gmail.com', href: 'mailto:adematurizm@gmail.com' },
+      { label: 'Διεύθυνση', value: 'Kumbahçe Mah. İskele Cad. Bodrum Yolcu Limanı İçi No:13 Ofis No:3, Bodrum / Muğla, Τουρκία' },
     ],
     honestyTitle: 'Η Αρχή Ειλικρίνειάς μας',
     honesty: 'Καμία πληροφορία τιμής ή κράτησης σε αυτή την ιστοσελίδα δεν είναι επινοημένη: όπου η ιστοσελίδα δεν δέχεται απευθείας κράτηση η ίδια (π.χ. πτήσεις), σας κατευθύνουμε απευθείας σε εξωτερικές πηγές που δείχνουν πραγματικές τιμές (όπως το Google Flights). Το περιεχόμενο ενημερώνεται και επεκτείνεται συνεχώς.',
@@ -110,7 +119,9 @@ export function AboutClient() {
           {c.legalItems.map((item) => (
             <div key={item.label} className="bg-white dark:bg-neutral-900 rounded-xl border border-slate-100 dark:border-neutral-900 px-4 py-3">
               <dt className="text-xs font-semibold text-neutral-400 uppercase tracking-wider">{item.label}</dt>
-              <dd className="text-sm font-medium text-neutral-800 dark:text-neutral-200">{item.value}</dd>
+              <dd className="text-sm font-medium text-neutral-800 dark:text-neutral-200">
+                {'href' in item && item.href ? <a href={item.href} className="text-sky-600 hover:underline">{item.value}</a> : item.value}
+              </dd>
             </div>
           ))}
         </dl>
