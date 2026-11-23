@@ -8,7 +8,8 @@ import { usePathname } from 'next/navigation'
 export function SiteFooter() {
   const { t } = useLanguage()
   // Acenta/belge satırı yalnızca ana sayfada (/, /en, /el) — Hakkımızda sayfasında zaten tam liste var.
-  const isHome = /^/(en|el)?/?$/.test(usePathname() ?? '')
+  const pathname = usePathname() ?? ''
+  const isHome = pathname === '/' || pathname === '/en' || pathname === '/el' || pathname === '/en/' || pathname === '/el/'
 
   return (
     <footer className="border-t border-slate-100 dark:border-neutral-900 bg-white dark:bg-neutral-950 py-8 mt-24">
